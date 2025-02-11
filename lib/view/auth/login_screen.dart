@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/custom_widgets/custom_textfield.dart';
-import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/view/auth/verification_screen.dart';
 
 class LoginScreen extends StatelessWidget {

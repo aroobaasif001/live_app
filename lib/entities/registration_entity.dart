@@ -11,14 +11,31 @@ class RegistrationEntity {
   final String? email;
   final String? gender;
   final String? country;
+  final String? city;
+  final String? street;
+  final String? house;
+  final String? apartment;
+  final String? entrance;
+  final String? index;
+  final List<String>? interests;  // ✅ General interest categories (e.g., Shoes, Electronics)
+  final List<String>? detailedInterests;  // ✅ New field for subcategories (e.g., Sneakers, Makeup)
 
-  RegistrationEntity(
-      {this.regId,
-      this.firstName,
-      this.lastName,
-      this.email,
-      this.gender,
-      this.country});
+  RegistrationEntity({
+    this.regId,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.gender,
+    this.country,
+    this.city,
+    this.street,
+    this.house,
+    this.apartment,
+    this.entrance,
+    this.index,
+    this.interests,
+    this.detailedInterests,  // ✅ Include in constructor
+  });
 
   factory RegistrationEntity.fromJson(Map<String, dynamic> json) =>
       _$RegistrationEntityFromJson(json);
@@ -29,19 +46,19 @@ class RegistrationEntity {
     return FirebaseFirestore.instance
         .collection('UserEntity')
         .withConverter<RegistrationEntity>(
-          fromFirestore: (snapshot, options) =>
-              RegistrationEntity.fromJson(snapshot.data()!),
-          toFirestore: (value, options) => value.toJson(),
-        );
+      fromFirestore: (snapshot, options) =>
+          RegistrationEntity.fromJson(snapshot.data()!),
+      toFirestore: (value, options) => value.toJson(),
+    );
   }
 
   static DocumentReference<RegistrationEntity> doc({required String userId}) {
     return FirebaseFirestore.instance
         .doc('UserEntity/$userId')
         .withConverter<RegistrationEntity>(
-          fromFirestore: (snapshot, options) =>
-              RegistrationEntity.fromJson(snapshot.data()!),
-          toFirestore: (value, options) => value.toJson(),
-        );
+      fromFirestore: (snapshot, options) =>
+          RegistrationEntity.fromJson(snapshot.data()!),
+      toFirestore: (value, options) => value.toJson(),
+    );
   }
 }
