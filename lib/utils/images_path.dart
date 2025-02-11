@@ -1,2 +1,18 @@
 const String backgroundImage = 'assets/images/background.png';
 const String backgroundScaffoldImage = 'assets/images/background_scaffold.png';
+
+const String clothImage = 'assets/images/cloth.png';
+const String shoesImage = 'assets/images/shose.png';
+const String babyImage = 'assets/images/baby.png';
+const String booksImage = 'assets/images/books.png';
+const String catImage = 'assets/images/cat.png';
+const String dagaImage = 'assets/images/daga.png';
+const String darazImage = 'assets/images/daraz.png';
+const String gameImage = 'assets/images/gamingPod.png';
+const String gymImage = 'assets/images/gym.png';
+const String hearPodImage = 'assets/images/hearPod.png';
+const String lipstickImage = 'assets/images/lipstick.png';
+const String manImage = 'assets/images/man.png';
+const String pirseImage = 'assets/images/pirse.png';
+const String tireImage = 'assets/images/tire.png';
+const String watchImage = 'assets/images/watch.png';
