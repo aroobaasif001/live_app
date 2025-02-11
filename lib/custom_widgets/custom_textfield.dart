@@ -1,21 +1,37 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final String hintText;
-  final Widget? suffixIcon;
-  final bool obscureText;
+  final TextEditingController? controller;
+  final bool isPassword;
+  final String? Function(String?)? validator;
 
   const CustomTextField({
     super.key,
     required this.hintText,
-    this.suffixIcon, this.obscureText = false,
+    this.controller,
+    this.isPassword = false,
+    this.validator,
   });
+
+  @override
+  _CustomTextFieldState createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  bool _obscureText = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.isPassword;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 45,
-      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+      height: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10), // ✅ Rounded edges
@@ -29,16 +45,30 @@ class CustomTextField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
-        obscureText: obscureText,
+        controller: widget.controller,
+        obscureText: _obscureText,
+        validator: widget.validator,
         decoration: InputDecoration(
           border: InputBorder.none, // ✅ No visible borders
-          hintText: hintText,
+          hintText: widget.hintText,
           hintStyle: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.grey, // ✅ Matches label color
             fontSize: 16,
           ),
-          suffixIcon: suffixIcon,
+          suffixIcon: widget.isPassword
+              ? IconButton(
+            icon: Icon(
+              _obscureText ? Icons.visibility_off : Icons.visibility,
+              color: Colors.grey,
+            ),
+            onPressed: () {
+              setState(() {
+                _obscureText = !_obscureText; // ✅ Toggle visibility
+              });
+            },
+          )
+              : null, // ✅ No suffix icon for non-password fields
         ),
       ),
     );

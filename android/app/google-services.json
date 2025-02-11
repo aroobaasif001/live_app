@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "531418432199",
+    "project_id": "hvatai",
+    "storage_bucket": "hvatai.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531418432199:android:2cc59bed540f6c0166b4e2",
+        "android_client_info": {
+          "package_name": "com.example.live_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdp6G0_BuIlGwrTm7ugxXLSjmtrHcuO0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

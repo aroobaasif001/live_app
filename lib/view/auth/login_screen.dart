@@ -8,7 +8,10 @@ import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/view/auth/verification_screen.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,23 +42,43 @@ class LoginScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
               // Email field
-              CustomTextField(hintText: 'Email'),
+              CustomTextField(
+                hintText: 'Email',
+                controller: _emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!RegExp(
+                          r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+                      .hasMatch(value)) {
+                    return 'Enter a valid email';
+                  }
+                  return null;
+                },
+              ),
               SizedBox(height: 20),
-              // Password field
               CustomTextField(
                 hintText: 'Password',
-                suffixIcon: CustomContainer(
-                  height: 18,
-                  width: 18,
-                  image: DecorationImage(image: AssetImage(eyeCloseIcon),scale: 3),
-                ),
+                controller: _passwordController,
+                isPassword: true, // ✅ Enables visibility toggle
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters';
+                  }
+                  return null;
+                },
               ),
+
               SizedBox(height: 20),
               // Login button
               CustomGradientButton(
                 text: 'Get Code',
                 onPressed: () {
-                  Get.to(()=> VerificationScreen());
+                  Get.to(() => VerificationScreen());
                 },
               ),
             ],
