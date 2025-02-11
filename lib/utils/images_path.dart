@@ -16,3 +16,4 @@ const String manImage = 'assets/images/man.png';
 const String pirseImage = 'assets/images/pirse.png';
 const String tireImage = 'assets/images/tire.png';
 const String watchImage = 'assets/images/watch.png';
+const String notificationImage = 'assets/images/notificationImage.png';

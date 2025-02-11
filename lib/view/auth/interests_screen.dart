@@ -173,8 +173,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
+          padding: const EdgeInsets.symmetric(horizontal: 28),          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomText(

@@ -6,6 +6,7 @@ import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
 import 'package:live_app/utils/colors.dart';
+import 'package:live_app/view/auth/notification_screen.dart';
 
 class InterestsDetailScreen extends StatefulWidget {
   final String? country;
@@ -134,7 +135,7 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 28),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
