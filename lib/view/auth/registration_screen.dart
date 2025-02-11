@@ -62,6 +62,7 @@ class RegistrationScreen extends StatelessWidget {
               // Gender dropdown
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
+                  hintText: "Select Gender",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none
@@ -81,6 +82,7 @@ class RegistrationScreen extends StatelessWidget {
               // Country dropdown
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
+                    hintText: "Select Country",
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none
