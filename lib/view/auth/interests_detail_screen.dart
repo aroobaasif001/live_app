@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/utils/colors.dart';
+import 'package:live_app/view/auth/notification_screen.dart';
 
 class InterestsDetailScreen extends StatefulWidget {
   InterestsDetailScreen({super.key});
@@ -65,7 +67,7 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 28),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -133,7 +135,7 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
               CustomGradientButton(
                 text: 'Continue',
                 onPressed: () {
-                  // Continue action
+                  Get.to(()=>NotificationScreen());
                 },
               ),
               SizedBox(height: 20),
