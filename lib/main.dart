@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
 
+import 'view/homeScreen/homeMainScreen/home_main_screen.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SocialsLoginScreen()
+      home: HomeMainScreen()
     );
   }
 }
