@@ -27,7 +27,7 @@ class RegistrationEntity {
 
   static CollectionReference<RegistrationEntity> collection() {
     return FirebaseFirestore.instance
-        .collection('RegistrationEntity')
+        .collection('UserEntity')
         .withConverter<RegistrationEntity>(
           fromFirestore: (snapshot, options) =>
               RegistrationEntity.fromJson(snapshot.data()!),
@@ -37,7 +37,7 @@ class RegistrationEntity {
 
   static DocumentReference<RegistrationEntity> doc({required String userId}) {
     return FirebaseFirestore.instance
-        .doc('RegistrationEntity/$userId')
+        .doc('UserEntity/$userId')
         .withConverter<RegistrationEntity>(
           fromFirestore: (snapshot, options) =>
               RegistrationEntity.fromJson(snapshot.data()!),
