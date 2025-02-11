@@ -69,6 +69,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: CustomText(
           text: 'Delivery Address',
@@ -99,91 +100,94 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 28),
           child: Form(
             key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                CustomTextField(
-                  controller: _countryController,
-                  hintText: 'Country',
-                  validator: (value) =>
-                  value!.isEmpty ? 'Please enter your country' : null,
-                ),
-                SizedBox(height: 20),
-                CustomTextField(
-                  hintText: 'City',
-                  controller: _cityController,
-                  validator: (value) =>
-                  value!.isEmpty ? 'Please enter your city' : null,
-                ),
-                SizedBox(height: 20),
-                CustomTextField(
-                  hintText: 'Street',
-                  controller: _streetController,
-                  validator: (value) =>
-                  value!.isEmpty ? 'Please enter your street' : null,
-                ),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        hintText: 'House',
-                        controller: _houseController,
-                        validator: (value) =>
-                        value!.isEmpty ? 'Required' : null,
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20),
+                  CustomTextField(
+                    controller: _countryController,
+                    hintText: 'Country',
+                    validator: (value) =>
+                    value!.isEmpty ? 'Please enter your country' : null,
+                  ),
+                  SizedBox(height: 20),
+                  CustomTextField(
+                    hintText: 'City',
+                    controller: _cityController,
+                    validator: (value) =>
+                    value!.isEmpty ? 'Please enter your city' : null,
+                  ),
+                  SizedBox(height: 20),
+                  CustomTextField(
+                    hintText: 'Street',
+                    controller: _streetController,
+                    validator: (value) =>
+                    value!.isEmpty ? 'Please enter your street' : null,
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          hintText: 'House',
+                          controller: _houseController,
+                          validator: (value) =>
+                          value!.isEmpty ? 'Required' : null,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: CustomTextField(
-                        hintText: 'Apartment',
-                        controller: _apartmentController,
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: CustomTextField(
+                          hintText: 'Apartment',
+                          controller: _apartmentController,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        hintText: 'Entrance',
-                        controller: _entranceController,
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          hintText: 'Entrance',
+                          controller: _entranceController,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: CustomTextField(
-                        hintText: 'Index',
-                        controller: _indexController,
-                        validator: (value) =>
-                        value!.isEmpty ? 'Please enter your index' : null,
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: CustomTextField(
+                          hintText: 'Index',
+                          controller: _indexController,
+                          validator: (value) =>
+                          value!.isEmpty ? 'Please enter your index' : null,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Center(
-                  child: TextButton.icon(
-                    onPressed: () {
-                      // Auto-fill logic here
-                    },
-                    icon: Icon(Icons.location_on, color: purpleColor1),
-                    label: CustomText(
-                      text: 'Fill automatically',
-                      fontSize: 16,
-                      color: purpleColor1,
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: TextButton.icon(
+                      onPressed: () {
+                        // Auto-fill logic here
+                      },
+                      icon: Icon(Icons.location_on, color: purpleColor1),
+                      label: CustomText(
+                        text: 'Fill automatically',
+                        fontSize: 16,
+                        color: purpleColor1,
+                      ),
                     ),
                   ),
-                ),
-                Spacer(),
-                CustomGradientButton(
-                  text: 'Continue',
-                  onPressed: _continueToNextScreen,
-                ),
-                SizedBox(height: 20),
-              ],
+                  Spacer(),
+                  CustomGradientButton(
+                    text: 'Continue',
+                    onPressed: _continueToNextScreen,
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         ),
