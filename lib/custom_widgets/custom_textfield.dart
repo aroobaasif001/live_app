@@ -2,26 +2,32 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
-  final Widget? suffixIcon;
+  final TextEditingController? controller;
+  final bool isPassword;
   final bool obscureText;
+  final String? Function(String?)? validator;
+  final Widget? suffixIcon;
 
   const CustomTextField({
     super.key,
     required this.hintText,
-    this.suffixIcon, this.obscureText = false,
+    this.controller,
+    this.isPassword = false,
+    this.obscureText = false,
+    this.validator, this.suffixIcon,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 45,
-      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+      height: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10), // ✅ Rounded edges
+        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05), // ✅ Soft shadow effect
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             spreadRadius: 2,
             offset: const Offset(0, 3),
@@ -29,7 +35,9 @@ class CustomTextField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
+        controller: controller,
         obscureText: obscureText,
+        validator: validator,
         decoration: InputDecoration(
           border: InputBorder.none, // ✅ No visible borders
           hintText: hintText,
@@ -38,7 +46,7 @@ class CustomTextField extends StatelessWidget {
             color: Colors.grey, // ✅ Matches label color
             fontSize: 16,
           ),
-          suffixIcon: suffixIcon,
+          suffixIcon: suffixIcon, // ✅ No suffix icon for non-password fields
         ),
       ),
     );
