@@ -5,6 +5,7 @@ import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/custom_widgets/custom_textfield.dart';
 import 'package:live_app/utils/icons_path.dart';
+import 'package:live_app/view/auth/delivery_address_screen.dart';
 
 class RegistrationScreen extends StatelessWidget {
   const RegistrationScreen({super.key});
@@ -127,7 +128,7 @@ class RegistrationScreen extends StatelessWidget {
               CustomGradientButton(
                 text: 'Continue',
                 onPressed: () {
-                  // Continue action
+                  Get.to(()=> DeliveryAddressScreen());
                 },
               ),
             ],
