@@ -6,6 +6,7 @@ import 'package:live_app/view/auth/socials_login_screen.dart';
 import 'package:live_app/view/market/market_screen.dart';
 import 'package:live_app/view/profile_views/profile_screen.dart';
 import 'firebase_options.dart';
+import 'view/homeScreen/homeMainScreen/home_main_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
