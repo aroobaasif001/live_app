@@ -1,5 +1,6 @@
 const String backgroundImage = 'assets/images/background.png';
 const String backgroundScaffoldImage = 'assets/images/background_scaffold.png';
+const String backgroundProfileScaffoldImage = 'assets/images/profile_screen_background_image.png';
 
 const String clothImage = 'assets/images/cloth.png';
 const String shoesImage = 'assets/images/shose.png';
