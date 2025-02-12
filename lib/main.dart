@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
 import 'firebase_options.dart';
+import 'view/homeScreen/homeMainScreen/home_main_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Live App",
-      home: const SocialsLoginScreen(),
+      home:  HomeMainScreen(),
     );
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/view/homeScreen/widgets/show_user_agrement_bottom.dart';
 import 'package:live_app/view/homeScreen/widgets/show_winner_pop_up.dart';
+import '../../../../custom_widgets/custom_text.dart';
+import '../../widgets/show_bet_bottom_sheet.dart';
 import '../../widgets/show_custom_bottom_sheet.dart';
 import '../../widgets/view_note_popup.dart';
 
@@ -34,21 +37,62 @@ class LiveShoppingScreen extends StatelessWidget {
                 Row(
                   children: [
                     GestureDetector(
-                      onTap: (){
-                           showCustomBottomSheet(context,
-                companyName: "Apple Inc.",
-                rating: 4.7,
-                profileIcon: Icons.apple,
-                actions: [
-                  {"icon": 'assets/icons/reward.png', "text": "Reward"},
-                  {"icon": 'assets/icons/profile1.png', "text": "View profile"},
-                  {"icon": 'assets/icons/message.png', "text": "Message"},
-                  {"icon": 'assets/icons/chat.png', "text": "Mention in chat"},
-                  {"icon": 'assets/icons/block.png', "text": "Block"},
-                  {"icon": 'assets/icons/report.png', "text": "Report abuse"},
-                ]);
-                      },
-                      child: Image.asset('assets/icons/apple1.png', height: 30)),
+                        onTap: () {
+                          showCustomBottomSheet(
+                            context,
+                            companyName: "Apple Inc.",
+                            rating: 4.7,
+                            profileIcon: Icons.apple,
+                            actions: [
+                              {
+                                "icon": 'assets/icons/reward.png',
+                                "text": "Reward",
+                                "onTap": () {
+                                   Get.back();
+                                  showSendRewardBottomSheet(context);
+                                 
+                                }
+                              },
+                              {
+                                "icon": 'assets/icons/profile1.png',
+                                "text": "View profile",
+                                "onTap": () {
+                                  print("View Profile Clicked");
+                                }
+                              },
+                              {
+                                "icon": 'assets/icons/message.png',
+                                "text": "Message",
+                                "onTap": () {
+                                  print("Message Clicked");
+                                }
+                              },
+                              {
+                                "icon": 'assets/icons/chat.png',
+                                "text": "Mention in chat",
+                                "onTap": () {
+                                  print("Mention in Chat Clicked");
+                                }
+                              },
+                              {
+                                "icon": 'assets/icons/block.png',
+                                "text": "Block",
+                                "onTap": () {
+                                  print("User Blocked");
+                                }
+                              },
+                              {
+                                "icon": 'assets/icons/report.png',
+                                "text": "Report abuse",
+                                "onTap": () {
+                                  print("Report Abuse Clicked");
+                                }
+                              },
+                            ],
+                          );
+                        },
+                        child:
+                            Image.asset('assets/icons/apple1.png', height: 30)),
                     SizedBox(width: 5),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +277,7 @@ class LiveShoppingScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: 20,
+            bottom: 15,
             left: 15,
             right: 15,
             child: Column(
@@ -244,13 +288,21 @@ class LiveShoppingScreen extends StatelessWidget {
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 16)),
-                Text("Delivery & Payment",
-                    style: TextStyle(color: Colors.white70, fontSize: 12)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Delivery & Payment",
+                        style: TextStyle(color: Colors.white70, fontSize: 12)),
+                         CustomText(text: '1000',fontFamily: 'Gilroy-Bold',fontSize: 18,color: Colors.white,)
+                  ],
+                ),
                 SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showBetBottomSheet(context);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white.withOpacity(0.2),
                       shape: RoundedRectangleBorder(
