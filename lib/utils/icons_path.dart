@@ -5,3 +5,5 @@ const String eyeCloseIcon = 'assets/icons/eye_close.png';
 const String messageIcon = 'assets/icons/message.png';
 const String tipsIcon = 'assets/icons/tips.png';
 const String tuneIcon = 'assets/icons/tune.png';
+const String crownIcon = 'assets/icons/crown_icon.png';
+const String userGroupIcon = 'assets/icons/Users_Group_Rounded_icon.png';

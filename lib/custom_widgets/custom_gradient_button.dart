@@ -4,20 +4,20 @@ import '../utils/colors.dart';
 
 class CustomGradientButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final void Function()? onPressed;
   final double width;
   final double height;
-  final double fontSize;
   final double borderRadius;
+  final double fontSize;
 
   const CustomGradientButton({
     super.key,
     required this.text,
-    required this.onPressed,
-    this.width = 311,
+    this.onPressed,
+    this.width = double.infinity,
     this.height = 52,
-    this.fontSize = 16,
     this.borderRadius = 10,
+    this.fontSize=16
   });
 
   @override
@@ -39,10 +39,12 @@ class CustomGradientButton extends StatelessWidget {
           child: Center(
             child: Text(
               text,
-              style: TextStyle(
+              style:  TextStyle(
                 color: Colors.white,
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
+
+
               ),
             ),
           ),
