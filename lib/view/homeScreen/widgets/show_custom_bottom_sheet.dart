@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
+import 'package:live_app/view/homeScreen/homeMainScreen/liveShoppingScreens/supportSellerScreen/support_seller_screen.dart';
 import 'package:live_app/view/homeScreen/paymentMethodScreen/reward_screen.dart';
 import 'package:live_app/view/homeScreen/widgets/show_payment_bottom_sheet.dart';
 
@@ -303,7 +304,9 @@ void showSendRewardBottomSheet(BuildContext context) {
                       child: CustomGradientButton(
                         text: "Continue",
                         onPressed: () {
-                          _showSubscribeBottomSheet(context);
+                          Get.to(()=>SupportSellerScreen());
+                         // _showSubscribeBottomSheet(context);
+
                         },
                         fontSize: screenWidth * 0.045,
                       ),
