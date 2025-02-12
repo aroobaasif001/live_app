@@ -7,6 +7,7 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
 
   const CustomTextField({
     super.key,
@@ -14,7 +15,7 @@ class CustomTextField extends StatelessWidget {
     this.controller,
     this.isPassword = false,
     this.obscureText = false,
-    this.validator, this.suffixIcon,
+    this.validator, this.suffixIcon,this.prefixIcon,
   });
 
   @override
@@ -47,6 +48,7 @@ class CustomTextField extends StatelessWidget {
             fontSize: 16,
           ),
           suffixIcon: suffixIcon, // ✅ No suffix icon for non-password fields
+          prefixIcon: prefixIcon, // ✅ No suffix icon for non-password fields
         ),
       ),
     );

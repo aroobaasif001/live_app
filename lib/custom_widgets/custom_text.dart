@@ -28,7 +28,7 @@ class CustomText extends StatelessWidget {
     this.overflow,
     this.height,
     this.wordSpacing,
-    this.fontFamily = "MontserratAlternates",
+    this.fontFamily = "Gilroy-Bold",
   });
 
   @override

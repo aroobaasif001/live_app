@@ -44,7 +44,7 @@ class CustomGradientButton extends StatelessWidget {
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
 
-                
+
               ),
             ),
           ),
