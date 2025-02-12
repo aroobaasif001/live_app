@@ -3,6 +3,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
+import 'package:live_app/view/market/market_screen.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Live App",
-      home: const SocialsLoginScreen(),
+      home: MarketScreen(),
     );
   }
 }

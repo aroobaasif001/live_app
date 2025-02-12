@@ -7,6 +7,7 @@ class CustomGradientButton extends StatelessWidget {
   final VoidCallback onPressed;
   final double width;
   final double height;
+  final double fontSize;
   final double borderRadius;
 
   const CustomGradientButton({
@@ -15,6 +16,7 @@ class CustomGradientButton extends StatelessWidget {
     required this.onPressed,
     this.width = 311,
     this.height = 52,
+    this.fontSize = 16,
     this.borderRadius = 10,
   });
 
@@ -37,9 +39,9 @@ class CustomGradientButton extends StatelessWidget {
           child: Center(
             child: Text(
               text,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: fontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),

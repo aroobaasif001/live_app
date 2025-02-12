@@ -17,3 +17,6 @@ const String pirseImage = 'assets/images/pirse.png';
 const String tireImage = 'assets/images/tire.png';
 const String watchImage = 'assets/images/watch.png';
 const String notificationImage = 'assets/images/notificationImage.png';
+const String marketImage = 'assets/images/marketImage.png';
+const String circleAppleImage = 'assets/images/circle_apple_image.png';
+const String circleButtonImage = 'assets/images/circle_button.png';
