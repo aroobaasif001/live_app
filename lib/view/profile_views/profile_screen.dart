@@ -7,10 +7,11 @@ import 'package:live_app/custom_widgets/custom_profile_background_scaffold.dart'
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/view/profile_views/my_rewards_screen.dart';
 import 'package:live_app/view/profile_views/settings_screen.dart';
-import 'package:live_app/view/profile_views/trade_profile_screen.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
-import 'notifications_settings_screen.dart';
+import 'edit_trade_profile.dart';
+import 'my_products_screen.dart';
+
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -224,7 +225,10 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         onTap: () {
                          // Get.to(()=> NotificationSettingsScreen());
-                         Get.to(()=> TradeProfileScreen());
+                         // Get.to(()=> SettingsScreen());
+                         // Get.to(()=> EditTradeProfile());
+                         Get.to(()=> MyProductsScreen());
+                         // Get.to(()=> TradeProfileScreen());
                         },
                       );
                     },
