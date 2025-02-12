@@ -1,5 +1,6 @@
 const String backgroundImage = 'assets/images/background.png';
 const String backgroundScaffoldImage = 'assets/images/background_scaffold.png';
+const String backgroundProfileScaffoldImage = 'assets/images/profile_screen_background_image.png';
 
 const String clothImage = 'assets/images/cloth.png';
 const String shoesImage = 'assets/images/shose.png';
@@ -16,4 +17,12 @@ const String manImage = 'assets/images/man.png';
 const String pirseImage = 'assets/images/pirse.png';
 const String tireImage = 'assets/images/tire.png';
 const String watchImage = 'assets/images/watch.png';
+const String profileImage = 'assets/images/profile_image.png';
+const String profileAdvertisementImage = 'assets/images/profile_advertisement_image.png';
 const String notificationImage = 'assets/images/notificationImage.png';
+const String bronzeAwardImage = 'assets/images/bronze_award.png';
+const String silverAwardImage = 'assets/images/silver_award.png';
+const String goldAwardImage = 'assets/images/gold_award.png';
+const String diamondAwardImage = 'assets/images/diamond_award.png';
+const String platinumAwardImage = 'assets/images/platinum_award.png';
+const String companyProfileBackgroundImage = 'assets/images/compnay_profile_background.png';

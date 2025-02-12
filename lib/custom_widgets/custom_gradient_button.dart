@@ -4,7 +4,7 @@ import '../utils/colors.dart';
 
 class CustomGradientButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final void Function()? onPressed;
   final double width;
   final double height;
   final double borderRadius;
@@ -13,8 +13,8 @@ class CustomGradientButton extends StatelessWidget {
   const CustomGradientButton({
     super.key,
     required this.text,
-    required this.onPressed,
-    this.width = 311,
+    this.onPressed,
+    this.width = double.infinity,
     this.height = 52,
     this.borderRadius = 10,
     this.fontSize=16
