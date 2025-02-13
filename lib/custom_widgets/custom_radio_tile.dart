@@ -5,12 +5,15 @@ class CustomRadioTile extends StatelessWidget {
   final String title;
   final String selectedOption;
   final Function(String) onChanged;
+  final String? imagePath;
+
 
   const CustomRadioTile({
     super.key,
     required this.title,
     required this.selectedOption,
     required this.onChanged,
+    this.imagePath,
   });
 
   @override
@@ -18,9 +21,16 @@ class CustomRadioTile extends StatelessWidget {
     return Column(
       children: [
         ListTile(
+          onTap: () => onChanged(title),
+          leading: imagePath != null
+              ? Image.asset(
+            imagePath!,
+            width: 40,
+            height: 40,
+          )
+              : SizedBox.shrink(),
           title: CustomText(text: title),
           trailing: GestureDetector(
-            onTap: () => onChanged(title),
             child: Container(
               width: 24,
               height: 24,
