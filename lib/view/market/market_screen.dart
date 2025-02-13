@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/custom_widgets/custom_icon_button.dart';
+import 'package:live_app/custom_widgets/custom_review.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/utils/images_path.dart';
+import 'package:live_app/view/market/tabs/clips_screen.dart';
 import 'package:live_app/view/market/tabs/for_you_screen.dart';
+import 'package:live_app/view/market/tabs/reviews_screen.dart';
 import 'package:readmore/readmore.dart';
 import '../../utils/colors.dart';
 import '../../utils/icons_path.dart';
@@ -16,6 +19,11 @@ class MarketScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+// Get the screen width and height for responsive adjustments
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
 
     return DefaultTabController(
       length: 5,
@@ -109,13 +117,13 @@ class MarketScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    _buildStatItem('4.7', 'Rating'),
+                                    CustomReview(value: '4.7',label: 'Rating',iconPath: startIcon),
                                     VerticalDivider(color: conLineColor),
-                                    _buildStatItem('33.8K', 'Reviews'),
+                                    CustomReview(value: '33.8K',label: 'Reviews'),
                                     VerticalDivider(color: conLineColor),
-                                    _buildStatItem('169.7K', 'Sold'),
+                                    CustomReview(value: '169.7K',label: 'Sold'),
                                     VerticalDivider(color: conLineColor),
-                                    _buildStatItem('+2d', 'Delivery'),
+                                    CustomReview(value: '+-2d',label: 'Delivery'),
                                   ],
                                 ),
                               ),
@@ -193,22 +201,22 @@ class MarketScreen extends StatelessWidget {
                               Tab(text: "Streams"),
                               Tab(text: "Reviews"),
                               Tab(text: "Clips"),
-                              Tab(text: "Past"),
+                              Tab(text: "Past Streams"),
                             ],
                           ),
-
+                          SizedBox(height: 20),
                         ],
                       ),
                     ),
                   ],
                 ),
                 CustomContainer(
-                  height: Get.height,
+                  height: screenHeight,
                   child: TabBarView(children: [
                     ForYouScreen(),
                     CustomText(text: "Streams"),
-                    CustomText(text: "Reviews"),
-                    CustomText(text: "Clips"),
+                    ReviewsScreen(),
+                    ClipsScreen(),
                     CustomText(text: "Past"),
                   ]),
                 )
@@ -216,25 +224,39 @@ class MarketScreen extends StatelessWidget {
             ),
           ),
         ),
+        floatingActionButton: CustomContainer(
+          height: 50,
+          width: 120,
+          borderRadius: BorderRadius.circular(100),
+          conColor: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: greyColor,
+              blurRadius: 5,
+              offset: Offset(-1, 3)
+            )
+          ],
+          child: Center(
+            child: CustomContainer(
+              height: 44,
+              width: 111,
+              borderRadius: BorderRadius.circular(100),
+              gradient: primaryGradientColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                   CustomContainer(
+                     height: 24,
+                     width: 24,
+                     image: DecorationImage(image: AssetImage(storeIcon)),
+                   ),
+                   CustomText(text: '1000 ₽',color: Colors.white)
+                 ],
+              ),
+            ),
+          ),
+        ),
       ),
-    );
-  }
-
-  Widget _buildStatItem(String value, String label) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CustomText(
-          text: value,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-        CustomText(
-          text: label,
-          fontSize: 14,
-          color: Colors.grey,
-        ),
-      ],
     );
   }
 }

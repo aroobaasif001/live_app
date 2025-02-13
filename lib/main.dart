@@ -41,7 +41,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Live App",
       home:  BottomNavigationBarWidget()
-
     );
   }
 }

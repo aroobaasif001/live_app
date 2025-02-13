@@ -109,3 +109,4 @@ flutter:
     - family: SFProRounded
       fonts:
         - asset: assets/fonts/SF-Pro-Rounded-Regular.ttf
+          weight: 700
