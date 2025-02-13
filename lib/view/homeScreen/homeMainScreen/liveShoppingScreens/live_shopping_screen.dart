@@ -332,7 +332,7 @@ class LiveShoppingScreen extends StatelessWidget {
         children: [
           FloatingActionButton(
               mini: true,
-              backgroundColor: Colors.black54,
+              backgroundColor: Colors.transparent,
               onPressed: onTap,
               child: Image.asset(icon)),
           SizedBox(height: 4),
