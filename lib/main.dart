@@ -6,6 +6,7 @@ import 'package:live_app/view/auth/socials_login_screen.dart';
 import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import 'package:live_app/view/market/market_screen.dart';
 import 'package:live_app/view/profile_views/profile_screen.dart';
+import 'package:live_app/view/search_views/search_screen.dart';
 import 'firebase_options.dart';
 import 'view/homeScreen/homeMainScreen/home_main_screen.dart';
 
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Live App",
       home:  BottomNavigationBarWidget()
+
     );
   }
 }
