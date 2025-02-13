@@ -3,8 +3,10 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
+import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import 'package:live_app/view/market/market_screen.dart';
 import 'package:live_app/view/profile_views/profile_screen.dart';
+import 'package:live_app/view/search_views/search_screen.dart';
 import 'firebase_options.dart';
 import 'view/homeScreen/homeMainScreen/home_main_screen.dart';
 
@@ -38,37 +40,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Live App",
-      home: MarketScreen(),
+      home:  BottomNavigationBarWidget()
     );
   }
 }
 
-///
-
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get_navigation/src/root/get_material_app.dart';
-// import 'package:live_app/view/auth/socials_login_screen.dart';
-//
-// import 'firebase_options.dart';
-//
-// void main() async{
-//   WidgetsFlutterBinding.ensureInitialized();
-//
-//   await Firebase.initializeApp(
-//     options: DefaultFirebaseOptions.currentPlatform,
-//   );
-//   runApp(MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return GetMaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: SocialsLoginScreen()
-//     );
-//   }
-// }

@@ -1,10 +1,10 @@
+
+
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 
 // class CustomBottomNavBar extends StatelessWidget {
-//   final RxInt selectedIndex = 0.obs; // Default selected index
-
-//   // **List of image paths for the bottom navigation bar**
+//   final RxInt selectedIndex = 0.obs;
 //   final List<String> imagePaths = [
 //     'assets/icons/home.png',
 //     'assets/icons/search.png',
@@ -13,8 +13,7 @@
 //     'assets/icons/profile.png',
 //   ];
 
-//   final List<String> labels = ["Home", "search", "menu", "faviourite", "Profile"];
-
+//   final List<String> labels = ["Home", "Search", "Menu", "Faviourite", "Profile"];
 //   @override
 //   Widget build(BuildContext context) {
 //     return Obx(
@@ -37,6 +36,16 @@
 //                 decoration: BoxDecoration(
 //                   color: isSelected ? Colors.white : Colors.black,
 //                   borderRadius: BorderRadius.circular(25),
+//                   boxShadow: isSelected
+//                       ? []
+//                       : [
+//                           BoxShadow(
+//                             color: Colors.white.withOpacity(0.2),
+//                             blurRadius: 5,
+//                             spreadRadius: 1,
+//                             offset: Offset(0, 2), 
+//                           ),
+//                         ],
 //                 ),
 //                 child: Row(
 //                   children: [
@@ -66,14 +75,16 @@
 //       ),
 //     );
 //   }
-
 // }
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
-  final RxInt selectedIndex = 0.obs;
+  final RxInt selectedIndex;
+
+  CustomBottomNavBar({required this.selectedIndex});
+
   final List<String> imagePaths = [
     'assets/icons/home.png',
     'assets/icons/search.png',
@@ -82,7 +93,8 @@ class CustomBottomNavBar extends StatelessWidget {
     'assets/icons/profile.png',
   ];
 
-  final List<String> labels = ["Home", "Search", "Menu", "Faviourite", "Profile"];
+  final List<String> labels = ["Home", "Search", "Menu", "Activity", "Profile"];
+
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -112,7 +124,7 @@ class CustomBottomNavBar extends StatelessWidget {
                             color: Colors.white.withOpacity(0.2),
                             blurRadius: 5,
                             spreadRadius: 1,
-                            offset: Offset(0, 2), 
+                            offset: Offset(0, 2),
                           ),
                         ],
                 ),
@@ -124,7 +136,7 @@ class CustomBottomNavBar extends StatelessWidget {
                       width: 24,
                       color: isSelected ? Colors.black : Colors.white,
                     ),
-                    if (isSelected && labels[index] != "")
+                    if (isSelected)
                       Padding(
                         padding: EdgeInsets.only(left: 8),
                         child: Text(
@@ -145,4 +157,3 @@ class CustomBottomNavBar extends StatelessWidget {
     );
   }
 }
-

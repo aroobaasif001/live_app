@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
+
+import '../../../custom_widgets/custom_text.dart';
 
 void showPaymentBottomSheet(BuildContext context) {
   showModalBottomSheet(
@@ -17,6 +20,7 @@ void showPaymentBottomSheet(BuildContext context) {
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
@@ -29,7 +33,7 @@ void showPaymentBottomSheet(BuildContext context) {
             ),
             SizedBox(height: 10),
             Text("Add payment information",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                style: GoogleFonts.montserratAlternates(fontWeight: FontWeight.w700, fontSize: 16)),
             SizedBox(height: 15),
             TextField(
               decoration: InputDecoration(
@@ -387,25 +391,28 @@ void showPaymentInfoBottomSheet(BuildContext context) {
               ),
             ),
             SizedBox(height: 10),
-            Text(
+            CustomText(text:
               "To buy from lives, we need your payment and shipping information",
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+             fontWeight: FontWeight.w900, fontSize: 18,
+             fontFamily: 'SF Pro Rounded',
             ),
             SizedBox(height: 10),
-            Text(
+            CustomText(text: 
               "Welcome to Grab! To participate in auctions, you must provide a payment method and delivery address. All bids and purchases are final.",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.black87),
+              fontFamily: 'Gilroy-Bold',
+             fontSize: 14, color: Colors.black87,
             ),
             SizedBox(height: 10),
-            Text(
+            CustomText(text: 
               "You will not be charged until you purchase the item.",
               textAlign: TextAlign.center,
-              style: TextStyle(
+              
                   fontSize: 14,
-                  color: Colors.blueAccent,
-                  fontWeight: FontWeight.w500),
+                  color: Color(0xff815BFF),
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Gilroy-Bold',
             ),
             SizedBox(height: 20),
             CustomGradientButton(
@@ -450,30 +457,30 @@ void showInviteFriendBottomSheet(BuildContext context) {
             ),
             SizedBox(height: 10),
 
-            Text(
+            CustomText(text: 
+            
               "Friends in live",
+              fontFamily: 'Gilroy-Bold',
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              fontWeight: FontWeight.w400, fontSize: 16,
             ),
 
             SizedBox(height: 20),
-            Icon(
-              Icons.person_outline,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+           Image.asset('assets/icons/friend.png'),
 
             SizedBox(height: 10),
-            Text(
+            CustomText(text: 
               "There's no one yet!",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+             fontWeight: FontWeight.w900, fontSize: 20,
+             fontFamily: 'SF Pro Rounded',
             ),
 
             SizedBox(height: 5),
-            Text(
+            CustomText(text: 
               "None of your friends are on this air. When they join, you will see them here.",
+              fontFamily: 'Gilroy-Bold',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.black54),
+             fontSize: 14, color: Colors.black54,
             ),
 
             SizedBox(height: 20),

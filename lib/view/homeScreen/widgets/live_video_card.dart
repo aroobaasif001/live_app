@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:live_app/utils/images_path.dart';
+
+import '../../../custom_widgets/custom_text.dart';
+import '../../../utils/icons_path.dart';
 
 class LiveVideoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
+      
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -17,7 +21,7 @@ class LiveVideoCard extends StatelessWidget {
             children: [
               Image.asset('assets/icons/apple1.png'),
               SizedBox(width: 10,),
-              Text('company_name',style: TextStyle(fontFamily: 'SFProRounded',fontWeight: FontWeight.bold),)
+              CustomText(text:'company_name',fontFamily: 'Gilroy-Bold',fontWeight: FontWeight.w400,)
             ],
           ),
           SizedBox(height: 10,),
@@ -27,37 +31,38 @@ class LiveVideoCard extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                 child: Image.asset(
-                  "assets/images/live.png",
+                 liveImage,
                   width: double.infinity,
                 fit: BoxFit.contain,
                 ),
               ),
 
-              // Positioned(
-              //   top: 8,
-              //   left: 8,
-              //   child: Container(
-              //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              //     decoration: BoxDecoration(
-              //       color: Colors.red,
-              //       borderRadius: BorderRadius.circular(5),
-              //     ),
-              //     child: Text("Live • 86",
-              //         style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
-              //   ),
-              // ),
-              // Positioned(
-              //   top: 8,
-              //   right: 8,
-              //   child: Row(
-              //     children: [
-              //       Icon(Icons.remove_red_eye, size: 14, color: Colors.white),
-              //       SizedBox(width: 4),
-              //       Text("161",
-              //           style: TextStyle(color: Colors.white, fontSize: 12)),
-              //     ],
-              //   ),
-              // ),
+              Positioned(
+                top: 8,
+                left: 8,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Text("Live • 86",
+                      style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Column(
+                  children: [
+                    Icon(Icons.bookmark,color: Colors.white,),
+                  
+                    SizedBox(width: 4),
+                    Text("161",
+                        style: TextStyle(color: Colors.white, fontSize: 12)),
+                  ],
+                ),
+              ),
             ],
           ),
 
@@ -70,11 +75,12 @@ class LiveVideoCard extends StatelessWidget {
                 Row(
                   
                   children: [
-                     Image.asset('assets/icons/flag.png', height: 16, width: 16),
+                     Image.asset(flagIcon, height: 16, width: 16),
                     Flexible(
-                      child: Text(
+                      child: CustomText(text: 
                         "Lorem ipsum dolor sit amet consectetur adipiscing ",
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                       fontSize: 12, color: Color(0xff2a2a2a),
+                       fontFamily: 'Gilroy-Bold',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -83,8 +89,8 @@ class LiveVideoCard extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text('Lorem ipsum ',style: TextStyle(color: Color(0xff3438B7)),),
-                    Flexible(child: Text('Lorem ipsum ',style: TextStyle(color: Colors.grey)))
+                    CustomText(text:'Lorem ipsum ',color: Color(0xff3438B7),),
+                    Flexible(child: CustomText(text: 'Lorem ipsum ',color: Colors.grey,maxLines: 1,),)
                   ],
                 )
               ],

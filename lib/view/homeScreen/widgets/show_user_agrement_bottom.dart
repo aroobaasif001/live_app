@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 
+import '../../../custom_widgets/custom_text.dart';
+
 void showUserAgreementBottomSheet(BuildContext context) {
   showModalBottomSheet(
     context: context,
@@ -29,14 +31,14 @@ void showUserAgreementBottomSheet(BuildContext context) {
             SizedBox(height: 10),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(
+              child: CustomText(text: 
                 "Welcome to the first stream!",
-                style: TextStyle(
-                  fontFamily: 'SFProRounded',
+               
+                  fontFamily: 'SF Pro Rounded',
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
                   color: Color(0xff2a2a2a),
-                ),
+                
               ),
             ),
             SizedBox(height: 5),

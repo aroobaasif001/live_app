@@ -7,6 +7,7 @@ const String tipsIcon = 'assets/icons/tips.png';
 const String tuneIcon = 'assets/icons/tune.png';
 const String crownIcon = 'assets/icons/crown_icon.png';
 const String userGroupIcon = 'assets/icons/Users_Group_Rounded_icon.png';
+
 const String storeIcon = 'assets/icons/store.png';
 const String miniIcon = 'assets/icons/mini.png';
 const String checkWithCircleIcon = 'assets/icons/checkWithCircle.png';
@@ -20,3 +21,16 @@ const String payIcon2 = 'assets/icons/payIcon2.png';
 const String payIcon3 = 'assets/icons/payIcon3.png';
 const String payIcon4 = 'assets/icons/payIcon4.png';
 const String payIcon5 = 'assets/icons/payIcon5.png';
+
+const String wadeMoneyIcon = 'assets/icons/wadmoney.png';
+const String HeartIcon = 'assets/icons/Heart.png';
+const String mchatIcon = 'assets/icons/mchat.png';
+const String dollarIcon = 'assets/icons/dollarIcon.png';
+const String money = 'assets/icons/money.png';
+const String referfriendIcon = 'assets/icons/referfriend.png';
+const String flagIcon = 'assets/icons/flag.png';
+const String findfriendsIcon = 'assets/icons/findfriends.png';
+const String penIcon = 'assets/icons/pen.png';
+const String cameraIcon = 'assets/icons/camera.png';
+const String galleryIcon = 'assets/icons/Gallery.png';
+

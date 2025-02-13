@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../custom_widgets/custom_text.dart';
+
 class ViewNoteButton extends StatelessWidget {
   static void showNotePopup(BuildContext context) {
     OverlayState overlayState = Overlay.of(context);
@@ -45,7 +47,7 @@ class ViewNoteButton extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Container(
-                  child: Text(
+                  child: CustomText(text:
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
                     "Amet sapien fringilla, mattis ligula consectetur, ultrices mauris.\n\n"
                     "Maecenas vitae mattis tellus. Nullam quis imperdiet augue. "
@@ -53,7 +55,8 @@ class ViewNoteButton extends StatelessWidget {
                     "Sodales sodales. Quisque sagittis orci ut diam condimentum, "
                     "vel euismod erat placerat. In iaculis arcu eros, eget tempus orci facilisis id. "
                     "Praesent lorem orci, mattis non efficitur id, ultricies vel nibh. Sed.",
-                    style: TextStyle(fontSize: 14, height: 1.5),
+                   fontSize: 14, 
+                   fontFamily: 'Gilroy-Bold',
                   ),
                 ),
               ],

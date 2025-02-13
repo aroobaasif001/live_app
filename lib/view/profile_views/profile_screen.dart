@@ -5,12 +5,21 @@ import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_profile_background_scaffold.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
+import 'package:live_app/view/auth/notification_screen.dart';
+import 'package:live_app/view/homeScreen/paymentMethodScreen/reward_screen.dart';
 import 'package:live_app/view/profile_views/my_rewards_screen.dart';
 import 'package:live_app/view/profile_views/settings_screen.dart';
+import 'package:live_app/view/profile_views/statistic_screen.dart';
 import 'package:live_app/view/profile_views/trade_profile_screen.dart';
+import 'package:live_app/view/profile_views/wallet_screen.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
-import 'notifications_settings_screen.dart';
+import 'create_a_product_screen.dart';
+import 'create_streem_screen.dart';
+import 'edit_trade_profile.dart';
+import 'item_for_auction.dart';
+import 'my_products_screen.dart';
+
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -18,12 +27,12 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> settingsOptions = [
-      {"icon": Icons.payment, "title": "Payment and delivery"},
-      {"icon": Icons.location_on, "title": "Addresses"},
-      {"icon": Icons.notifications, "title": "Notifications"},
-      {"icon": Icons.email, "title": "Change E-Mail"},
-      {"icon": Icons.lock, "title": "Change password"},
-      {"icon": Icons.settings, "title": "Settings"},
+      {"icon": Icons.payment, "title": "Payment and delivery","screen" :SettingsScreen()},
+      {"icon": Icons.location_on, "title": "Addresses","screen" : SettingsScreen()},
+      {"icon": Icons.notifications, "title": "Notifications","screen" : NotificationScreen()},
+      {"icon": Icons.email, "title": "Change E-Mail","screen" :SettingsScreen()},
+      {"icon": Icons.lock, "title": "Change password","screen" : SettingsScreen()},
+      {"icon": Icons.settings, "title": "Settings","screen" : SettingsScreen()},
     ];
     return CustomProfileBackgroundScaffold(
       child: Scaffold(
@@ -164,11 +173,16 @@ class ProfileScreen extends StatelessWidget {
                                     height: 10,
                                   ),
                                   FittedBox(
-                                    child: CustomText(
-                                      text: "My Award",
-                                      fontFamily: "SF Pro Rounded",
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Get.to(()=>RewardsScreen());
+                                      },
+                                      child: CustomText(
+                                        text: "My Award",
+                                        fontFamily: "SF Pro Rounded",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
                                   CustomText(
@@ -223,8 +237,7 @@ class ProfileScreen extends StatelessWidget {
                           size: 28,
                         ),
                         onTap: () {
-                         // Get.to(()=> NotificationSettingsScreen());
-                         Get.to(()=> TradeProfileScreen());
+                          Get.to(settingsOptions[index]['screen']);
                         },
                       );
                     },
