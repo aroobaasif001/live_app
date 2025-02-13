@@ -32,4 +32,5 @@ const String companyProfileBackgroundImage = 'assets/images/compnay_profile_back
 const String liveImage = 'assets/images/live.png';
 const String applegImage = 'assets/images/appleg.png';
 
+const String watchVerticalImage = 'assets/images/watch_image.png';
 
