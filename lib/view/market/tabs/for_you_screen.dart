@@ -9,6 +9,8 @@ import 'package:live_app/custom_widgets/custom_textfield.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
+import 'package:live_app/view/market/tabs/fix_card_screen.dart';
+import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
 
 class ForYouScreen extends StatefulWidget {
   const ForYouScreen({super.key});
@@ -27,7 +29,6 @@ class _ForYouScreenState extends State<ForYouScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20),
           CustomTextField(
             prefixIcon: Icon(CupertinoIcons.search),
             hintText: 'Search',
@@ -131,7 +132,9 @@ class _ForYouScreenState extends State<ForYouScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CustomGradientButton(
-                                  height: 21, width: 31, fontSize: 10, text: 'Fix', onPressed: () {}),
+                                  height: 21, width: 31, fontSize: 10, text: 'Fix', onPressed: () {
+                                    Get.to(()=> FixCardScreen());
+                              }),
                               CustomContainer(
                                 height: 30,
                                 width: 45,
@@ -169,8 +172,10 @@ class _ForYouScreenState extends State<ForYouScreen> {
                             ),
                             SizedBox(height: 25),
                             CustomGradientButton(
-                              text: 'text',
-                              onPressed: () {},
+                              text: 'Add to Card',
+                              onPressed: () {
+                                Get.to(()=> ProductDetailScreen());
+                              },
                             ),
                           ],
                         ),
