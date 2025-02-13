@@ -16,7 +16,7 @@ const conLineColor = Color(0xffE9E9E9);
 const greyButtonColor = Color(0xffF2F2F2);
  Color viewColor = Color(0xff000000).withOpacity(0.5);
  Color buttonColor = Color(0xff007AFF).withOpacity(0.2);
-
+Color textColor=Color(0xff2A2A2A);
  LinearGradient primaryGradientColor = LinearGradient(
   colors: [blueLiteColor, purpleLiteColor,deepPurpleColor],
  );
