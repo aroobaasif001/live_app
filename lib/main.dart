@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Live App",
-      home: const SocialsLoginScreen(),
+      home: const ProfileScreen(),
     );
   }
 }
