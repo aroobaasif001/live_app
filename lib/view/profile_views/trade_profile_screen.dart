@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/utils/images_path.dart';
+import 'package:live_app/view/profile_views/edit_trade_profile.dart';
 import '../../custom_widgets/custom_text.dart';
 
 class TradeProfileScreen extends StatelessWidget {
@@ -32,15 +34,20 @@ class TradeProfileScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding:
-                  const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                   child: Column(
                     children: [
                       const SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children: [
                           Icon(Icons.arrow_back, color: Colors.white, size: 24),
-                          Icon(Icons.edit, color: Colors.white, size: 24),
+                          GestureDetector(
+                              onTap: () {
+                                Get.to(() => EditTradeProfile());
+                              },
+                              child: Icon(Icons.edit,
+                                  color: Colors.white, size: 24)),
                         ],
                       ),
                       const SizedBox(height: 50),
@@ -148,7 +155,8 @@ class TradeProfileScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: List.generate(bottomOptions.length, (index) {
-                  return optionTile(bottomOptions[index]["icon"], bottomOptions[index]["title"]);
+                  return optionTile(bottomOptions[index]["icon"],
+                      bottomOptions[index]["title"]);
                 }),
               ),
             ),
@@ -306,7 +314,6 @@ class TradeProfileScreen extends StatelessWidget {
     );
   }
 }
-
 
 ///
 

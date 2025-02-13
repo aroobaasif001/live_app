@@ -103,7 +103,7 @@ class _NotificationSettingsScreenState
   Widget buildCustomSwitchTile(
       String title, bool value, Function(bool) onChanged) {
     return ListTile(
-      title: CustomText(text: title, fontSize: 16,  fontFamily: "Gilroy-Bold",),
+      title: CustomText(text: title, fontSize: 15,  fontFamily: "Gilroy-Bold",),
       trailing: Switch(
         value: value,
         activeColor: Colors.green,
