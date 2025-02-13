@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:live_app/view/homeScreen/homeMainScreen/home_main_screen.dart';
 import '../../profile_views/profile_screen.dart';
+import '../activityScreen/activity_screen.dart';
 import '../bottomNaviagtionBar/custom_bottom_bar.dart';
 
 import '../widgets/category_tab.dart';
@@ -18,7 +19,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
     // FavScreen(), 
     Text('Menu'),
     Text('Menu'),
-    Text('Fav'),
+  ActivityScreen(),
     ProfileScreen(), 
   ];
 

@@ -93,7 +93,7 @@ class CustomBottomNavBar extends StatelessWidget {
     'assets/icons/profile.png',
   ];
 
-  final List<String> labels = ["Home", "Search", "Menu", "Favourite", "Profile"];
+  final List<String> labels = ["Home", "Search", "Menu", "Activity", "Profile"];
 
   @override
   Widget build(BuildContext context) {

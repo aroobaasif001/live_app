@@ -30,4 +30,6 @@ const String diamondAwardImage = 'assets/images/diamond_award.png';
 const String platinumAwardImage = 'assets/images/platinum_award.png';
 const String companyProfileBackgroundImage = 'assets/images/compnay_profile_background.png';
 const String liveImage = 'assets/images/live.png';
+const String applegImage = 'assets/images/appleg.png';
+
 

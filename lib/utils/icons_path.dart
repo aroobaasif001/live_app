@@ -14,3 +14,7 @@ const String dollarIcon = 'assets/icons/dollarIcon.png';
 const String money = 'assets/icons/money.png';
 const String referfriendIcon = 'assets/icons/referfriend.png';
 const String flagIcon = 'assets/icons/flag.png';
+const String findfriendsIcon = 'assets/icons/findfriends.png';
+const String penIcon = 'assets/icons/pen.png';
+const String cameraIcon = 'assets/icons/camera.png';
+const String galleryIcon = 'assets/icons/Gallery.png';
