@@ -7,9 +7,15 @@ import 'package:live_app/custom_widgets/custom_profile_background_scaffold.dart'
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/view/profile_views/my_rewards_screen.dart';
 import 'package:live_app/view/profile_views/settings_screen.dart';
+import 'package:live_app/view/profile_views/statistic_screen.dart';
+import 'package:live_app/view/profile_views/trade_profile_screen.dart';
+import 'package:live_app/view/profile_views/wallet_screen.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
+import 'create_a_product_screen.dart';
+import 'create_streem_screen.dart';
 import 'edit_trade_profile.dart';
+import 'item_for_auction.dart';
 import 'my_products_screen.dart';
 
 
@@ -227,7 +233,12 @@ class ProfileScreen extends StatelessWidget {
                          // Get.to(()=> NotificationSettingsScreen());
                          // Get.to(()=> SettingsScreen());
                          // Get.to(()=> EditTradeProfile());
-                         Get.to(()=> MyProductsScreen());
+                         // Get.to(()=> MyProductsScreen());
+                         // Get.to(()=> CreateProductScreen());
+                         // Get.to(()=> WalletScreen());
+                         // Get.to(()=> CreateStreamScreen());
+                         // Get.to(()=> ItemAuctionScreen());
+                         Get.to(()=> StatisticsScreen());
                          // Get.to(()=> TradeProfileScreen());
                         },
                       );
