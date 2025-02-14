@@ -10,6 +10,7 @@ import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/auth/notification_screen.dart';
+import 'package:live_app/view/auth/socials_login_screen.dart';
 import 'package:live_app/view/homeScreen/paymentMethodScreen/reward_screen.dart';
 import 'package:live_app/view/profile_views/my_rewards_screen.dart';
 import 'package:live_app/view/profile_views/settings_screen.dart';
@@ -480,7 +481,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onPressed: () async {
                         await FirebaseAuth.instance.signOut();
                         Get.back(); // Close dialog
-                        Get.offAllNamed('/login'); // Navigate to login screen
+                        Get.offAll(()=>SocialsLoginScreen()); // Navigate to login screen
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,

@@ -17,8 +17,8 @@ class RegistrationEntity {
   final String? apartment;
   final String? entrance;
   final String? index;
-  final List<String>? interests;  // ✅ General interest categories (e.g., Shoes, Electronics)
-  final List<String>? detailedInterests;  // ✅ New field for subcategories (e.g., Sneakers, Makeup)
+  final List<String>? interests;
+  final List<String>? detailedInterests;
 
   RegistrationEntity({
     this.regId,
