@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
 import 'package:live_app/view/auth/verification_screen.dart';
@@ -38,10 +39,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Live App",
-      home: SocialsLoginScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(430, 900),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, child) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Live App',
+
+
+          home: SocialsLoginScreen(),
+
+        );
+      },
     );
   }
 }
