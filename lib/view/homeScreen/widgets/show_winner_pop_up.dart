@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'show_custom_bottom_sheet.dart';
+
 void showWinnerPopup(BuildContext context, String winnerName) {
   showDialog(
     context: context,
@@ -26,20 +28,25 @@ void showWinnerPopup(BuildContext context, String winnerName) {
                 ),
               ),
               SizedBox(height: 15),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2), 
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Center(
-                  child: Text(
-                    winnerName,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              GestureDetector(
+                onTap: (){
+                  showSubscribeBottomSheet(context);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2), 
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Text(
+                      winnerName,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
+import 'package:live_app/utils/images_path.dart';
 
 import '../../../custom_widgets/custom_text.dart';
+import 'show_custom_bottom_sheet.dart';
 
 void showPaymentBottomSheet(BuildContext context) {
   showModalBottomSheet(
@@ -492,32 +494,32 @@ void showInviteFriendBottomSheet(BuildContext context) {
                     friends: [
                       {
                         "name": "nickname25",
-                        "image": "assets/icons/pr1.png",
+                        "image": applegImage,
                         "status": "on_broadcast"
                       },
                       {
                         "name": "nickname25",
-                        "image": "assets/icons/pr1.png",
+                        "image": applegImage,
                         "status": "invite"
                       },
                       {
                         "name": "nickname25",
-                        "image": "assets/icons/pr1.png",
+                        "image": applegImage,
                         "status": "invite"
                       },
                       {
                         "name": "nickname25",
-                        "image": "assets/icons/pr1.png",
+                        "image": applegImage,
                         "status": "invite"
                       },
                       {
                         "name": "nickname25",
-                        "image": "assets/icons/pr1.png",
+                        "image": applegImage,
                         "status": "invite"
                       },
                       {
                         "name": "nickname25",
-                        "image": "assets/icons/pr1.png",
+                        "image": applegImage,
                         "status": "disabled"
                       },
                     ],
@@ -572,10 +574,13 @@ void showFriendsInLiveBottomSheet(BuildContext context,
 
             // Friends List
             ListView.builder(
+              
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: friends.length,
+              
               itemBuilder: (context, index) {
+                
                 return _buildFriendItem(
                   name: friends[index]["name"]!,
                   image: friends[index]["image"]!,
@@ -592,7 +597,6 @@ void showFriendsInLiveBottomSheet(BuildContext context,
   );
 }
 
-// **Reusable Friend Item**
 Widget _buildFriendItem(
     {required String name, required String image, required String status}) {
   return Padding(
@@ -641,7 +645,9 @@ Widget _buildInviteButton(String text) {
   return SizedBox(
     width: 80,
     height: 35,
-    child: CustomGradientButton(text: 'Invite', onPressed: (){}));
+    child: CustomGradientButton(text: 'Invite', onPressed: (){
+      
+    }));
 }
 
 // **Reusable Status Tag**

@@ -324,7 +324,7 @@ void showSendRewardBottomSheet(BuildContext context) {
   );
 }
 
-void _showSubscribeBottomSheet(BuildContext context) {
+void showSubscribeBottomSheet(BuildContext context) {
   showModalBottomSheet(
     context: context,
     shape: RoundedRectangleBorder(
