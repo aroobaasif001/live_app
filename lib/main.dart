@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Live App",
 
-      home:  SearchScreen(),
+      home:  SocialsLoginScreen(),
 
     );
   }
