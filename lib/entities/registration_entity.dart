@@ -19,6 +19,8 @@ class RegistrationEntity {
   final String? index;
   final List<String>? interests;
   final List<String>? detailedInterests;
+    final String? image; 
+  final String? coverImage;
 
   RegistrationEntity({
     this.regId,
@@ -34,7 +36,9 @@ class RegistrationEntity {
     this.entrance,
     this.index,
     this.interests,
-    this.detailedInterests,  // ✅ Include in constructor
+    this.detailedInterests,
+    this.image , 
+    this.coverImage
   });
 
   factory RegistrationEntity.fromJson(Map<String, dynamic> json) =>
