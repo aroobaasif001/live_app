@@ -20,3 +20,6 @@ Color textColor=Color(0xff2A2A2A);
  LinearGradient primaryGradientColor = LinearGradient(
   colors: [blueLiteColor, purpleLiteColor,deepPurpleColor],
  );
+  LinearGradient secondaryGradientColor = LinearGradient(
+  colors: [greyLiteColor, greyLiteColor,greyLiteColor],
+ );

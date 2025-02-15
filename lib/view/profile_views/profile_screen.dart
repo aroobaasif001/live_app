@@ -153,7 +153,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: 110,
                                 text: "Trade Profile",
                                 onPressed: () {
-                                  Get.to(() => TradeProfileScreen());
+                                  Get.to(() => TradeProfileScreen(
+                                    //userId: FirebaseAuth.instance.currentUser!.uid,
+                                    ));
                                 },
                               )
                             ],

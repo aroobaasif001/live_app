@@ -1,5 +1,7 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:live_app/view/profile_views/create_a_product_screen.dart';
 
 import '../../custom_widgets/custom_container.dart';
 import '../../custom_widgets/custom_gradient_button.dart';
@@ -120,7 +122,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         // Floating Action Button
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.purpleAccent,
-          onPressed: () {},
+          onPressed: () {
+            Get.to(()=>CreateProductScreen());
+          },
           child: const Icon(Icons.add, size: 28, color: Colors.white),
         ),
       ),
