@@ -49,8 +49,3 @@ class TradeProfileEntity {
         );
   }
 }
-
-
-
-
-

@@ -154,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 text: "Trade Profile",
                                 onPressed: () {
                                   Get.to(() => TradeProfileScreen(
-                                    //userId: FirebaseAuth.instance.currentUser!.uid,
+                                    userId: FirebaseAuth.instance.currentUser!.uid,
                                     ));
                                 },
                               )
@@ -178,6 +178,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
+                      TextButton(onPressed: (){
+                       // Get.to(()=>LivePreviewScreen(name: snapshot.data!.data()!.firstName.toString(), photo: 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
+                      }, child: Text('Start Live')),
+
+                      TextButton(onPressed: (){
+                      //  Get.to(()=>LiveStreamViewScreen());
+                      }, child: Text('Current Lives')),
                       SizedBox(
                         height: 12,
                       ),
