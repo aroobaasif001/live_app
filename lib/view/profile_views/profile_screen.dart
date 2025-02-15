@@ -10,7 +10,10 @@ import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/auth/notification_screen.dart';
+import 'package:live_app/view/auth/socials_login_screen.dart';
 import 'package:live_app/view/homeScreen/paymentMethodScreen/reward_screen.dart';
+import 'package:live_app/view/livestreaming/live_preview.dart';
+import 'package:live_app/view/livestreaming/livestreamingview_screen.dart';
 import 'package:live_app/view/profile_views/my_rewards_screen.dart';
 import 'package:live_app/view/profile_views/settings_screen.dart';
 import 'package:live_app/view/profile_views/trade_profile_screen.dart';
@@ -175,6 +178,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
+                      TextButton(onPressed: (){
+                        Get.to(()=>LivePreviewScreen(name: snapshot.data!.data()!.firstName.toString(), photo: 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
+                      }, child: Text('Start Live')),
+
+                      TextButton(onPressed: (){
+                        Get.to(()=>LiveStreamViewScreen());
+                      }, child: Text('Current Lives')),
                       SizedBox(
                         height: 12,
                       ),
@@ -480,7 +490,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onPressed: () async {
                         await FirebaseAuth.instance.signOut();
                         Get.back(); // Close dialog
-                        Get.offAllNamed('/login'); // Navigate to login screen
+                        Get.offAll(()=>SocialsLoginScreen()); // Navigate to login screen
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,

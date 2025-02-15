@@ -5,7 +5,8 @@ import 'package:live_app/custom_widgets/custom_table.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/utils/icons_path.dart';
-import 'package:live_app/view/market/tabs/product_detail/tabs/bid_screen.dart';
+
+import 'bid_screen.dart';
 
 class AboutTheProductScreen extends StatelessWidget {
   const AboutTheProductScreen({super.key});
