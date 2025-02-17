@@ -420,9 +420,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
           products =
               products.where((product) => product.saleType == "Auction").toList();
         } else if (filter == "Active") {
-         products = products.where((product) => !product.selfDestruct).toList();
+         products = products.where((product) => product.isActive && !product.isSold).toList();
         } else if (filter == "Sold") {
-          products = products.where((product) => product.selfDestruct).toList();
+          products = products.where((product) => product.isSold).toList();
         }
 
         return ListView.builder(
@@ -435,72 +435,169 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     );
   }
 
+  // Widget buildProductItem(Product product) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 5),
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Stack(
+  //           children: [
+  //             CustomContainer(
+  //               height: 135,
+  //               width: 135,
+  //               borderRadius: BorderRadius.circular(8),
+  //               image: DecorationImage(
+  //                 image: NetworkImage(product.images![0]),
+  //                 fit: BoxFit.cover,
+  //               ),
+  //             ),
+  //             Positioned(
+  //               top: 6,
+  //               left: 6,
+  //               child: CustomContainer(
+  //                 height: 20,
+  //                 padding: EdgeInsets.symmetric(horizontal: 6),
+  //                 borderRadius: BorderRadius.circular(6),
+  //                 gradient: LinearGradient(
+  //                   colors: [Colors.blue, Colors.pinkAccent],
+  //                   begin: Alignment.topLeft,
+  //                   end: Alignment.bottomRight,
+  //                 ),
+  //                 child: CustomText(
+  //                   text: product.saleType == "Auction" ? "Auction" : "Buy Now",
+  //                   fontSize: 10,
+  //                   color: Colors.white,
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+
+  //         const SizedBox(width: 12),
+
+  //         Expanded(
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               CustomText(
+  //                 text: product.title,
+  //                 fontWeight: FontWeight.bold,
+  //                 fontSize: 16,
+  //               ),
+  //               CustomText(
+  //                 text: product.description,
+  //                 fontSize: 14,
+  //                 color: Colors.grey,
+  //               ),
+  //               CustomText(
+  //                 text: "${product.price} ₽",
+  //                 fontWeight: FontWeight.bold,
+  //                 fontSize: 16,
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget buildProductItem(Product product) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              CustomContainer(
-                height: 135,
-                width: 135,
-                borderRadius: BorderRadius.circular(8),
-                image: DecorationImage(
-                  image: NetworkImage(product.images![0]),
-                  fit: BoxFit.cover,
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 5),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Stack(
+          children: [
+            CustomContainer(
+              height: 135,
+              width: 135,
+              borderRadius: BorderRadius.circular(8),
+              image: DecorationImage(
+                image: NetworkImage(product.images != null && product.images!.isNotEmpty
+                    ? product.images![0]
+                    : 'https://via.placeholder.com/150'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned(
+              top: 6,
+              left: 6,
+              child: CustomContainer(
+                height: 20,
+                padding: EdgeInsets.symmetric(horizontal: 6),
+                borderRadius: BorderRadius.circular(6),
+                gradient: LinearGradient(
+                  colors: [Colors.blue, Colors.pinkAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                child: CustomText(
+                  text: product.saleType == "Auction" ? "Auction" : "Buy Now",
+                  fontSize: 10,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
+            if (product.isSold) // ✅ Show "SOLD" if product is sold
               Positioned(
-                top: 6,
+                bottom: 6,
                 left: 6,
                 child: CustomContainer(
-                  height: 20,
-                  padding: EdgeInsets.symmetric(horizontal: 6),
+                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   borderRadius: BorderRadius.circular(6),
-                  gradient: LinearGradient(
-                    colors: [Colors.blue, Colors.pinkAccent],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  conColor: Colors.red,
                   child: CustomText(
-                    text: product.saleType == "Auction" ? "Auction" : "Buy Now",
+                    text: "SOLD",
                     fontSize: 10,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
+          ],
+        ),
+
+        const SizedBox(width: 12),
+
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomText(
+                text: product.title,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+              CustomText(
+                text: product.description,
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+              CustomText(
+                text: "${product.price} ₽",
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+
+              const SizedBox(height: 8),
+
+              CustomText(
+                text: product.isActive ? "Active" : "Inactive",
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: product.isActive ? Colors.green : Colors.red,
+              ),
             ],
           ),
+        ),
+      ],
+    ),
+  );
+}
 
-          const SizedBox(width: 12),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomText(
-                  text: product.title,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                CustomText(
-                  text: product.description,
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
-                CustomText(
-                  text: "${product.price} ₽",
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

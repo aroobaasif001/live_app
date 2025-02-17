@@ -19,7 +19,7 @@ class RegistrationEntity {
   final String? index;
   final List<String>? interests;
   final List<String>? detailedInterests;
-    final String? image; 
+  final String? image; 
   final String? coverImage;
 
   RegistrationEntity({
