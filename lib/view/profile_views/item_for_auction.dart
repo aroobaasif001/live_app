@@ -235,6 +235,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:live_app/utils/images_path.dart';
+import 'package:live_app/entities/product_entity.dart';
 
 class ItemAuctionScreen extends StatefulWidget {
   const ItemAuctionScreen({super.key});
@@ -245,13 +246,8 @@ class ItemAuctionScreen extends StatefulWidget {
 
 class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  late Stream<QuerySnapshot> _productsStream;
-
-  @override
-  void initState() {
-    super.initState();
-    _productsStream = _firestore.collection("products").snapshots();
-  }
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
@@ -272,22 +268,40 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.search, color: Colors.black54),
-                    SizedBox(width: 10),
+                    const Icon(Icons.search, color: Colors.black54),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Search",
+                        controller: _searchController,
+                        decoration: const InputDecoration(
+                          hintText: "Search by product name...",
                           border: InputBorder.none,
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            _searchQuery = value.trim().toLowerCase();
+                          });
+                        },
                       ),
                     ),
+                    if (_searchQuery.isNotEmpty)
+                      IconButton(
+                        icon: const Icon(Icons.clear, color: Colors.black54),
+                        onPressed: () {
+                          setState(() {
+                            _searchController.clear();
+                            _searchQuery = "";
+                          });
+                        },
+                      ),
                   ],
                 ),
               ),
               const SizedBox(height: 12),
+
+              /// **📌 Sorting & Category Buttons**
               Row(
                 children: [
                   _buildFilterButton("Sort", Icons.sort),
@@ -300,7 +314,7 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
               /// **📌 Auction Items List from Firestore**
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: _productsStream,
+                  stream: _firestore.collection("products").snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -308,28 +322,38 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
 
                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                       return const Center(
-                        child: Text("No products available"),
+                        child: Text("No auction products available"),
                       );
                     }
 
-                    var products = snapshot.data!.docs;
+                    // Convert Firestore data to ProductEntity list
+                    List<ProductEntity> products = snapshot.data!.docs
+                        .map((doc) =>
+                            ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+                        .toList();
+
+                    // Filter only auction-type products
+                    products =
+                        products.where((p) => p.saleType == "Auction").toList();
+
+                    // Apply search filtering
+                    if (_searchQuery.isNotEmpty) {
+                      products = products.where((p) {
+                        final title = p.title?.toLowerCase() ?? "";
+                        return title.contains(_searchQuery);
+                      }).toList();
+                    }
+
+                    if (products.isEmpty) {
+                      return const Center(
+                        child: Text("No matching products found"),
+                      );
+                    }
 
                     return ListView.builder(
                       itemCount: products.length,
                       itemBuilder: (context, index) {
-                        var product = products[index].data() as Map<String, dynamic>;
-
-                        double bid = (product["startingBid"] != null) 
-                          ? (product["startingBid"] as num).toDouble() 
-                          : 0.0; // ✅ Safe conversion
-
-                        return _buildAuctionItem(
-                          product["queue"] ?? 0,
-                          bid,
-                          product["title"] ?? "Unknown Product",
-                          product["description"] ?? "No Description",
-                          product["image"][0] ?? marketImage, 
-                        );
+                        return _buildAuctionItem(products[index]);
                       },
                     );
                   },
@@ -362,7 +386,7 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
   }
 
   /// **📌 Auction Item Card**
-  Widget _buildAuctionItem(int queue, double bid, String name, String description, String imageUrl) {
+  Widget _buildAuctionItem(ProductEntity product) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -378,32 +402,32 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  imageUrl,
+                  (product.images != null && product.images!.isNotEmpty)
+                      ? product.images!.first
+                      : 'https://via.placeholder.com/150', // Placeholder image
                   width: 120,
                   height: 120,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      Image.asset(marketImage, width: 120, height: 120), // Fallback
                 ),
               ),
-              Positioned(
-                bottom: 4,
-                left: 4,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    "Queue: $queue",
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   bottom: 4,
+              //   left: 4,
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              //     decoration: BoxDecoration(
+              //       color: Colors.black,
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //     child: Text(
+              //       "Queue: ${product.queue ?? 0}",
+              //       style: const TextStyle(
+              //           color: Colors.white,
+              //           fontSize: 12,
+              //           fontWeight: FontWeight.bold),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           const SizedBox(width: 12),
@@ -414,15 +438,15 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  product.title ?? "No Title",
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   overflow: TextOverflow.ellipsis,
                 ),
-                Text(description,
+                Text(product.description ?? "No Description",
                     style: const TextStyle(fontSize: 12, color: Colors.grey)),
                 const SizedBox(height: 6),
                 Text(
-                  "$bid ₽ current bid",
+                  "${product.startingBid ?? 0} ₽ current bid",
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold),
                 ),
@@ -442,7 +466,9 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // TODO: Implement streaming functionality
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
                         shadowColor: Colors.transparent,
