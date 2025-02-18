@@ -24,15 +24,25 @@ class _GetAllGoodsState extends State<GetAllGoods> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<QuerySnapshot<ProductEntity>>(
       stream: getAllProduct,
-      builder: (context, snapshot) {
-        return Expanded(
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<ProductEntity>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        if (!snapshot.hasData || snapshot.data == null) {
+          return Text('No data available');
+        }
+        final data = snapshot.data!;
+        return Flexible(
           child: ListView.builder(
-            itemCount: snapshot.data!.docs.length,
+            itemCount: data.docs.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              var productResponse = snapshot.data!.docs[index].data();
+              var productResponse = data.docs[index].data();
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Row(
@@ -61,7 +71,12 @@ class _GetAllGoodsState extends State<GetAllGoods> {
                                 fontSize: 10,
                                 text: 'Fix',
                                 onPressed: () {
-                                  Get.to(() => FixCardScreen());
+                                  Get.to(() => FixCardScreen(
+                                    productImage:productResponse.images!.first,
+                                    productName:productResponse.title,
+                                    productPrice: productResponse.startingBid,
+                                    productCompanyId:productResponse.id,
+                                  ));
                                 }),
                             CustomContainer(
                               height: 30,

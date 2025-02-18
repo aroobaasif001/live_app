@@ -110,8 +110,17 @@ class _ForYouScreenState extends State<ForYouScreen> {
             fontWeight: FontWeight.bold,
           ),
           SizedBox(height: 10),
-          GetAllGoods(),
-          SizedBox(height: 10),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GetAllGoods(),
+                  SizedBox(height: 10),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
