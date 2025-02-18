@@ -8,6 +8,10 @@ part of 'registration_entity.dart';
 
 RegistrationEntity _$RegistrationEntityFromJson(Map<String, dynamic> json) =>
     RegistrationEntity(
+      delivery: json['delivery'] as String?,
+      sold: json['sold'] as String?,
+      reviews: json['reviews'] as String?,
+      rating: json['rating'] as String?,
       regId: json['regId'] as String?,
       firstName: json['firstName'] as String?,
       lastName: json['lastName'] as String?,
@@ -48,4 +52,8 @@ Map<String, dynamic> _$RegistrationEntityToJson(RegistrationEntity instance) =>
       'detailedInterests': instance.detailedInterests,
       'image': instance.image,
       'coverImage': instance.coverImage,
+      'rating': instance.rating,
+      'reviews': instance.reviews,
+      'sold': instance.sold,
+      'delivery': instance.delivery,
     };

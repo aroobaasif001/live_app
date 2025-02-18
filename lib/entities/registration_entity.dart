@@ -19,27 +19,34 @@ class RegistrationEntity {
   final String? index;
   final List<String>? interests;
   final List<String>? detailedInterests;
-  final String? image; 
+  final String? image;
   final String? coverImage;
+  final String? rating;
+  final String? reviews;
+  final String? sold;
+  final String? delivery;
 
-  RegistrationEntity({
-    this.regId,
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.gender,
-    this.country,
-    this.city,
-    this.street,
-    this.house,
-    this.apartment,
-    this.entrance,
-    this.index,
-    this.interests,
-    this.detailedInterests,
-    this.image , 
-    this.coverImage
-  });
+  RegistrationEntity(
+      {this.delivery,
+      this.sold,
+      this.reviews,
+      this.rating,
+      this.regId,
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.gender,
+      this.country,
+      this.city,
+      this.street,
+      this.house,
+      this.apartment,
+      this.entrance,
+      this.index,
+      this.interests,
+      this.detailedInterests,
+      this.image,
+      this.coverImage});
 
   factory RegistrationEntity.fromJson(Map<String, dynamic> json) =>
       _$RegistrationEntityFromJson(json);
@@ -50,19 +57,19 @@ class RegistrationEntity {
     return FirebaseFirestore.instance
         .collection('UserEntity')
         .withConverter<RegistrationEntity>(
-      fromFirestore: (snapshot, options) =>
-          RegistrationEntity.fromJson(snapshot.data()!),
-      toFirestore: (value, options) => value.toJson(),
-    );
+          fromFirestore: (snapshot, options) =>
+              RegistrationEntity.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        );
   }
 
   static DocumentReference<RegistrationEntity> doc({required String userId}) {
     return FirebaseFirestore.instance
         .doc('UserEntity/$userId')
         .withConverter<RegistrationEntity>(
-      fromFirestore: (snapshot, options) =>
-          RegistrationEntity.fromJson(snapshot.data()!),
-      toFirestore: (value, options) => value.toJson(),
-    );
+          fromFirestore: (snapshot, options) =>
+              RegistrationEntity.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        );
   }
 }

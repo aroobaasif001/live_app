@@ -74,9 +74,10 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:live_app/entities/product.dart';
+import 'package:live_app/entities/product_entity.dart';
 
-Widget buildAuctionCard(Product product) {
+
+Widget buildAuctionCard(ProductEntity product) {
   return Card(
     color: Colors.white,
     margin: EdgeInsets.symmetric(vertical: 6),
@@ -105,7 +106,7 @@ Widget buildAuctionCard(Product product) {
               children: [
                 Row(
                   children: [
-                    Text(product.category, 
+                    Text(product.category!,
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                     SizedBox(width: 4),
                     Icon(Icons.star, color: Colors.amber, size: 14),
@@ -114,8 +115,8 @@ Widget buildAuctionCard(Product product) {
                   ],
                 ),
                 SizedBox(height: 4),
-                Text(product.title, style: TextStyle(fontSize: 14)),
-                Text(product.description, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                Text(product.title!, style: TextStyle(fontSize: 14)),
+                Text(product.description!, style: TextStyle(fontSize: 12, color: Colors.grey)),
                 SizedBox(height: 4),
                 Text("${product.price} ₽", 
                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),

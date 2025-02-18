@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:live_app/entities/product_entity.dart';
 
-import '../entities/product.dart';
 
 class FirebaseService {
   static Future<List<String>> uploadImages(List<File> images) async {
@@ -18,7 +18,7 @@ class FirebaseService {
     }
     return imageUrls;
   }
-    static Future<void> saveProduct(Product product) async {
-    await Product.collection().add(product);
+    static Future<void> saveProduct(ProductEntity product) async {
+    await ProductEntity.collection().add(product);
   }
 }

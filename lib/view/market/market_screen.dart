@@ -57,78 +57,91 @@ class _MarketScreenState extends State<MarketScreen> {
                           width: double.infinity,
                           height: 220,
                           image: DecorationImage(
-                              image: AssetImage(marketImage),
-                              fit: BoxFit.cover),
+                            fit: BoxFit.cover,
+                            image: userData?.coverImage != null &&
+                                    userData!.coverImage!.isNotEmpty
+                                ? NetworkImage(userData.coverImage.toString())
+                                    as ImageProvider
+                                : AssetImage(circleAppleImage),
+                          ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                              Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                CustomContainer(
-                                  height: 77,
-                                  width: 77,
-                                  image: DecorationImage(
-                                    image: userData?.image != null && userData!.image!.isNotEmpty
-                                        ? NetworkImage(userData.image.toString()) as ImageProvider
-                                        : AssetImage(circleAppleImage),
-                                  ),
-                                  child: Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: CustomContainer(
-                                                height: 30,
-                                                width: 30,
-                                                image: DecorationImage(
-                                                    image: AssetImage(
-                                                        circleButtonImage)),
-                                              ),
-                                            ),
-                                ),
-                                SizedBox(width: 16),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    CustomText(
-                                      text: userData?.firstName ?? '',
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                    CustomContainer(
+                                      height: 77,
+                                      width: 77,
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: userData?.image != null &&
+                                                userData!.image!.isNotEmpty
+                                            ? NetworkImage(
+                                                    userData.image.toString())
+                                                as ImageProvider
+                                            : AssetImage(circleAppleImage),
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: CustomContainer(
+                                          height: 30,
+                                          width: 30,
+                                          image: DecorationImage(
+                                              image: AssetImage(
+                                                  circleButtonImage)),
+                                        ),
+                                      ),
                                     ),
-                                    CustomText(
-                                      text: userData?.lastName ?? '',
-                                      color: Colors.white,
-                                    ),
-                                    Row(
+                                    SizedBox(width: 16),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: '95K ',
-                                                style: TextStyle(color: Colors.white),
+                                        CustomText(
+                                          text: userData?.firstName ?? '',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                        CustomText(
+                                          text: userData?.lastName ?? '',
+                                          color: Colors.white,
+                                        ),
+                                        Row(
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: '95K ',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  TextSpan(
+                                                    text: 'Subscribers',
+                                                    style: TextStyle(
+                                                        color: Colors.white54),
+                                                  ),
+                                                  TextSpan(text: ' . '),
+                                                  TextSpan(
+                                                    text: '132 Subscriptions',
+                                                    style: TextStyle(
+                                                        color: Colors.white54),
+                                                  ),
+                                                ],
                                               ),
-                                              TextSpan(
-                                                text: 'Subscribers',
-                                                style: TextStyle(color: Colors.white54),
-                                              ),
-                                              TextSpan(text: ' . '),
-                                              TextSpan(
-                                                text: '132 Subscriptions',
-                                                style: TextStyle(color: Colors.white54),
-                                              ),
-                                            ],
-                                          ),
-                                        )
+                                            )
+                                          ],
+                                        ),
                                       ],
-                                    ),
+                                    )
                                   ],
-                                )
-                              ],
-                            ),
-
-                              SizedBox(height: 50)
+                                ),
+                                SizedBox(height: 50)
                               ],
                             ),
                           ),
@@ -154,18 +167,21 @@ class _MarketScreenState extends State<MarketScreen> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       CustomReview(
-                                          value: '4.7',
+                                          value: userData?.rating ?? '',
                                           label: 'Rating',
                                           iconPath: startIcon),
                                       VerticalDivider(color: conLineColor),
                                       CustomReview(
-                                          value: '33.8K', label: 'Reviews'),
+                                          value: userData?.reviews ?? '',
+                                          label: 'Reviews'),
                                       VerticalDivider(color: conLineColor),
                                       CustomReview(
-                                          value: '169.7K', label: 'Sold'),
+                                          value: userData?.sold ?? '',
+                                          label: 'Sold'),
                                       VerticalDivider(color: conLineColor),
                                       CustomReview(
-                                          value: '+-2d', label: 'Delivery'),
+                                          value: userData?.delivery ?? '',
+                                          label: 'Delivery'),
                                     ],
                                   ),
                                 ),
