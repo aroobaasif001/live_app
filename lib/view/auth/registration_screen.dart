@@ -45,7 +45,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     _firstNameController = TextEditingController(text: widget.firstName ?? '');
     _lastNameController = TextEditingController(text: widget.lastName ?? '');
     _emailController = TextEditingController(text: widget.email ?? '');
-    isSignUpWithGoogle = widget.isSignUpWithGoogle ?? false; // ✅ Fix applied
+    isSignUpWithGoogle = widget.isSignUpWithGoogle ?? false;
     _passwordController = TextEditingController(text: widget.password ?? '');
   }
 

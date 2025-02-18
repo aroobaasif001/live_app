@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:live_app/utils/images_path.dart';
 import 'package:live_app/view/profile_views/edit_trade_profile.dart';
+import 'package:live_app/view/profile_views/item_for_auction.dart';
 import '../../custom_widgets/custom_text.dart';
 import '../../entities/registration_entity.dart';
 import 'my_products_screen.dart';
@@ -230,7 +231,9 @@ Future<void> _fetchUserProfile() async {
                             actionBox(
                                 Icons.account_balance_wallet, 'Wallet', () {}),
                             const SizedBox(width: 10),
-                            actionBox(Icons.list_alt, 'Orders', () {},
+                            actionBox(Icons.list_alt, 'Orders', () {
+                              Get.to(()=>ItemAuctionScreen());
+                            },
                                 badgeCount: 1),
                           ],
                         ),
