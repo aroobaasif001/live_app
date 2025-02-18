@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:live_app/custom_widgets/custom_background_scaffold.dart';
 import 'package:live_app/custom_widgets/custom_icon_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
@@ -23,87 +25,103 @@ class SocialsLoginScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Column(
                 children: [
-                  /// register
+                  /// Register
                   GestureDetector(
                     onTap: () {
-                      Get.to(()=> RegistrationScreen());
+                      Get.to(() => RegistrationScreen());
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         GradientText(
                           'Register',
-                          colors: [
-                            purpleColor,
-                            pinkColor
-                          ],
-                          style: TextStyle(
+                          colors: [purpleColor, pinkColor],
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'MontserratAlternates',
                           ),
                         ),
-                        Icon(Icons.arrow_forward_ios_rounded,color: Color(0xffE26ADC),size: 15,)
+                        const Icon(Icons.arrow_forward_ios_rounded,
+                            color: Color(0xffE26ADC), size: 15),
                       ],
                     ),
                   ),
-                  ///login
+
+                  /// Login
                   GestureDetector(
                     onTap: () {
-                      Get.to(()=> LoginScreen());
+                      Get.to(() => LoginScreen());
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         GradientText(
                           'Login',
-                          colors: [
-                            purpleColor,
-                            pinkColor
-                          ],
-                          style: TextStyle(
+                          colors: [purpleColor, pinkColor],
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'MontserratAlternates',
                           ),
                         ),
-                        Icon(Icons.arrow_forward_ios_rounded,color: Color(0xffE26ADC),size: 15,)
+                        const Icon(Icons.arrow_forward_ios_rounded,
+                            color: Color(0xffE26ADC), size: 15),
                       ],
                     ),
                   ),
 
                   /// Central logo and images
                   Image(image: AssetImage(backgroundImage)),
+
                   /// Main text
-                  SizedBox(height: 20),
-                  CustomText(
+                  const SizedBox(height: 20),
+                  const CustomText(
                     text: 'Grab it!',
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'SFProRounded',
                   ),
-                  CustomText(
-                    text: 'Join the online shopping community as a seller or buyer',
+                  const CustomText(
+                    text:
+                        'Join the online shopping community as a seller or buyer',
                     textAlign: TextAlign.center,
                     fontSize: 16,
                     fontFamily: 'MontserratAlternates',
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
+
                   // Buttons
-                  CustomIconButton(onPressed: (){}, text: 'Continue with Apple', iconPath: appleIcon),
-                  SizedBox(height: 10),
-                  CustomIconButton(onPressed: (){}, text: 'Continue with Google', iconPath: googleIcon),
-                  SizedBox(height: 10),
-                  CustomIconButton(onPressed: (){}, text: 'Continue with Email', iconPath: emailIcon),
-                  SizedBox(height: 20),
+                  CustomIconButton(
+                    onPressed: () {
+                      signUpGoogle();
+                    },
+                    text: 'Continue with Google',
+                    iconPath: googleIcon,
+                  ),
+                  const SizedBox(height: 10),
+                  CustomIconButton(
+                    onPressed: () {},
+                    text: 'Continue with Apple',
+                    iconPath: appleIcon,
+                  ),
+                  const SizedBox(height: 10),
+                  CustomIconButton(
+                    onPressed: () {},
+                    text: 'Continue with Email',
+                    iconPath: emailIcon,
+                  ),
+                  const SizedBox(height: 20),
+
                   // Terms and conditions
-                  CustomText(
-                    text: 'By continuing, you agree to the Terms of Service and Privacy Policy',
+                  const CustomText(
+                    text:
+                        'By continuing, you agree to the Terms of Service and Privacy Policy',
                     textAlign: TextAlign.center,
                     fontSize: 12,
                     color: Colors.grey,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -112,4 +130,65 @@ class SocialsLoginScreen extends StatelessWidget {
       ),
     );
   }
+
+  /// Google Sign-Up Function
+  Future<void> signUpGoogle() async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        Get.snackbar(
+          'Sign in',
+          'Google sign-in canceled by user',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      User? user = userCredential.user;
+
+      if (user != null) {
+        List<String> nameParts = (user.displayName ?? "").split(" ");
+        String firstName = nameParts.isNotEmpty ? nameParts[0] : "User";
+        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+
+
+        Get.offAll(() => RegistrationScreen(
+          firstName: firstName,
+          lastName: lastName,
+          email: user.email ?? "",
+          isSignUpWithGoogle: true,
+        ));
+
+        Get.snackbar(
+          'Success',
+          'Google Sign-In Successful',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Google Sign-In failed: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      print('Google Sign-In failed: $e');
+    }
+  }
+
 }
+

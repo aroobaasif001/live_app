@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
@@ -22,10 +23,12 @@ class InterestsScreen extends StatefulWidget {
   final String? apartment;
   final String? entrance;
   final String? index;
+  final bool? isSignUpWithGoogle;
 
   const InterestsScreen({
     super.key,
     this.country,
+    this.isSignUpWithGoogle,
     this.gender,
     this.firstName,
     this.lastName,
@@ -107,49 +110,91 @@ class _InterestsScreenState extends State<InterestsScreen> {
     });
 
     try {
-      UserCredential userCredential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: widget.email!.trim(),
-        password: widget.password!.trim(),
-      );
 
-      String docId = userCredential.user!.uid;
-      RegistrationEntity registrationEntity = RegistrationEntity(
-        regId: docId,
-        firstName: widget.firstName,
-        lastName: widget.lastName,
-        email: widget.email,
-        gender: widget.gender,
-        country: widget.country,
-        city: widget.city,
-        street: widget.street,
-        house: widget.house,
-        apartment: widget.apartment,
-        entrance: widget.entrance,
-        index: widget.index,
-        interests: selectedInterests,
+      if(widget.isSignUpWithGoogle == true){
+        String docId = FirebaseAuth.instance.currentUser!.uid;
+        RegistrationEntity registrationEntity = RegistrationEntity(
+          regId: docId,
+          firstName: widget.firstName,
+          lastName: widget.lastName,
+          email: widget.email,
+          gender: widget.gender,
+          country: widget.country,
+          city: widget.city,
+          street: widget.street,
+          house: widget.house,
+          apartment: widget.apartment,
+          entrance: widget.entrance,
+          index: widget.index,
+          interests: selectedInterests,
           detailedInterests: [],
-      );
+        );
 
-      await RegistrationEntity.doc(userId: docId).set(registrationEntity);
+        await RegistrationEntity.doc(userId: docId).set(registrationEntity);
 
-      Get.snackbar("Success", "Registration completed successfully!");
+        Get.snackbar("Success", "Registration completed successfully!");
+        Get.to(() => InterestsDetailScreen(
+          country: widget.country,
+          gender: widget.gender,
+          firstName: widget.firstName,
+          lastName: widget.lastName,
+          email: widget.email,
+          password: widget.password,
+          city: widget.city,
+          street: widget.street,
+          house: widget.house,
+          apartment: widget.apartment,
+          entrance: widget.entrance,
+          index: widget.index,
+          interests: selectedInterests,
+        ));
+      }
+      else{
+        UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: widget.email!.trim(),
+          password: widget.password!.trim(),
+        );
 
-      Get.to(() => InterestsDetailScreen(
-        country: widget.country,
-        gender: widget.gender,
-        firstName: widget.firstName,
-        lastName: widget.lastName,
-        email: widget.email,
-        password: widget.password,
-        city: widget.city,
-        street: widget.street,
-        house: widget.house,
-        apartment: widget.apartment,
-        entrance: widget.entrance,
-        index: widget.index,
-        interests: selectedInterests,
-      ));
+        String docId = userCredential.user!.uid;
+        RegistrationEntity registrationEntity = RegistrationEntity(
+          regId: docId,
+          firstName: widget.firstName,
+          lastName: widget.lastName,
+          email: widget.email,
+          gender: widget.gender,
+          country: widget.country,
+          city: widget.city,
+          street: widget.street,
+          house: widget.house,
+          apartment: widget.apartment,
+          entrance: widget.entrance,
+          index: widget.index,
+          interests: selectedInterests,
+          detailedInterests: [],
+        );
+
+        await RegistrationEntity.doc(userId: docId).set(registrationEntity);
+
+        Get.snackbar("Success", "Registration completed successfully!");
+        Get.to(() => InterestsDetailScreen(
+          country: widget.country,
+          gender: widget.gender,
+          firstName: widget.firstName,
+          lastName: widget.lastName,
+          email: widget.email,
+          password: widget.password,
+          city: widget.city,
+          street: widget.street,
+          house: widget.house,
+          apartment: widget.apartment,
+          entrance: widget.entrance,
+          index: widget.index,
+          interests: selectedInterests,
+        ));
+      }
+
+
 
     } catch (e) {
       Get.snackbar("Error", e.toString());

@@ -6,7 +6,20 @@ import 'package:live_app/custom_widgets/custom_textfield.dart';
 import 'package:live_app/view/auth/delivery_address_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({super.key});
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? password;
+  final bool? isSignUpWithGoogle;
+
+  const RegistrationScreen({
+    super.key,
+    this.firstName,
+    this.password,
+    this.isSignUpWithGoogle,
+    this.lastName,
+    this.email,
+  });
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -15,21 +28,40 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
 
   String? country;
   String? gender;
   bool isAgreedToTerms = false;
   bool isAbove18 = false;
+  late bool isSignUpWithGoogle;
+
+  @override
+  void initState() {
+    super.initState();
+    _firstNameController = TextEditingController(text: widget.firstName ?? '');
+    _lastNameController = TextEditingController(text: widget.lastName ?? '');
+    _emailController = TextEditingController(text: widget.email ?? '');
+    isSignUpWithGoogle = widget.isSignUpWithGoogle ?? false; // ✅ Fix applied
+    _passwordController = TextEditingController(text: widget.password ?? '');
+  }
+
+
 
   void _storeUser() async {
     if (!_formKey.currentState!.validate()) return;
 
     if (!isAgreedToTerms || !isAbove18) {
-      Get.snackbar("Error", "You must accept the terms and confirm your age.");
+      Get.snackbar(
+        "Error",
+        "You must accept the terms and confirm your age.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
       return;
     }
 
@@ -119,21 +151,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
-                CustomTextField(
-                  hintText: 'Password',
-                  controller: _passwordController,
-                  isPassword: true, // ✅ Enables visibility toggle
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
-                  },
-                ),
+                isSignUpWithGoogle == false
+                    ? SizedBox(height: 20)
+                    : SizedBox(),
+               isSignUpWithGoogle == false
+                    ? CustomTextField(
+                        hintText: 'Password',
+                        controller: _passwordController,
+                        isPassword: true, // ✅ Enables visibility toggle
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          if (value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        },
+                      )
+                    : SizedBox(),
                 SizedBox(height: 20),
                 DropdownButtonFormField<String>(
                   value: gender,
