@@ -146,6 +146,28 @@ class TranslationsApp extends Translations {
       'verification_check_failed': 'Failed to check verification status.',
       'email_sent': 'Check your email for the verification link.',
       'email_send_failed': 'Failed to send verification email.',
+      
+      // Interest Categories
+      'Cloth': 'Cloth',
+      'Shoes': 'Shoes',
+      'Electronics': 'Electronics',
+      'Bags': 'Bags',
+      'Sport': 'Sport',
+      'Toys': 'Toys',
+      'Beauty': 'Beauty',
+      'Accessories': 'Accessories',
+      'Furniture': 'Furniture',
+      'Pet Supplies': 'Pet Supplies',
+      'Automotive products': 'Automotive products',
+      'Video Games': 'Video Games',
+      'For children': 'For children',
+      'Books': 'Books',
+      'Hobby': 'Hobby',
+      
+      // Success Messages
+      'success': 'Success',
+      'error': 'Error',
+      'registration_completed': 'Registration completed successfully!',
     },
     'ru': {
       // Auth screens (Corrected Russian Translations)
@@ -290,6 +312,28 @@ class TranslationsApp extends Translations {
       'verification_check_failed': 'Не удалось проверить статус подтверждения.',
       'email_sent': 'Проверьте почту для подтверждения.',
       'email_send_failed': 'Не удалось отправить письмо для подтверждения.',
+      
+      // Interest Categories
+      'Cloth': 'Одежда',
+      'Shoes': 'Обувь',
+      'Electronics': 'Электроника',
+      'Bags': 'Сумки',
+      'Sport': 'Спорт',
+      'Toys': 'Игрушки',
+      'Beauty': 'Красота',
+      'Accessories': 'Аксессуары',
+      'Furniture': 'Мебель',
+      'Pet Supplies': 'Товары для животных',
+      'Automotive products': 'Автотовары',
+      'Video Games': 'Видеоигры',
+      'For children': 'Для детей',
+      'Books': 'Книги',
+      'Hobby': 'Хобби',
+      
+      // Success Messages
+      'success': 'Успех',
+      'error': 'Ошибка',
+      'registration_completed': 'Регистрация успешно завершена!',
     },
   };
 }
