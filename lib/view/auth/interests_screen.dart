@@ -24,6 +24,7 @@ class InterestsScreen extends StatefulWidget {
   final String? apartment;
   final String? entrance;
   final String? index;
+  final bool? isSignUpWithGoogle;
 
   const InterestsScreen({
     super.key,
@@ -39,6 +40,7 @@ class InterestsScreen extends StatefulWidget {
     this.apartment,
     this.entrance,
     this.index,
+    this.isSignUpWithGoogle,
   });
 
   @override
@@ -63,28 +65,30 @@ class _InterestsScreenState extends State<InterestsScreen> {
     dagaImage
   ];
 
-  final List<String> interestNames = [
-    'Cloth',
-    'Shoes',
-    'Electronics',
-    'Bags',
-    'Sport',
-    'Toys',
-    'Beauty',
-    'Accessories',
-    'Furniture',
-    'Pet Supplies',
-    'Automotive products',
-    'Video Games',
-    'For children',
-    'Books',
-    'Hobby',
+  final List<String> interestKeys = [
+    'cloth',
+    'shoes',
+    'electronics',
+    'bags',
+    'sport',
+    'toys',
+    'beauty',
+    'accessories',
+    'furniture',
+    'pet_supplies',
+    'automotive',
+    'video_games',
+    'for_children',
+    'books',
+    'hobby',
   ];
 
   final Set<int> selectedIndices = {};
   final List<String> selectedInterests = [];
 
   bool isLoading = false;
+
+  bool? get isSignUpWithGoogle => widget.isSignUpWithGoogle;
 
   void _toggleInterest(int index) {
     setState(() {
@@ -100,7 +104,13 @@ class _InterestsScreenState extends State<InterestsScreen> {
 
   void _registerUser() async {
     if (selectedInterests.isEmpty) {
-      Get.snackbar("Error", "select_interest".tr);
+      Get.snackbar(
+        "error".tr, 
+        "select_interest".tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
       return;
     }
 
@@ -109,8 +119,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
     });
 
     try {
-
-      if(widget.isSignUpWithGoogle == true){
+      if(isSignUpWithGoogle == true){
         String docId = FirebaseAuth.instance.currentUser!.uid;
         RegistrationEntity registrationEntity = RegistrationEntity(
           regId: docId,
@@ -137,7 +146,14 @@ class _InterestsScreenState extends State<InterestsScreen> {
 
         await RegistrationEntity.doc(userId: docId).set(registrationEntity);
 
-        Get.snackbar("Success", "Registration completed successfully!");
+        Get.snackbar(
+          "success".tr, 
+          "registration_completed".tr,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        
         Get.to(() => InterestsDetailScreen(
           country: widget.country,
           gender: widget.gender,
@@ -181,26 +197,38 @@ class _InterestsScreenState extends State<InterestsScreen> {
 
         await RegistrationEntity.doc(userId: docId).set(registrationEntity);
 
-      Get.snackbar("Success", "registration_success".tr);
+        Get.snackbar(
+          "success".tr, 
+          "registration_completed".tr,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
 
-      Get.to(() => InterestsDetailScreen(
-        country: widget.country,
-        gender: widget.gender,
-        firstName: widget.firstName,
-        lastName: widget.lastName,
-        email: widget.email,
-        password: widget.password,
-        city: widget.city,
-        street: widget.street,
-        house: widget.house,
-        apartment: widget.apartment,
-        entrance: widget.entrance,
-        index: widget.index,
-        interests: selectedInterests,
-      ));
-
+        Get.to(() => InterestsDetailScreen(
+          country: widget.country,
+          gender: widget.gender,
+          firstName: widget.firstName,
+          lastName: widget.lastName,
+          email: widget.email,
+          password: widget.password,
+          city: widget.city,
+          street: widget.street,
+          house: widget.house,
+          apartment: widget.apartment,
+          entrance: widget.entrance,
+          index: widget.index,
+          interests: selectedInterests,
+        ));
+      }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar(
+        "error".tr, 
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
 
     setState(() {
