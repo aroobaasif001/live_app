@@ -26,6 +26,7 @@ class SocialsLoginScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Column(
                 children: [
+
                   /// Register
                   GestureDetector(
                     onTap: () {
