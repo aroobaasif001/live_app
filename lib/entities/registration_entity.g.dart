@@ -26,6 +26,8 @@ RegistrationEntity _$RegistrationEntityFromJson(Map<String, dynamic> json) =>
       detailedInterests: (json['detailedInterests'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      image: json['image'] as String?,
+      coverImage: json['coverImage'] as String?,
     );
 
 Map<String, dynamic> _$RegistrationEntityToJson(RegistrationEntity instance) =>
@@ -44,4 +46,6 @@ Map<String, dynamic> _$RegistrationEntityToJson(RegistrationEntity instance) =>
       'index': instance.index,
       'interests': instance.interests,
       'detailedInterests': instance.detailedInterests,
+      'image': instance.image,
+      'coverImage': instance.coverImage,
     };

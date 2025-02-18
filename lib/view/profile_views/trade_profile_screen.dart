@@ -48,34 +48,41 @@ class _TradeProfileScreenState extends State<TradeProfileScreen> {
   //     }
   //   }
   // }
-  Future<void> _fetchUserProfile() async {
-    try {
-      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-          .collection("UserEntity")
-          .doc(widget.userId)
-          .get();
+Future<void> _fetchUserProfile() async {
+  try {
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection("UserEntity")
+        .doc(widget.userId)
+        .get();
 
-      if (userSnapshot.exists) {
+    if (userSnapshot.exists) {
+      Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
+
+      if (userData != null) {
+        print("🔥 Firestore Data: $userData"); // Debugging Firestore response
+
         setState(() {
-          userProfile = RegistrationEntity.fromJson(
-              userSnapshot.data() as Map<String, dynamic>);
+          userProfile = RegistrationEntity.fromJson(userData);
           _isLoading = false;
         });
 
-        // ✅ Debugging - Print URLs
-        print("Profile Image URL...: ${userProfile?.lastName}");
+        // ✅ Debugging - Print Image URLs
+        print("Profile Image URL: ${userProfile?.image}");
         print("Cover Image URL: ${userProfile?.coverImage}");
-        print(":::::::::::::::::::::::");
-        print(userProfile);
       } else {
-        print("User document does not exist");
+        print("Firestore returned null data.");
         setState(() => _isLoading = false);
       }
-    } catch (e) {
-      print("Error fetching user profile: $e");
+    } else {
+      print("User document does not exist");
       setState(() => _isLoading = false);
     }
+  } catch (e) {
+    print("Error fetching user profile: $e");
+    setState(() => _isLoading = false);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
