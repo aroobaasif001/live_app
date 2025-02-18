@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradiant_tab_button.dart';
 import 'package:live_app/utils/images_path.dart';
 
+import '../../../entities/product.dart';
 import '../homeMainScreen/liveShoppingScreens/live_shopping_screen.dart';
 import '../widgets/live_video_card.dart';
 import 'widget/build_action_card.dart';
@@ -67,9 +69,35 @@ class FeatureActivityScreen extends StatelessWidget {
             _buildLiveVideos(context),
             SizedBox(height: 16),
             _buildSectionTitle("Goods"),
-            ..._getFilteredAuctions()
-                .map((item) => buildAuctionCard(item))
-                .toList(),
+            // ..._getFilteredAuctions()
+            //     .map((item) => buildAuctionCard(item))
+            //     .toList(),
+            SizedBox(
+              height: 300,
+              child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance.collection('products').snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+                        }
+              
+                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Center(child: Text("No products available"));
+                        }
+              
+                        List<Product> products = snapshot.data!.docs
+                .map((doc) => Product.fromJson(doc.data() as Map<String, dynamic>))
+                .toList();
+              
+                        return ListView.builder(
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                return buildAuctionCard(products[index]); // ✅ Display Products
+              },
+                        );
+                      },
+                    ),
+            ),
             SizedBox(height: 16),
             _buildSectionTitle("Search"),
             _buildSearchFilters(),

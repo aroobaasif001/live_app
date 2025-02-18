@@ -82,7 +82,8 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
       
 
       );
-        Get.to(()=>TradeProfileScreen(userId: widget.userId));
+       Get.off(() => TradeProfileScreen(userId: widget.userId));
+
     } catch (e) {
       print("Error updating profile: $e");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -273,6 +274,8 @@ class EditProfileTextField extends StatelessWidget {
               height: 40,
               child: TextFormField(
                 controller: controller,
+
+
                 maxLines: maxLines,
                 style: TextStyle(
                   fontSize: 16,
