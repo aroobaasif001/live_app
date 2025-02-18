@@ -5,33 +5,40 @@ part 'product_entity.g.dart';
 
 @JsonSerializable()
 class ProductEntity {
-  String? productId;
-  String? category;
-  String? title;
-  String? description;
-  int quantity;
-  String typeOfSale;
-  double? startingBid;
-  bool selfDestruct;
-  bool livePurchase;
-  String? streamer;
-  String? delivery;
-  List<String>? images;
+  final String? id;
+  final String? category;
+  final String? title;
+  final String? description;
+  final String? quantity;
+  final String? saleType;
+  final String? startingBid;
+  final String? price;
+  final bool? selfDestruct;
+  final bool? liveOnly;
+  final String? streamer;
+  final String? delivery;
+  final List<String>? images;
+  final bool? isActive;
+  final bool? isSold;
 
-  ProductEntity({
-    this.productId,
-    this.category,
-    this.title,
-    this.description,
-    this.quantity = 1,
-    this.typeOfSale = "Auction",
-    this.startingBid,
-    this.selfDestruct = false,
-    this.livePurchase = true,
-    this.streamer,
-    this.delivery,
-    this.images,
-  });
+  ProductEntity(
+      {this.id,
+      this.category,
+      this.title,
+      this.description,
+      this.quantity,
+      this.saleType,
+      this.startingBid,
+      this.price,
+      this.selfDestruct,
+      this.liveOnly,
+      this.streamer,
+      this.delivery,
+      this.images,
+      this.isActive,
+      this.isSold});
+
+
 
   factory ProductEntity.fromJson(Map<String, dynamic> json) =>
       _$ProductEntityFromJson(json);
@@ -40,7 +47,7 @@ class ProductEntity {
 
   static CollectionReference<ProductEntity> collection() {
     return FirebaseFirestore.instance
-        .collection('Products')
+        .collection('products')
         .withConverter<ProductEntity>(
           fromFirestore: (snapshot, options) =>
               ProductEntity.fromJson(snapshot.data()!),
@@ -50,7 +57,7 @@ class ProductEntity {
 
   static DocumentReference<ProductEntity> doc({required String productId}) {
     return FirebaseFirestore.instance
-        .doc('Products/$productId')
+        .doc('products/$productId')
         .withConverter<ProductEntity>(
           fromFirestore: (snapshot, options) =>
               ProductEntity.fromJson(snapshot.data()!),

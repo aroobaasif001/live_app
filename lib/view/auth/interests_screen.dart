@@ -128,6 +128,12 @@ class _InterestsScreenState extends State<InterestsScreen> {
           index: widget.index,
           interests: selectedInterests,
           detailedInterests: [],
+          image: "",
+          coverImage: "",
+          delivery: "",
+          rating: "",
+          reviews: "",
+          sold: "",
         );
 
         await RegistrationEntity.doc(userId: docId).set(registrationEntity);

@@ -2,9 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradiant_tab_button.dart';
+import 'package:live_app/entities/product_entity.dart';
 import 'package:live_app/utils/images_path.dart';
-
-import '../../../entities/product.dart';
 import '../homeMainScreen/liveShoppingScreens/live_shopping_screen.dart';
 import '../widgets/live_video_card.dart';
 import 'widget/build_action_card.dart';
@@ -85,8 +84,8 @@ class FeatureActivityScreen extends StatelessWidget {
               return Center(child: Text("No products available"));
                         }
               
-                        List<Product> products = snapshot.data!.docs
-                .map((doc) => Product.fromJson(doc.data() as Map<String, dynamic>))
+                        List<ProductEntity> products = snapshot.data!.docs
+                .map((doc) => ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
                 .toList();
               
                         return ListView.builder(

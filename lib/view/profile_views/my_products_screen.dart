@@ -2,7 +2,7 @@ import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/entities/product.dart';
+import 'package:live_app/entities/product_entity.dart';
 import 'package:live_app/view/profile_views/create_a_product_screen.dart';
 
 import '../../custom_widgets/custom_container.dart';
@@ -10,271 +10,6 @@ import '../../custom_widgets/custom_gradient_button.dart';
 import '../../custom_widgets/custom_text.dart';
 import '../../utils/images_path.dart';
 
-// class MyProductsScreen extends StatefulWidget {
-//   const MyProductsScreen({super.key});
-
-//   @override
-//   State<MyProductsScreen> createState() => _MyProductsScreenState();
-// }
-
-// class _MyProductsScreenState extends State<MyProductsScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return DefaultTabController(
-//       length: 5,
-//       child: Scaffold(
-//         backgroundColor: Colors.white,
-//         appBar: AppBar(
-//           backgroundColor: Colors.white,
-//           elevation: 0,
-//           leading: IconButton(
-//             icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-//             onPressed: () {
-//               Navigator.pop(context);
-//             },
-//           ),
-//           title: const Text(
-//             "My Products",
-//             style: TextStyle(
-//               fontSize: 18,
-//               fontWeight: FontWeight.bold,
-//               color: Colors.black,
-//             ),
-//           ),
-//           centerTitle: true,
-//         ),
-//         body: Padding(
-//           padding: const EdgeInsets.all(12),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               ButtonsTabBar(
-//                 unselectedBackgroundColor: Colors.white,
-//                 // Background for unselected tabs
-//                 borderWidth: 0,
-//                 unselectedBorderColor: Colors.transparent,
-//                 borderColor: Colors.transparent,
-//                 contentPadding:
-//                     EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-//                 labelStyle: TextStyle(
-//                   color: Colors.white,
-//                   fontWeight: FontWeight.bold,
-//                   fontSize: 14,
-//                 ),
-//                 unselectedLabelStyle: TextStyle(
-//                   color: Colors.black,
-//                   fontWeight: FontWeight.bold,
-//                   fontSize: 14,
-//                 ),
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(12),
-//                   gradient: LinearGradient(
-//                     colors: [Colors.blue, Colors.pinkAccent],
-//                     // Gradient for selected tab
-//                     begin: Alignment.topLeft,
-//                     end: Alignment.bottomRight,
-//                   ),
-//                 ),
-//                 tabs: [
-//                   Tab(text: "All"),
-//                   Tab(text: "Active"),
-//                   Tab(text: "Sold"),
-//                   Tab(text: "Fix"),
-//                   Tab(text: "Auction"),
-//                 ],
-//               ),
-
-//               const SizedBox(height: 12),
-
-//               // Search Bar
-//               Container(
-//                 height: 40,
-//                 decoration: BoxDecoration(
-//                   color: Colors.grey[200],
-//                   borderRadius: BorderRadius.circular(12),
-//                 ),
-//                 padding: const EdgeInsets.symmetric(horizontal: 12),
-//                 child: const TextField(
-//                   decoration: InputDecoration(
-//                     border: InputBorder.none,
-//                     hintText: "Search",
-//                     prefixIcon: Icon(Icons.search, color: Colors.grey),
-//                   ),
-//                 ),
-//               ),
-
-//               const SizedBox(height: 12),
-
-//               // Product List View
-//               Expanded(
-//                 child: TabBarView(
-//                   children: [
-//                     buildProductList(),
-//                     buildProductList(),
-//                     buildProductList(),
-//                     buildProductList(),
-//                     buildProductList(),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-
-//         // Floating Action Button
-//         floatingActionButton: FloatingActionButton(
-//           backgroundColor: Colors.purpleAccent,
-//           onPressed: () {
-//             Get.to(()=>CreateProductScreen());
-//           },
-//           child: const Icon(Icons.add, size: 28, color: Colors.white),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget buildProductList() {
-//     return ListView(
-//       children: [
-//         // Active Products
-//         buildProductItem(isAuction: false, isArchived: false),
-//         buildProductItem(isAuction: true, isArchived: false),
-
-//         const SizedBox(height: 16),
-
-//         // Archive Header
-//         const CustomText(
-//           text: "Archive",
-//           fontSize: 16,
-//           fontWeight: FontWeight.bold,
-//           color: Colors.black54,
-//         ),
-
-//         // Archived Products
-//         buildProductItem(isAuction: false, isArchived: true),
-//         buildProductItem(isAuction: true, isArchived: true),
-//       ],
-//     );
-//   }
-
-//   Widget buildProductItem({required bool isAuction, required bool isArchived}) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 5),
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           // Product Image with Labels & Notification Icon
-//           Stack(
-//             children: [
-//               CustomContainer(
-//                 height: 135,
-//                 width: 135,
-//                 borderRadius: BorderRadius.circular(8),
-//                 image: DecorationImage(
-//                     image: AssetImage(marketImage), fit: BoxFit.cover),
-//               ),
-//               Positioned(
-//                 top: 6,
-//                 left: 6,
-//                 child: CustomContainer(
-//                   height: 20,
-//                   padding: EdgeInsets.symmetric(horizontal: 6),
-//                   borderRadius: BorderRadius.circular(6),
-//                   gradient: LinearGradient(
-//                     colors: [Colors.blue, Colors.pinkAccent],
-//                     // Gradient for selected tab
-//                     begin: Alignment.topLeft,
-//                     end: Alignment.bottomRight,
-//                   ),
-//                   child: CustomText(
-//                     text: isAuction ? "Auction" : "Fix",
-//                     fontSize: 10,
-//                     color: Colors.white,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//               ),
-//               Positioned(
-//                 top: 6,
-//                 right: 6,
-//                 child: CustomContainer(
-//                   height: 26,
-//                   width: 40,
-//                   conColor: Colors.white,
-//                   borderRadius: BorderRadius.circular(100),
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: [
-//                       const Icon(Icons.notifications_none_rounded, size: 14),
-//                       const SizedBox(width: 2),
-//                       const CustomText(text: '1', fontSize: 12),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               if (isAuction)
-//                 Positioned(
-//                   bottom: 6,
-//                   left: 6,
-//                   child: CustomContainer(
-//                     padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-//                     borderRadius: BorderRadius.circular(6),
-//                     conColor: Colors.white,
-//                     child: CustomText(
-//                       text: "23 hours left.",
-//                       fontSize: 10,
-//                       color: Colors.black,
-//                     ),
-//                   ),
-//                 ),
-//             ],
-//           ),
-
-//           const SizedBox(width: 12),
-
-//           // Product Details
-//           Expanded(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 const CustomText(
-//                   text: "Product name",
-//                   fontWeight: FontWeight.bold,
-//                   fontSize: 16,
-//                 ),
-//                 const CustomText(
-//                   text: "Description",
-//                   fontSize: 14,
-//                   color: Colors.grey,
-//                 ),
-//                 CustomText(
-//                   text: isAuction ? "1,000 ₽ current bid" : "1,000 ₽",
-//                   fontWeight: FontWeight.bold,
-//                   fontSize: 16,
-//                 ),
-//                 const SizedBox(height: 16),
-//                 if (!isArchived)
-//                   CustomContainer(
-//                     height: 35,
-//                     width: 100,
-//                     conColor: Colors.grey[300],
-//                     borderRadius: BorderRadius.circular(6),
-//                     child: Center(
-//                       child: CustomText(
-//                         text: "Change",
-//                         fontSize: 14,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                   ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 class MyProductsScreen extends StatefulWidget {
   const MyProductsScreen({super.key});
 
@@ -319,26 +54,26 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                 unselectedBorderColor: Colors.transparent,
                 borderColor: Colors.transparent,
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                labelStyle: TextStyle(
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                labelStyle: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),
-                unselectedLabelStyle: TextStyle(
+                unselectedLabelStyle: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [Colors.blue, Colors.pinkAccent],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                 ),
-                tabs: [
+                tabs: const [
                   Tab(text: "All"),
                   Tab(text: "Active"),
                   Tab(text: "Sold"),
@@ -388,7 +123,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.purpleAccent,
           onPressed: () {
-            Get.to(() => CreateProductScreen());
+            Get.to(() => const CreateProductScreen());
           },
           child: const Icon(Icons.add, size: 28, color: Colors.white),
         ),
@@ -408,21 +143,23 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
           return const Center(child: Text("No products found"));
         }
 
-        List<Product> products = snapshot.data!.docs
+        // Convert each doc into a ProductEntity
+        List<ProductEntity> products = snapshot.data!.docs
             .map((doc) =>
-                Product.fromJson(doc.data() as Map<String, dynamic>))
+            ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
 
+        // Filter logic
         if (filter == "Fix") {
-          products =
-              products.where((product) => product.saleType == "Buy Now").toList();
+          products = products.where((p) => p.saleType == "Buy Now").toList();
         } else if (filter == "Auction") {
-          products =
-              products.where((product) => product.saleType == "Auction").toList();
+          products = products.where((p) => p.saleType == "Auction").toList();
         } else if (filter == "Active") {
-         products = products.where((product) => product.isActive && !product.isSold).toList();
+          products =
+              products.where((p) => (p.isActive ?? false) && !(p.isSold ?? false))
+                  .toList();
         } else if (filter == "Sold") {
-          products = products.where((product) => product.isSold).toList();
+          products = products.where((p) => p.isSold ?? false).toList();
         }
 
         return ListView.builder(
@@ -435,169 +172,387 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     );
   }
 
-  // Widget buildProductItem(Product product) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 5),
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Stack(
-  //           children: [
-  //             CustomContainer(
-  //               height: 135,
-  //               width: 135,
-  //               borderRadius: BorderRadius.circular(8),
-  //               image: DecorationImage(
-  //                 image: NetworkImage(product.images![0]),
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //             Positioned(
-  //               top: 6,
-  //               left: 6,
-  //               child: CustomContainer(
-  //                 height: 20,
-  //                 padding: EdgeInsets.symmetric(horizontal: 6),
-  //                 borderRadius: BorderRadius.circular(6),
-  //                 gradient: LinearGradient(
-  //                   colors: [Colors.blue, Colors.pinkAccent],
-  //                   begin: Alignment.topLeft,
-  //                   end: Alignment.bottomRight,
-  //                 ),
-  //                 child: CustomText(
-  //                   text: product.saleType == "Auction" ? "Auction" : "Buy Now",
-  //                   fontSize: 10,
-  //                   color: Colors.white,
-  //                   fontWeight: FontWeight.bold,
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-
-  //         const SizedBox(width: 12),
-
-  //         Expanded(
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               CustomText(
-  //                 text: product.title,
-  //                 fontWeight: FontWeight.bold,
-  //                 fontSize: 16,
-  //               ),
-  //               CustomText(
-  //                 text: product.description,
-  //                 fontSize: 14,
-  //                 color: Colors.grey,
-  //               ),
-  //               CustomText(
-  //                 text: "${product.price} ₽",
-  //                 fontWeight: FontWeight.bold,
-  //                 fontSize: 16,
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  Widget buildProductItem(Product product) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 5),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Stack(
-          children: [
-            CustomContainer(
-              height: 135,
-              width: 135,
-              borderRadius: BorderRadius.circular(8),
-              image: DecorationImage(
-                image: NetworkImage(product.images != null && product.images!.isNotEmpty
-                    ? product.images![0]
-                    : 'https://via.placeholder.com/150'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              top: 6,
-              left: 6,
-              child: CustomContainer(
-                height: 20,
-                padding: EdgeInsets.symmetric(horizontal: 6),
-                borderRadius: BorderRadius.circular(6),
-                gradient: LinearGradient(
-                  colors: [Colors.blue, Colors.pinkAccent],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                child: CustomText(
-                  text: product.saleType == "Auction" ? "Auction" : "Buy Now",
-                  fontSize: 10,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+  Widget buildProductItem(ProductEntity product) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              // Product image
+              CustomContainer(
+                height: 135,
+                width: 135,
+                borderRadius: BorderRadius.circular(8),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    (product.images != null && product.images!.isNotEmpty)
+                        ? product.images!.first
+                        : 'https://via.placeholder.com/150',
+                  ),
+                  fit: BoxFit.cover,
                 ),
               ),
-            ),
-            if (product.isSold) // ✅ Show "SOLD" if product is sold
+
+              // "Auction" or "Buy Now"
               Positioned(
-                bottom: 6,
+                top: 6,
                 left: 6,
                 child: CustomContainer(
-                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  height: 20,
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
                   borderRadius: BorderRadius.circular(6),
-                  conColor: Colors.red,
+                  gradient: const LinearGradient(
+                    colors: [Colors.blue, Colors.pinkAccent],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   child: CustomText(
-                    text: "SOLD",
+                    text: product.saleType == "Auction" ? "Auction" : "Buy Now",
                     fontSize: 10,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-          ],
-        ),
 
-        const SizedBox(width: 12),
-
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomText(
-                text: product.title,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-              CustomText(
-                text: product.description,
-                fontSize: 14,
-                color: Colors.grey,
-              ),
-              CustomText(
-                text: "${product.price} ₽",
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-
-              const SizedBox(height: 8),
-
-              CustomText(
-                text: product.isActive ? "Active" : "Inactive",
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: product.isActive ? Colors.green : Colors.red,
-              ),
+              // "SOLD"
+              if (product.isSold ?? false)
+                Positioned(
+                  bottom: 6,
+                  left: 6,
+                  child: CustomContainer(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(6),
+                    conColor: Colors.red,
+                    child: const CustomText(
+                      text: "SOLD",
+                      fontSize: 10,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
             ],
           ),
-        ),
-      ],
-    ),
-  );
+          const SizedBox(width: 12),
+
+          // Right side info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomText(
+                  text: product.title ?? "",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                CustomText(
+                  text: product.description ?? "",
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+                // Price
+                CustomText(
+                  text: product.price == null
+                      ? "${product.startingBid ?? '0'} ₽"
+                      : "${product.price} ₽",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+
+                const SizedBox(height: 8),
+                // Active or Inactive
+                CustomText(
+                  text: (product.isActive ?? false) ? "Active" : "Inactive",
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: (product.isActive ?? false) ? Colors.green : Colors.red,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-}
+
+
+
+///
+
+
+
+// import 'package:buttons_tabbar/buttons_tabbar.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:live_app/entities/product_entity.dart';
+// import 'package:live_app/view/profile_views/create_a_product_screen.dart';
+//
+// import '../../custom_widgets/custom_container.dart';
+// import '../../custom_widgets/custom_gradient_button.dart';
+// import '../../custom_widgets/custom_text.dart';
+// import '../../utils/images_path.dart';
+// class MyProductsScreen extends StatefulWidget {
+//   const MyProductsScreen({super.key});
+//
+//   @override
+//   State<MyProductsScreen> createState() => _MyProductsScreenState();
+// }
+//
+// class _MyProductsScreenState extends State<MyProductsScreen> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return DefaultTabController(
+//       length: 5,
+//       child: Scaffold(
+//         backgroundColor: Colors.white,
+//         appBar: AppBar(
+//           backgroundColor: Colors.white,
+//           elevation: 0,
+//           leading: IconButton(
+//             icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+//             onPressed: () {
+//               Navigator.pop(context);
+//             },
+//           ),
+//           title: const Text(
+//             "My Products",
+//             style: TextStyle(
+//               fontSize: 18,
+//               fontWeight: FontWeight.bold,
+//               color: Colors.black,
+//             ),
+//           ),
+//           centerTitle: true,
+//         ),
+//         body: Padding(
+//           padding: const EdgeInsets.all(12),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               ButtonsTabBar(
+//                 unselectedBackgroundColor: Colors.white,
+//                 borderWidth: 0,
+//                 unselectedBorderColor: Colors.transparent,
+//                 borderColor: Colors.transparent,
+//                 contentPadding:
+//                     EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+//                 labelStyle: TextStyle(
+//                   color: Colors.white,
+//                   fontWeight: FontWeight.bold,
+//                   fontSize: 14,
+//                 ),
+//                 unselectedLabelStyle: TextStyle(
+//                   color: Colors.black,
+//                   fontWeight: FontWeight.bold,
+//                   fontSize: 14,
+//                 ),
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(12),
+//                   gradient: LinearGradient(
+//                     colors: [Colors.blue, Colors.pinkAccent],
+//                     begin: Alignment.topLeft,
+//                     end: Alignment.bottomRight,
+//                   ),
+//                 ),
+//                 tabs: [
+//                   Tab(text: "All"),
+//                   Tab(text: "Active"),
+//                   Tab(text: "Sold"),
+//                   Tab(text: "Fix"),
+//                   Tab(text: "Auction"),
+//                 ],
+//               ),
+//
+//               const SizedBox(height: 12),
+//
+//               // Search Bar
+//               Container(
+//                 height: 40,
+//                 decoration: BoxDecoration(
+//                   color: Colors.grey[200],
+//                   borderRadius: BorderRadius.circular(12),
+//                 ),
+//                 padding: const EdgeInsets.symmetric(horizontal: 12),
+//                 child: const TextField(
+//                   decoration: InputDecoration(
+//                     border: InputBorder.none,
+//                     hintText: "Search",
+//                     prefixIcon: Icon(Icons.search, color: Colors.grey),
+//                   ),
+//                 ),
+//               ),
+//
+//               const SizedBox(height: 12),
+//
+//               // Product List View
+//               Expanded(
+//                 child: TabBarView(
+//                   children: [
+//                     buildProductList("All"),
+//                     buildProductList("Active"),
+//                     buildProductList("Sold"),
+//                     buildProductList("Fix"),
+//                     buildProductList("Auction"),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//
+//         // Floating Action Button
+//         floatingActionButton: FloatingActionButton(
+//           backgroundColor: Colors.purpleAccent,
+//           onPressed: () {
+//             Get.to(() => CreateProductScreen());
+//           },
+//           child: const Icon(Icons.add, size: 28, color: Colors.white),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget buildProductList(String filter) {
+//     return StreamBuilder<QuerySnapshot>(
+//       stream: FirebaseFirestore.instance.collection('products').snapshots(),
+//       builder: (context, snapshot) {
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return const Center(child: CircularProgressIndicator());
+//         }
+//
+//         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+//           return const Center(child: Text("No products found"));
+//         }
+//
+//         List<ProductEntity> products = snapshot.data!.docs
+//             .map((doc) =>
+//                 ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+//             .toList();
+//
+//         if (filter == "Fix") {
+//           products = products
+//               .where((product) => product.saleType == "Buy Now")
+//               .toList();
+//         } else if (filter == "Auction") {
+//           products = products
+//               .where((product) => product.saleType == "Auction")
+//               .toList();
+//         } else if (filter == "Active") {
+//           products = products
+//               .where((product) => product.isActive! && !product.isSold!)
+//               .toList();
+//         } else if (filter == "Sold") {
+//           products = products.where((product) => product.isSold!).toList();
+//         }
+//
+//         return ListView.builder(
+//           itemCount: products.length,
+//           itemBuilder: (context, index) {
+//             return buildProductItem(products[index]);
+//           },
+//         );
+//       },
+//     );
+//   }
+//   Widget buildProductItem(ProductEntity product) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 5),
+//       child: Row(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Stack(
+//             children: [
+//               CustomContainer(
+//                 height: 135,
+//                 width: 135,
+//                 borderRadius: BorderRadius.circular(8),
+//                 image: DecorationImage(
+//                   image: NetworkImage(
+//                       product.images != null && product.images!.isNotEmpty
+//                           ? product.images![0]
+//                           : 'https://via.placeholder.com/150'),
+//                   fit: BoxFit.cover,
+//                 ),
+//               ),
+//               Positioned(
+//                 top: 6,
+//                 left: 6,
+//                 child: CustomContainer(
+//                   height: 20,
+//                   padding: EdgeInsets.symmetric(horizontal: 6),
+//                   borderRadius: BorderRadius.circular(6),
+//                   gradient: LinearGradient(
+//                     colors: [Colors.blue, Colors.pinkAccent],
+//                     begin: Alignment.topLeft,
+//                     end: Alignment.bottomRight,
+//                   ),
+//                   child: CustomText(
+//                     text: product.saleType == "Auction" ? "Auction" : "Buy Now",
+//                     fontSize: 10,
+//                     color: Colors.white,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//               ),
+//               if (product.isSold!) // ✅ Show "SOLD" if product is sold
+//                 Positioned(
+//                   bottom: 6,
+//                   left: 6,
+//                   child: CustomContainer(
+//                     padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+//                     borderRadius: BorderRadius.circular(6),
+//                     conColor: Colors.red,
+//                     child: CustomText(
+//                       text: "SOLD",
+//                       fontSize: 10,
+//                       color: Colors.white,
+//                       fontWeight: FontWeight.bold,
+//                     ),
+//                   ),
+//                 ),
+//             ],
+//           ),
+//           const SizedBox(width: 12),
+//           Expanded(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 CustomText(
+//                   text: product.title!,
+//                   fontWeight: FontWeight.bold,
+//                   fontSize: 16,
+//                 ),
+//                 CustomText(
+//                   text: product.description!,
+//                   fontSize: 14,
+//                   color: Colors.grey,
+//                 ),
+//                 CustomText(
+//                   text: "${product.price} ₽",
+//                   fontWeight: FontWeight.bold,
+//                   fontSize: 16,
+//                 ),
+//                 const SizedBox(height: 8),
+//                 CustomText(
+//                   text: product.isActive! ? "Active" : "Inactive",
+//                   fontSize: 14,
+//                   fontWeight: FontWeight.bold,
+//                   color: product.isActive! ? Colors.green : Colors.red,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
