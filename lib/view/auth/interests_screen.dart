@@ -63,22 +63,22 @@ class _InterestsScreenState extends State<InterestsScreen> {
     dagaImage
   ];
 
-  final List<String> interestKeys = [
-    'cloth',
-    'shoes',
-    'electronics',
-    'bags',
-    'sport',
-    'toys',
-    'beauty',
-    'accessories',
-    'furniture',
-    'pet_supplies',
-    'automotive',
-    'video_games',
-    'for_children',
-    'books',
-    'hobby',
+  final List<String> interestNames = [
+    'Cloth',
+    'Shoes',
+    'Electronics',
+    'Bags',
+    'Sport',
+    'Toys',
+    'Beauty',
+    'Accessories',
+    'Furniture',
+    'Pet Supplies',
+    'Automotive products',
+    'Video Games',
+    'For children',
+    'Books',
+    'Hobby',
   ];
 
   final Set<int> selectedIndices = {};
@@ -109,31 +109,71 @@ class _InterestsScreenState extends State<InterestsScreen> {
     });
 
     try {
-      UserCredential userCredential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: widget.email!.trim(),
-        password: widget.password!.trim(),
-      );
 
-      String docId = userCredential.user!.uid;
-      RegistrationEntity registrationEntity = RegistrationEntity(
-        regId: docId,
-        firstName: widget.firstName,
-        lastName: widget.lastName,
-        email: widget.email,
-        gender: widget.gender,
-        country: widget.country,
-        city: widget.city,
-        street: widget.street,
-        house: widget.house,
-        apartment: widget.apartment,
-        entrance: widget.entrance,
-        index: widget.index,
-        interests: selectedInterests,
+      if(widget.isSignUpWithGoogle == true){
+        String docId = FirebaseAuth.instance.currentUser!.uid;
+        RegistrationEntity registrationEntity = RegistrationEntity(
+          regId: docId,
+          firstName: widget.firstName,
+          lastName: widget.lastName,
+          email: widget.email,
+          gender: widget.gender,
+          country: widget.country,
+          city: widget.city,
+          street: widget.street,
+          house: widget.house,
+          apartment: widget.apartment,
+          entrance: widget.entrance,
+          index: widget.index,
+          interests: selectedInterests,
           detailedInterests: [],
-      );
+        );
 
-      await RegistrationEntity.doc(userId: docId).set(registrationEntity);
+        await RegistrationEntity.doc(userId: docId).set(registrationEntity);
+
+        Get.snackbar("Success", "Registration completed successfully!");
+        Get.to(() => InterestsDetailScreen(
+          country: widget.country,
+          gender: widget.gender,
+          firstName: widget.firstName,
+          lastName: widget.lastName,
+          email: widget.email,
+          password: widget.password,
+          city: widget.city,
+          street: widget.street,
+          house: widget.house,
+          apartment: widget.apartment,
+          entrance: widget.entrance,
+          index: widget.index,
+          interests: selectedInterests,
+        ));
+      }
+      else{
+        UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: widget.email!.trim(),
+          password: widget.password!.trim(),
+        );
+
+        String docId = userCredential.user!.uid;
+        RegistrationEntity registrationEntity = RegistrationEntity(
+          regId: docId,
+          firstName: widget.firstName,
+          lastName: widget.lastName,
+          email: widget.email,
+          gender: widget.gender,
+          country: widget.country,
+          city: widget.city,
+          street: widget.street,
+          house: widget.house,
+          apartment: widget.apartment,
+          entrance: widget.entrance,
+          index: widget.index,
+          interests: selectedInterests,
+          detailedInterests: [],
+        );
+
+        await RegistrationEntity.doc(userId: docId).set(registrationEntity);
 
       Get.snackbar("Success", "registration_success".tr);
 
@@ -280,4 +320,3 @@ class _InterestsScreenState extends State<InterestsScreen> {
     );
   }
 }
-

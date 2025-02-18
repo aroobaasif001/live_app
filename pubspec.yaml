@@ -41,6 +41,7 @@ dependencies:
   firebase_auth: ^5.3.1
   firebase_core: ^3.6.0
   cloud_firestore: ^5.3.0
+  google_sign_in: any
   firebase_storage: ^12.2.0
   json_annotation: ^4.9.0
   firebase_app_check: any

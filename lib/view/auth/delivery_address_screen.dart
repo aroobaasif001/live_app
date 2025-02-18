@@ -13,11 +13,13 @@ class DeliveryAddressScreen extends StatefulWidget {
   final String? lastName;
   final String? email;
   final String? password;
+  final bool? isSignUpWithGoogle;
 
   const DeliveryAddressScreen({
     super.key,
     this.gender,
     this.country,
+    this.isSignUpWithGoogle,
     this.email,
     this.firstName,
     this.lastName,
@@ -38,6 +40,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
   final TextEditingController _apartmentController = TextEditingController();
   final TextEditingController _entranceController = TextEditingController();
   final TextEditingController _indexController = TextEditingController();
+
 
   @override
   void initState() {

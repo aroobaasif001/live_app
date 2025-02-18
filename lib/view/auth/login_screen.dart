@@ -5,6 +5,7 @@ import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/custom_widgets/custom_textfield.dart';
 import 'package:live_app/view/auth/verification_screen.dart';
+import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
