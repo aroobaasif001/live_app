@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:live_app/custom_widgets/custom_background_scaffold.dart';
 import 'package:live_app/custom_widgets/custom_icon_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
+import 'package:live_app/translate/controller/translations_controller.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
@@ -13,7 +14,7 @@ import 'package:live_app/view/auth/registration_screen.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class SocialsLoginScreen extends StatelessWidget {
-  const SocialsLoginScreen({super.key});
+  final TranslationsController translationController = Get.find<TranslationsController>();
 
   @override
   Widget build(BuildContext context) {
@@ -34,94 +35,95 @@ class SocialsLoginScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         GradientText(
-                          'Register',
+                          'register'.tr,
                           colors: [purpleColor, pinkColor],
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'MontserratAlternates',
                           ),
                         ),
-                        const Icon(Icons.arrow_forward_ios_rounded,
-                            color: Color(0xffE26ADC), size: 15),
+                        Icon(Icons.arrow_forward_ios_rounded,color: Color(0xffE26ADC),size: 15,)
                       ],
                     ),
                   ),
-
                   /// Login
                   GestureDetector(
                     onTap: () {
-                      Get.to(() => LoginScreen());
+                      Get.to(()=> LoginScreen());
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         GradientText(
-                          'Login',
+                          'login'.tr,
                           colors: [purpleColor, pinkColor],
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'MontserratAlternates',
                           ),
                         ),
-                        const Icon(Icons.arrow_forward_ios_rounded,
-                            color: Color(0xffE26ADC), size: 15),
+                        Icon(Icons.arrow_forward_ios_rounded,color: Color(0xffE26ADC),size: 15,)
                       ],
                     ),
                   ),
 
                   /// Central logo and images
                   Image(image: AssetImage(backgroundImage)),
-
                   /// Main text
-                  const SizedBox(height: 20),
-                  const CustomText(
-                    text: 'Grab it!',
+                  SizedBox(height: 20),
+                  CustomText(
+                    text: 'grab_it'.tr,
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'SFProRounded',
                   ),
-                  const CustomText(
-                    text:
-                        'Join the online shopping community as a seller or buyer',
+                  CustomText(
+                    text: 'join_community'.tr,
                     textAlign: TextAlign.center,
                     fontSize: 16,
                     fontFamily: 'MontserratAlternates',
                   ),
-                  const SizedBox(height: 20),
-
+                  SizedBox(height: 20),
                   // Buttons
                   CustomIconButton(
                     onPressed: () {
                       signUpGoogle();
                     },
-                    text: 'Continue with Google',
-                    iconPath: googleIcon,
+                    text: 'continue_with_apple'.tr,
+                    iconPath: appleIcon
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   CustomIconButton(
                     onPressed: () {},
-                    text: 'Continue with Apple',
-                    iconPath: appleIcon,
+                    text: 'continue_with_google'.tr,
+                    iconPath: googleIcon
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   CustomIconButton(
                     onPressed: () {},
-                    text: 'Continue with Email',
-                    iconPath: emailIcon,
+                    text: 'continue_with_email'.tr,
+                    iconPath: emailIcon
                   ),
-                  const SizedBox(height: 20),
-
+                  SizedBox(height: 20),
                   // Terms and conditions
-                  const CustomText(
-                    text:
-                        'By continuing, you agree to the Terms of Service and Privacy Policy',
+                  CustomText(
+                    text: 'terms_conditions'.tr,
                     textAlign: TextAlign.center,
                     fontSize: 12,
                     color: Colors.grey,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(width: 5),
+                  GradientText(
+                    'terms_conditions2'.tr,
+                    textAlign: TextAlign.center,
+                    colors: [
+                      Color(0xff8385E6),
+                      Color(0xffE569DB),
+                    ],
+                  ),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -189,6 +191,4 @@ class SocialsLoginScreen extends StatelessWidget {
       print('Google Sign-In failed: $e');
     }
   }
-
 }
-

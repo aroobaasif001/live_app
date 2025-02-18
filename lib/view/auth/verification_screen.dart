@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
-import 'package:live_app/view/auth/notification_screen.dart';
-
 import '../homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
-
 
 class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key});
@@ -34,17 +31,17 @@ class _VerificationScreenState extends State<VerificationScreen> {
           isVerified = true;
         });
 
-        Get.snackbar("Success", "Email verified successfully!");
+        Get.snackbar("Success", "email_verified".tr);
 
         // ✅ Navigate to NavigationScreen after verification
         Future.delayed(Duration(seconds: 2), () {
           Get.offAll(() => BottomNavigationBarWidget()); // ✅ Replace entire stack
         });
       } else {
-        Get.snackbar("Error", "Email is not verified yet.");
+        Get.snackbar("Error", "email_not_verified".tr);
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to check verification status.");
+      Get.snackbar("Error", "verification_check_failed".tr);
     }
 
     setState(() {
@@ -56,9 +53,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
   Future<void> _resendVerificationEmail() async {
     try {
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
-      Get.snackbar("Email Sent", "Check your email for the verification link.");
+      Get.snackbar("Success", "email_sent".tr);
     } catch (e) {
-      Get.snackbar("Error", "Failed to send verification email.");
+      Get.snackbar("Error", "email_send_failed".tr);
     }
   }
 
@@ -72,14 +69,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomText(
-                text: 'Email Verification',
+                text: 'email_verification'.tr,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'SFProRounded',
               ),
               SizedBox(height: 20),
               CustomText(
-                text: 'We have sent you a verification email.',
+                text: 'verification_sent'.tr,
                 fontSize: 14,
                 color: Colors.grey,
                 fontFamily: 'MontserratAlternates',
@@ -87,13 +84,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
               SizedBox(height: 50),
               // **Check Verification Button**
               CustomGradientButton(
-                text: isLoading ? "Checking..." : "Verify Now",
-                onPressed: isLoading ? () {} : _checkEmailVerification,
+                text: isLoading ? "checking".tr : "verify_now".tr,
+                onPressed: isLoading ? null : _checkEmailVerification,
               ),
               SizedBox(height: 10),
               // **Resend Email Button**
               CustomGradientButton(
-                text: "Resend Email",
+                text: "resend_email".tr,
                 onPressed: _resendVerificationEmail,
               ),
               SizedBox(height: 20),

@@ -44,24 +44,24 @@ class InterestsDetailScreen extends StatefulWidget {
 
 class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
   final Map<String, List<String>> detailedInterestOptions = {
-    'Shoes': ['Sneakers', 'Trainers', 'Boots', 'Sandals'],
-    'Electronics': [
-      'Smartphones',
-      'Headphones',
-      'Computers',
-      'Tablets',
-      'Cameras',
-      'Speakers',
-      'Monitors'
+    'shoes'.tr: ['sneakers', 'trainers', 'boots', 'sandals'],
+    'electronics'.tr: [
+      'smartphones',
+      'headphones',
+      'computers',
+      'tablets',
+      'cameras',
+      'speakers',
+      'monitors'
     ],
-    'Beauty': [
-      'Skincare',
-      'Makeup',
-      'Fragrances',
-      'Haircare',
-      'Nail Care',
-      'Tools',
-      'Accessories'
+    'beauty'.tr: [
+      'skincare',
+      'makeup',
+      'fragrances',
+      'haircare',
+      'nail_care',
+      'tools',
+      'beauty_accessories'
     ],
   };
 
@@ -71,7 +71,7 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
   /// **📝 Save detailed interests to Firestore**
   Future<void> _updateUserInterests() async {
     if (selectedDetailedInterests.isEmpty) {
-      Get.snackbar("Error", "Please select at least one detailed interest.");
+      Get.snackbar("Error", "select_detailed_interest".tr);
       return;
     }
 
@@ -88,12 +88,12 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
         'detailedInterests': selectedDetailedInterests.toList(), // ✅ New field
       });
 
-      Get.snackbar("Success", "Interests updated successfully!");
+      Get.snackbar("Success", "interests_updated".tr);
       Get.offAll(()=>NotificationScreen());
 
 
     } catch (e) {
-      Get.snackbar("Error", "Failed to update interests: $e");
+      Get.snackbar("Error", "${'update_failed'.tr} $e");
     }
 
     setState(() {
@@ -106,12 +106,20 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
     Get.offAll(()=>NotificationScreen());
   }
 
+  // Add a method to get the base category key
+  String getBaseCategoryKey(String translatedCategory) {
+    if (translatedCategory == 'Обувь' || translatedCategory == 'Shoes') return 'shoes';
+    if (translatedCategory == 'Электроника' || translatedCategory == 'Electronics') return 'electronics';
+    if (translatedCategory == 'Красота' || translatedCategory == 'Beauty') return 'beauty';
+    return translatedCategory;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
-          text: 'Back',
+          text: 'back'.tr,
           fontSize: 20,
           fontWeight: FontWeight.bold,
           fontFamily: 'SFProRounded',
@@ -122,7 +130,7 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
             child: Row(
               children: [
                 CustomText(
-                  text: 'Skip',
+                  text: 'skip'.tr,
                   fontSize: 16,
                   color: Colors.black,
                 ),
@@ -139,14 +147,14 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomText(
-                text: 'Tell us a little more',
+                text: 'tell_more'.tr,
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'SFProRounded',
               ),
               SizedBox(height: 8),
               CustomText(
-                text: 'Choose what interests you',
+                text: 'choose_interests'.tr,
                 fontSize: 16,
                 color: Colors.grey,
                 fontFamily: 'MontserratAlternates',
@@ -155,55 +163,56 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
               Expanded(
                 child: ListView(
                   children: widget.interests!
-                      .where((category) =>
-                      detailedInterestOptions.containsKey(category))
+                      .where((category) {
+                        String baseCategory = getBaseCategoryKey(category);
+                        return detailedInterestOptions.containsKey(baseCategory.tr);
+                      })
                       .map((category) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText(
-                          text: category,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        SizedBox(height: 10),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: detailedInterestOptions[category]!
-                              .map((item) {
-                            final isSelected =
-                            selectedDetailedInterests.contains(item);
-                            return ChoiceChip(
-                              label: CustomText(
-                                text: item,
-                                fontSize: 14,
-                              ),
-                              selected: isSelected,
-                              onSelected: (selected) {
-                                setState(() {
-                                  if (selected) {
-                                    selectedDetailedInterests.add(item);
-                                  } else {
-                                    selectedDetailedInterests.remove(item);
-                                  }
-                                });
-                              },
-                              selectedColor: Colors.blueAccent.withOpacity(0.2),
-                              backgroundColor:
-                              Color(0xff000000).withOpacity(0.03),
-                            );
-                          }).toList(),
-                        ),
-                        SizedBox(height: 20),
-                      ],
-                    );
-                  }).toList(),
+                        String baseCategory = getBaseCategoryKey(category);
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText(
+                              text: category,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            SizedBox(height: 10),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: detailedInterestOptions[baseCategory.tr]!
+                                  .map((item) {
+                                    final isSelected = selectedDetailedInterests.contains(item);
+                                    return ChoiceChip(
+                                      label: CustomText(
+                                        text: item.tr, // Translate the item text
+                                        fontSize: 14,
+                                      ),
+                                      selected: isSelected,
+                                      onSelected: (selected) {
+                                        setState(() {
+                                          if (selected) {
+                                            selectedDetailedInterests.add(item);
+                                          } else {
+                                            selectedDetailedInterests.remove(item);
+                                          }
+                                        });
+                                      },
+                                      selectedColor: Colors.blueAccent.withOpacity(0.2),
+                                      backgroundColor: Color(0xff000000).withOpacity(0.03),
+                                    );
+                                  }).toList(),
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        );
+                      }).toList(),
                 ),
               ),
               CustomGradientButton(
-                text: isLoading ? "Updating..." : "Continue",
-                onPressed: isLoading ? () {} : _updateUserInterests, // ✅ Save only if items are selected
+                text: isLoading ? "updating".tr : "continue".tr,
+                onPressed: isLoading ? null : _updateUserInterests, // ✅ Save only if items are selected
               ),
               SizedBox(height: 20),
             ],

@@ -3,14 +3,13 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:live_app/translate/controller/translations_controller.dart';
+import 'package:live_app/view/auth/delivery_address_screen.dart';
+import 'package:live_app/view/auth/notification_screen.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
-import 'package:live_app/view/auth/verification_screen.dart';
-import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
-import 'package:live_app/view/market/market_screen.dart';
-import 'package:live_app/view/profile_views/profile_screen.dart';
-import 'package:live_app/view/search_views/search_screen.dart';
 import 'firebase_options.dart';
-import 'view/homeScreen/homeMainScreen/home_main_screen.dart';
+import 'translate/translations_app.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,11 +30,17 @@ Future<void> main() async {
     debugPrint("🔥 Firebase Initialization Error: $e");
   }
 
-  runApp(const MyApp());
+  // Load SharedPreferences before running the app
+  final prefs = await SharedPreferences.getInstance();
+
+  // Initialize GetX controller
+  Get.put(TranslationsController());
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, });
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +52,10 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Live App',
-
-
-      home:  SocialsLoginScreen(),
-
+          home: NotificationScreen(),
+          translations: TranslationsApp(),
+          locale: Get.deviceLocale ?? const Locale('en'), // Ensure fallback for null device locale
+          fallbackLocale: const Locale('en'),
         );
       },
     );

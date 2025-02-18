@@ -55,10 +55,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     if (!isAgreedToTerms || !isAbove18) {
-      Get.snackbar(
-        "Error",
-        "You must accept the terms and confirm your age.",
-        snackPosition: SnackPosition.BOTTOM,
+      Get.snackbar("Error", "accept_terms_age".tr,snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -88,7 +85,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: CustomText(
-          text: 'Registration',
+          text: 'register'.tr,
           fontSize: 24,
           fontWeight: FontWeight.bold,
           fontFamily: 'SFProRounded',
@@ -98,9 +95,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             padding: const EdgeInsets.only(right: 18),
             child: IconButton(
               icon: Icon(Icons.close),
-              onPressed: () {
-                Get.back();
-              },
+              onPressed: () => Get.back(),
+              tooltip: 'close'.tr,
             ),
           ),
         ],
@@ -115,38 +111,37 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               children: [
                 SizedBox(height: 20),
                 CustomTextField(
-                  hintText: 'First Name',
+                  hintText: 'first_name'.tr,
                   controller: _firstNameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your first name';
+                      return 'enter_first_name'.tr;
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: 20),
                 CustomTextField(
-                  hintText: 'Last Name',
+                  hintText: 'last_name'.tr,
                   controller: _lastNameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your last name';
+                      return 'enter_last_name'.tr;
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: 20),
                 CustomTextField(
-                  hintText: 'Email',
+                  hintText: 'email'.tr,
                   controller: _emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
+                      return 'enter_email'.tr;
                     }
-                    if (!RegExp(
-                            r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+                    if (!RegExp(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
                         .hasMatch(value)) {
-                      return 'Enter a valid email';
+                      return 'invalid_email'.tr;
                     }
                     return null;
                   },
@@ -156,15 +151,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     : SizedBox(),
                isSignUpWithGoogle == false
                     ? CustomTextField(
-                        hintText: 'Password',
+                 hintText: 'password'.tr,
                         controller: _passwordController,
                         isPassword: true, // ✅ Enables visibility toggle
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
+                            return 'enter_password'.tr;
                           }
                           if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
+                            return 'password_length'.tr;
                           }
                           return null;
                         },
@@ -174,7 +169,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 DropdownButtonFormField<String>(
                   value: gender,
                   decoration: InputDecoration(
-                    hintText: "Select Gender",
+                    hintText: 'select_gender'.tr,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
@@ -182,23 +177,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     fillColor: Colors.white,
                     filled: true,
                   ),
-                  items: ['Male', 'Female', 'Other']
-                      .map((gender) => DropdownMenuItem(
-                            value: gender,
-                            child: Text(gender),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      gender = value;
-                    });
-                  },
+                  items: [
+                    'male'.tr,
+                    'female'.tr,
+                    'other'.tr,
+                  ].map((gender) => DropdownMenuItem(
+                    value: gender,
+                    child: Text(gender),
+                  )).toList(),
+                  onChanged: (value) => setState(() => gender = value),
                 ),
                 SizedBox(height: 20),
                 DropdownButtonFormField<String>(
                   value: country,
                   decoration: InputDecoration(
-                    hintText: "Select Country",
+                    hintText: 'select_country'.tr,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
@@ -206,33 +199,26 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     fillColor: Colors.white,
                     filled: true,
                   ),
-                  items: ['Russia', 'USA', 'India']
-                      .map((country) => DropdownMenuItem(
-                            value: country,
-                            child: Text(country),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      country = value;
-                    });
-                  },
+                  items: [
+                    'russia'.tr,
+                    'usa'.tr,
+                    'india'.tr,
+                  ].map((country) => DropdownMenuItem(
+                    value: country,
+                    child: Text(country),
+                  )).toList(),
+                  onChanged: (value) => setState(() => country = value),
                 ),
                 SizedBox(height: 20),
                 Row(
                   children: [
                     Checkbox(
                       value: isAgreedToTerms,
-                      onChanged: (value) {
-                        setState(() {
-                          isAgreedToTerms = value!;
-                        });
-                      },
+                      onChanged: (value) => setState(() => isAgreedToTerms = value!),
                     ),
                     Expanded(
                       child: CustomText(
-                        text:
-                            'I agree to the Terms of Service and Privacy Policy',
+                        text: 'agree_terms'.tr,
                         fontSize: 12,
                       ),
                     ),
@@ -242,15 +228,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   children: [
                     Checkbox(
                       value: isAbove18,
-                      onChanged: (value) {
-                        setState(() {
-                          isAbove18 = value!;
-                        });
-                      },
+                      onChanged: (value) => setState(() => isAbove18 = value!),
                     ),
                     Expanded(
                       child: CustomText(
-                        text: 'I confirm that I am over 18 years old',
+                        text: 'confirm_age'.tr,
                         fontSize: 12,
                       ),
                     ),
@@ -258,10 +240,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 SizedBox(height: 20),
                 CustomGradientButton(
-                  text: 'Continue',
-                  onPressed: () {
-                    _storeUser();
-                  },
+                  text: 'continue'.tr,
+                  onPressed: _storeUser,
                 ),
               ],
             ),
