@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
-import 'package:live_app/view/auth/notification_screen.dart';
-
 import '../homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
-
 
 class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key});
