@@ -12,6 +12,7 @@ import '../../custom_widgets/custom_text.dart';
 
 class EditTradeProfile extends StatefulWidget {
   final String userId;
+
   const EditTradeProfile({super.key, required this.userId});
 
   @override
@@ -37,8 +38,10 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
 
   Future<void> _loadProfile() async {
     try {
-      DocumentSnapshot snapshot =
-          await FirebaseFirestore.instance.collection("UserEntity").doc(widget.userId).get();
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection("UserEntity")
+          .doc(widget.userId)
+          .get();
 
       if (snapshot.exists) {
         setState(() {
@@ -52,7 +55,6 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
           _isLoading = false;
         });
       } else {
-       
         setState(() {
           _isLoading = false;
         });
@@ -67,23 +69,20 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
 
   Future<void> _updateProfile() async {
     try {
-      await FirebaseFirestore.instance.collection("UserEntity").doc(widget.userId).set({
-        "firstName": _firstNameController.text,
-        "lastName": _lastNameController.text,
-        "email": _emailController.text,
-        "city": _cityController.text,
-        "country": _countryController.text,
-        "image": _profileImageUrl ?? "", 
-        "coverImage": _coverImageUrl ?? "", 
-      }, SetOptions(merge: true));
+      await RegistrationEntity.doc(userId: widget.userId).update({
+          "firstName": _firstNameController.text,
+          "lastName": _lastNameController.text,
+          "email": _emailController.text,
+          "city": _cityController.text,
+          "country": _countryController.text,
+          "image": _profileImageUrl ?? "",
+          "coverImage": _coverImageUrl ?? "",
+      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Profile updated successfully!")),
-      
-
       );
-       Get.off(() => TradeProfileScreen(userId: widget.userId));
-
+      Get.off(() => TradeProfileScreen(userId: widget.userId));
     } catch (e) {
       print("Error updating profile: $e");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -94,7 +93,8 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
 
   Future<void> _pickImage(bool isProfile) async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedImage =
+        await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedImage != null) {
       File imageFile = File(pickedImage.path);
@@ -107,7 +107,10 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
           _coverImageUrl = imageUrl;
         }
       });
-      await FirebaseFirestore.instance.collection("UserEntity").doc(widget.userId).update({
+      await FirebaseFirestore.instance
+          .collection("UserEntity")
+          .doc(widget.userId)
+          .update({
         isProfile ? "image" : "coverImage": imageUrl,
       });
     }
@@ -115,7 +118,8 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
 
   Future<String> _uploadImage(File imageFile, bool isProfile) async {
     String fileName = "${widget.userId}_${isProfile ? 'profile' : 'cover'}.jpg";
-    Reference storageRef = FirebaseStorage.instance.ref().child("users/$fileName");
+    Reference storageRef =
+        FirebaseStorage.instance.ref().child("users/$fileName");
 
     await storageRef.putFile(imageFile);
     return await storageRef.getDownloadURL();
@@ -174,12 +178,15 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
                             image: DecorationImage(
                               image: _coverImageUrl != null
                                   ? NetworkImage(_coverImageUrl!)
-                                  : const AssetImage(companyProfileBackgroundImage) as ImageProvider,
+                                  : const AssetImage(
+                                          companyProfileBackgroundImage)
+                                      as ImageProvider,
                               fit: BoxFit.cover,
                             ),
                           ),
                           child: const Center(
-                            child: Icon(Icons.camera_alt_rounded, color: Colors.white),
+                            child: Icon(Icons.camera_alt_rounded,
+                                color: Colors.white),
                           ),
                         ),
                       ),
@@ -193,9 +200,11 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
                             backgroundColor: Colors.white,
                             backgroundImage: _profileImageUrl != null
                                 ? NetworkImage(_profileImageUrl!)
-                                : const AssetImage("assets/default_profile.png") as ImageProvider,
+                                : const AssetImage("assets/default_profile.png")
+                                    as ImageProvider,
                             child: _profileImageUrl == null
-                                ? const Icon(Icons.camera_alt_rounded, color: Colors.black)
+                                ? const Icon(Icons.camera_alt_rounded,
+                                    color: Colors.black)
                                 : null,
                           ),
                         ),
@@ -214,11 +223,23 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
                           fontWeight: FontWeight.w400,
                         ),
                         const SizedBox(height: 16),
-                        EditProfileTextField(controller: _firstNameController, label: "First Name", maxLines: 1, isBold: true),
+                        EditProfileTextField(
+                            controller: _firstNameController,
+                            label: "First Name",
+                            maxLines: 1,
+                            isBold: true),
                         const SizedBox(height: 16),
-                        EditProfileTextField(controller: _lastNameController, label: "Last Name", maxLines: 1, isBold: true),
+                        EditProfileTextField(
+                            controller: _lastNameController,
+                            label: "Last Name",
+                            maxLines: 1,
+                            isBold: true),
                         const SizedBox(height: 16),
-                        EditProfileTextField(controller: _emailController, label: "Email", maxLines: 1, isBold: false),
+                        EditProfileTextField(
+                            controller: _emailController,
+                            label: "Email",
+                            maxLines: 1,
+                            isBold: false),
                       ],
                     ),
                   ),
@@ -228,6 +249,7 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
     );
   }
 }
+
 class EditProfileTextField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
@@ -274,8 +296,6 @@ class EditProfileTextField extends StatelessWidget {
               height: 40,
               child: TextFormField(
                 controller: controller,
-
-
                 maxLines: maxLines,
                 style: TextStyle(
                   fontSize: 16,
@@ -302,4 +322,3 @@ class EditProfileTextField extends StatelessWidget {
     );
   }
 }
-
