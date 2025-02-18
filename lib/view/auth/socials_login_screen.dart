@@ -26,6 +26,37 @@ class SocialsLoginScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Obx(() => TextButton(
+                        onPressed: () => translationController.updateLanguage('en'),
+                        child: Text(
+                          'English',
+                          style: TextStyle(
+                            color: translationController.selectedLanguage.value == 'English'
+                                ? purpleColor
+                                : Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )),
+                      Text(' | '),
+                      Obx(() => TextButton(
+                        onPressed: () => translationController.updateLanguage('ru'),
+                        child: Text(
+                          'Russian',
+                          style: TextStyle(
+                            color: translationController.selectedLanguage.value == 'Russian'
+                                ? purpleColor
+                                : Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )),
+                    ],
+                  ),
+
                   /// Register
                   GestureDetector(
                     onTap: () {

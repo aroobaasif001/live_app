@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Live App',
-          home: SocialsLoginScreen(),
+          home: InterestsScreen(),
           translations: TranslationsApp(),
           locale: Get.deviceLocale ?? const Locale('en'), // Ensure fallback for null device locale
           fallbackLocale: const Locale('en'),
