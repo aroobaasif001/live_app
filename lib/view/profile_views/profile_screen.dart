@@ -17,6 +17,7 @@ import 'package:live_app/view/profile_views/settings_screen.dart';
 import 'package:live_app/view/profile_views/trade_profile_screen.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
+import '../livestreaming/live_preview.dart';
 import 'notifications_settings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -165,22 +166,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(
                         height: 25,
                       ),
-                      Container(
-                        height: 155,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(profileAdvertisementImage),
-                                fit: BoxFit.cover)),
+                      GestureDetector(
+                        onTap: (){
+                          Get.to(()=>LivePreviewScreen(name: snapshot.data!.data()!.firstName.toString(), photo: 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
+
+                        },
+                        child: Container(
+                          height: 155,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(profileAdvertisementImage),
+                                  fit: BoxFit.cover)),
+                        ),
                       ),
                       CustomText(
                         text: "Account",
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
-                      TextButton(onPressed: (){
-                       // Get.to(()=>LivePreviewScreen(name: snapshot.data!.data()!.firstName.toString(), photo: 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
-                      }, child: Text('Start Live')),
+
 
                       TextButton(onPressed: (){
                       //  Get.to(()=>LiveStreamViewScreen());
