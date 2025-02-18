@@ -6,7 +6,20 @@ import 'package:live_app/custom_widgets/custom_textfield.dart';
 import 'package:live_app/view/auth/delivery_address_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({super.key});
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? password;
+  final bool? isSignUpWithGoogle;
+
+  const RegistrationScreen({
+    super.key,
+    this.firstName,
+    this.password,
+    this.isSignUpWithGoogle,
+    this.lastName,
+    this.email,
+  });
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -15,21 +28,37 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
 
   String? country;
   String? gender;
   bool isAgreedToTerms = false;
   bool isAbove18 = false;
+  late bool isSignUpWithGoogle;
+
+  @override
+  void initState() {
+    super.initState();
+    _firstNameController = TextEditingController(text: widget.firstName ?? '');
+    _lastNameController = TextEditingController(text: widget.lastName ?? '');
+    _emailController = TextEditingController(text: widget.email ?? '');
+    isSignUpWithGoogle = widget.isSignUpWithGoogle ?? false;
+    _passwordController = TextEditingController(text: widget.password ?? '');
+  }
+
+
 
   void _storeUser() async {
     if (!_formKey.currentState!.validate()) return;
 
     if (!isAgreedToTerms || !isAbove18) {
-      Get.snackbar("Error", "You must accept the terms and confirm your age.");
+      Get.snackbar("Error", "accept_terms_age".tr,snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
       return;
     }
 
@@ -56,7 +85,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: CustomText(
-          text: 'Registration',
+          text: 'register'.tr,
           fontSize: 24,
           fontWeight: FontWeight.bold,
           fontFamily: 'SFProRounded',
@@ -66,9 +95,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             padding: const EdgeInsets.only(right: 18),
             child: IconButton(
               icon: Icon(Icons.close),
-              onPressed: () {
-                Get.back();
-              },
+              onPressed: () => Get.back(),
+              tooltip: 'close'.tr,
             ),
           ),
         ],
@@ -83,62 +111,65 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               children: [
                 SizedBox(height: 20),
                 CustomTextField(
-                  hintText: 'First Name',
+                  hintText: 'first_name'.tr,
                   controller: _firstNameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your first name';
+                      return 'enter_first_name'.tr;
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: 20),
                 CustomTextField(
-                  hintText: 'Last Name',
+                  hintText: 'last_name'.tr,
                   controller: _lastNameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your last name';
+                      return 'enter_last_name'.tr;
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: 20),
                 CustomTextField(
-                  hintText: 'Email',
+                  hintText: 'email'.tr,
                   controller: _emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
+                      return 'enter_email'.tr;
                     }
-                    if (!RegExp(
-                            r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+                    if (!RegExp(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
                         .hasMatch(value)) {
-                      return 'Enter a valid email';
+                      return 'invalid_email'.tr;
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
-                CustomTextField(
-                  hintText: 'Password',
-                  controller: _passwordController,
-                  isPassword: true, // ✅ Enables visibility toggle
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
-                  },
-                ),
+                isSignUpWithGoogle == false
+                    ? SizedBox(height: 20)
+                    : SizedBox(),
+               isSignUpWithGoogle == false
+                    ? CustomTextField(
+                 hintText: 'password'.tr,
+                        controller: _passwordController,
+                        isPassword: true, // ✅ Enables visibility toggle
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'enter_password'.tr;
+                          }
+                          if (value.length < 6) {
+                            return 'password_length'.tr;
+                          }
+                          return null;
+                        },
+                      )
+                    : SizedBox(),
                 SizedBox(height: 20),
                 DropdownButtonFormField<String>(
                   value: gender,
                   decoration: InputDecoration(
-                    hintText: "Select Gender",
+                    hintText: 'select_gender'.tr,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
@@ -146,23 +177,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     fillColor: Colors.white,
                     filled: true,
                   ),
-                  items: ['Male', 'Female', 'Other']
-                      .map((gender) => DropdownMenuItem(
-                            value: gender,
-                            child: Text(gender),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      gender = value;
-                    });
-                  },
+                  items: [
+                    'male'.tr,
+                    'female'.tr,
+                    'other'.tr,
+                  ].map((gender) => DropdownMenuItem(
+                    value: gender,
+                    child: Text(gender),
+                  )).toList(),
+                  onChanged: (value) => setState(() => gender = value),
                 ),
                 SizedBox(height: 20),
                 DropdownButtonFormField<String>(
                   value: country,
                   decoration: InputDecoration(
-                    hintText: "Select Country",
+                    hintText: 'select_country'.tr,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
@@ -170,33 +199,26 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     fillColor: Colors.white,
                     filled: true,
                   ),
-                  items: ['Russia', 'USA', 'India']
-                      .map((country) => DropdownMenuItem(
-                            value: country,
-                            child: Text(country),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      country = value;
-                    });
-                  },
+                  items: [
+                    'russia'.tr,
+                    'usa'.tr,
+                    'india'.tr,
+                  ].map((country) => DropdownMenuItem(
+                    value: country,
+                    child: Text(country),
+                  )).toList(),
+                  onChanged: (value) => setState(() => country = value),
                 ),
                 SizedBox(height: 20),
                 Row(
                   children: [
                     Checkbox(
                       value: isAgreedToTerms,
-                      onChanged: (value) {
-                        setState(() {
-                          isAgreedToTerms = value!;
-                        });
-                      },
+                      onChanged: (value) => setState(() => isAgreedToTerms = value!),
                     ),
                     Expanded(
                       child: CustomText(
-                        text:
-                            'I agree to the Terms of Service and Privacy Policy',
+                        text: 'agree_terms'.tr,
                         fontSize: 12,
                       ),
                     ),
@@ -206,15 +228,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   children: [
                     Checkbox(
                       value: isAbove18,
-                      onChanged: (value) {
-                        setState(() {
-                          isAbove18 = value!;
-                        });
-                      },
+                      onChanged: (value) => setState(() => isAbove18 = value!),
                     ),
                     Expanded(
                       child: CustomText(
-                        text: 'I confirm that I am over 18 years old',
+                        text: 'confirm_age'.tr,
                         fontSize: 12,
                       ),
                     ),
@@ -222,10 +240,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 SizedBox(height: 20),
                 CustomGradientButton(
-                  text: 'Continue',
-                  onPressed: () {
-                    _storeUser();
-                  },
+                  text: 'continue'.tr,
+                  onPressed: _storeUser,
                 ),
               ],
             ),

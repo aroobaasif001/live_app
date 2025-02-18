@@ -5,6 +5,7 @@ import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/custom_widgets/custom_textfield.dart';
 import 'package:live_app/view/auth/verification_screen.dart';
+import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
@@ -21,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   /// **🔥 Firebase Login Function**
   Future<void> _loginUser() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      Get.snackbar("Error", "Please fill in all fields");
+      Get.snackbar("Error", "fill_all_fields".tr);
       return;
     }
 
@@ -30,21 +31,21 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await FirebaseAuth.instance.setLanguageCode("en"); // ✅ Fix locale error
+      await FirebaseAuth.instance.setLanguageCode(Get.locale?.languageCode ?? "en");
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      Get.snackbar("Success", "Login successful!");
-      Get.to(() => VerificationScreen()); // ✅ Navigate to Verification Screen
+      Get.snackbar("Success", "login_successful".tr);
+      Get.to(() => VerificationScreen());
 
     } on FirebaseAuthException catch (e) {
-      String errorMessage = "Login failed. Please try again.";
+      String errorMessage = "login_failed".tr;
       if (e.code == 'user-not-found') {
-        errorMessage = "No user found with this email.";
+        errorMessage = "user_not_found".tr;
       } else if (e.code == 'wrong-password') {
-        errorMessage = "Incorrect password. Please try again.";
+        errorMessage = "wrong_password".tr;
       }
       Get.snackbar("Error", errorMessage);
     }
@@ -67,33 +68,51 @@ class _LoginScreenState extends State<LoginScreen> {
                 alignment: Alignment.topRight,
                 child: IconButton(
                   icon: Icon(Icons.close),
-                  onPressed: () {
-                    Get.back();
-                  },
+                  onPressed: () => Get.back(),
+                  tooltip: 'close'.tr,
                 ),
               ),
               SizedBox(height: 20),
               CustomText(
-                text: 'Login',
+                text: 'login'.tr,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'SFProRounded',
               ),
               SizedBox(height: 20),
               CustomTextField(
-                hintText: 'Email',
+                hintText: 'email'.tr,
                 controller: _emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'enter_email'.tr;
+                  }
+                  if (!RegExp(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+                      .hasMatch(value)) {
+                    return 'invalid_email'.tr;
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 20),
               CustomTextField(
-                hintText: 'Password',
+                hintText: 'password'.tr,
                 controller: _passwordController,
                 isPassword: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'enter_password'.tr;
+                  }
+                  if (value.length < 6) {
+                    return 'password_length'.tr;
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 20),
               CustomGradientButton(
-                text: isLoading ? "Logging in..." : "Get Code",
-                onPressed: isLoading ? () {} : _loginUser,
+                text: isLoading ? 'logging_in'.tr : 'get_code'.tr,
+                onPressed: isLoading ? null : _loginUser,
               ),
             ],
           ),

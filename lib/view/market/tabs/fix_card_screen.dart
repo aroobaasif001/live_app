@@ -1,10 +1,10 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_review.dart';
-import 'package:live_app/custom_widgets/custom_table.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
@@ -13,11 +13,61 @@ import 'package:live_app/view/market/tabs/product_detail/tabs/about_the_product_
 import 'package:live_app/view/market/tabs/product_detail/tabs/seller_information_screen.dart';
 import '../../../utils/colors.dart';
 
-class FixCardScreen extends StatelessWidget {
+class FixCardScreen extends StatefulWidget {
+  final String? productImage;
+  final String? productPrice;
+  final String? productName;
+  final String? productCompanyId;
+
+  FixCardScreen(
+      {this.productImage,
+      this.productPrice,
+      this.productName,
+      this.productCompanyId});
+
+  @override
+  State<FixCardScreen> createState() => _FixCardScreenState();
+}
+
+class _FixCardScreenState extends State<FixCardScreen> {
+  String? companyName; // Variable to store the company name
+
+  @override
+  void initState() {
+    super.initState();
+    getCompanyName();
+  }
+
+  Future<void> getCompanyName() async {
+    try {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection("UserEntity")
+          .doc(widget.productCompanyId)
+          .get();
+
+      // Ensure the document exists and contains the 'name' field
+      if (doc.exists && doc.data() != null) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        setState(() {
+          companyName = data['firstName'] ?? 'Unknown Company'; // Store name
+        });
+      } else {
+        setState(() {
+          companyName = 'Unknown Company'; // Fallback if doc doesn't exist
+        });
+      }
+    } catch (e) {
+      print("Error fetching company name: $e");
+      setState(() {
+        companyName = 'Unknown Company'; // Handle error case
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Tab count should match TabBarView children count
+      length: 2,
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -26,7 +76,9 @@ class FixCardScreen extends StatelessWidget {
               CustomContainer(
                 height: 376,
                 width: double.infinity,
-                image: DecorationImage(image: AssetImage(iphoneImage), fit: BoxFit.fill),
+                image: DecorationImage(
+                    image: NetworkImage(widget.productImage!),
+                    fit: BoxFit.fill),
                 child: Align(
                   alignment: Alignment.topRight,
                   child: Padding(
@@ -54,7 +106,7 @@ class FixCardScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: 'Iphone 16 PRO MAX 512 GB',
+                      text: widget.productName!,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'SFProRounded',
@@ -74,7 +126,7 @@ class FixCardScreen extends StatelessWidget {
                         ),
                         SizedBox(width: 13),
                         CustomText(
-                          text: '100 ₽',
+                          text: widget.productPrice!,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -96,10 +148,14 @@ class FixCardScreen extends StatelessWidget {
                                   CustomContainer(
                                     height: 14,
                                     width: 14,
-                                    image: DecorationImage(image: AssetImage(saveIcon)),
+                                    image: DecorationImage(
+                                        image: AssetImage(saveIcon)),
                                   ),
                                   SizedBox(width: 6),
-                                  CustomText(text: '2',color: Colors.black,),
+                                  CustomText(
+                                    text: '2',
+                                    color: Colors.black,
+                                  ),
                                 ],
                               ),
                             ),
@@ -107,27 +163,30 @@ class FixCardScreen extends StatelessWidget {
                         ),
                         SizedBox(width: 12),
                         Expanded(
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: CustomContainer(
-                              height: 32,
-                              border: Border.all(color: Color(0xffC9C9C9)),
-                              borderRadius: BorderRadius.circular(8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CustomContainer(
-                                    height: 14,
-                                    width: 14,
-                                    image: DecorationImage(image: AssetImage(shareIcon)),
-                                  ),
-                                  SizedBox(width: 6),
-                                  CustomText(text: 'Share',color: Colors.black,),
-                                ],
-                              ),
+                            child: GestureDetector(
+                          onTap: () {},
+                          child: CustomContainer(
+                            height: 32,
+                            border: Border.all(color: Color(0xffC9C9C9)),
+                            borderRadius: BorderRadius.circular(8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CustomContainer(
+                                  height: 14,
+                                  width: 14,
+                                  image: DecorationImage(
+                                      image: AssetImage(shareIcon)),
+                                ),
+                                SizedBox(width: 6),
+                                CustomText(
+                                  text: 'Share',
+                                  color: Colors.black,
+                                ),
+                              ],
                             ),
-                          )
-                        ),
+                          ),
+                        )),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -148,7 +207,8 @@ class FixCardScreen extends StatelessWidget {
                           ),
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 8),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -156,18 +216,20 @@ class FixCardScreen extends StatelessWidget {
                                     height: 32,
                                     width: 32,
                                     shape: BoxShape.circle,
-                                    image: DecorationImage(image: AssetImage(appleGBlackImage)),
+                                    image: DecorationImage(
+                                        image: AssetImage(appleGBlackImage)),
                                   ),
                                   SizedBox(width: 6),
                                   CustomText(
-                                    text: 'company_name',
+                                    text: companyName ?? 'Loading...',
                                   ),
                                   Spacer(),
                                   CustomContainer(
                                     height: 32,
                                     width: 32,
                                     shape: BoxShape.circle,
-                                    image: DecorationImage(image: AssetImage(messageBlackIcon)),
+                                    image: DecorationImage(
+                                        image: AssetImage(messageBlackIcon)),
                                   ),
                                 ],
                               ),
@@ -191,16 +253,22 @@ class FixCardScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  CustomReview(value: '4.7',label: 'Rating',iconPath: startIcon),
+                                  CustomReview(
+                                      value: '4.7',
+                                      label: 'Rating',
+                                      iconPath: startIcon),
                                   VerticalDivider(color: conLineColor),
-                                  CustomReview(value: '33.8K',label: 'Reviews'),
+                                  CustomReview(
+                                      value: '33.8K', label: 'Reviews'),
                                   VerticalDivider(color: conLineColor),
-                                  CustomReview(value: '169.7K',label: 'Sold'),
+                                  CustomReview(value: '169.7K', label: 'Sold'),
                                   VerticalDivider(color: conLineColor),
-                                  CustomReview(value: '+-2d',label: 'Delivery'),
+                                  CustomReview(
+                                      value: '+-2d', label: 'Delivery'),
                                 ],
                               ),
                             ),
@@ -218,7 +286,8 @@ class FixCardScreen extends StatelessWidget {
                       unselectedBorderColor: Colors.transparent,
                       borderColor: Colors.transparent,
                       radius: 8,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                       buttonMargin: EdgeInsets.symmetric(horizontal: 10),
                       labelStyle: TextStyle(
                         color: Colors.white,
@@ -233,7 +302,8 @@ class FixCardScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         gradient: LinearGradient(
-                          colors: [Colors.blue, Colors.pinkAccent], // Gradient for selected tab
+                          colors: [Colors.blue, Colors.pinkAccent],
+                          // Gradient for selected tab
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -253,6 +323,7 @@ class FixCardScreen extends StatelessWidget {
                   children: [
                     /// **First Tab: About the Product**
                     AboutTheProductScreen(),
+
                     /// **Second Tab: Seller Information**
                     SellerInformationScreen(),
                   ],
@@ -264,7 +335,9 @@ class FixCardScreen extends StatelessWidget {
         bottomNavigationBar: CustomContainer(
           height: 92,
           padding: EdgeInsets.all(16),
-          child: CustomGradientButton(text: 'Add to cart',),
+          child: CustomGradientButton(
+            text: 'Add to cart',
+          ),
         ),
         floatingActionButton: GestureDetector(
           onTap: () {
@@ -276,11 +349,7 @@ class FixCardScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(100),
             conColor: Colors.white,
             boxShadow: [
-              BoxShadow(
-                  color: greyColor,
-                  blurRadius: 5,
-                  offset: Offset(-1, 3)
-              )
+              BoxShadow(color: greyColor, blurRadius: 5, offset: Offset(-1, 3))
             ],
             child: Center(
               child: CustomContainer(
@@ -296,7 +365,7 @@ class FixCardScreen extends StatelessWidget {
                       width: 24,
                       image: DecorationImage(image: AssetImage(storeIcon)),
                     ),
-                    CustomText(text: '1000 ₽',color: Colors.white)
+                    CustomText(text: '1000 ₽', color: Colors.white)
                   ],
                 ),
               ),
@@ -306,6 +375,7 @@ class FixCardScreen extends StatelessWidget {
       ),
     );
   }
+
   void _showBasketModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -330,25 +400,38 @@ class FixCardScreen extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
-                      IconButton(onPressed: () {
-                        Get.back();
-                      }, icon: Icon(Icons.close)),
+                      IconButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          icon: Icon(Icons.close)),
                     ],
                   ),
+
                   ///listview
                   Row(
                     children: [
                       CustomContainer(
                         width: 18,
                         height: 18,
-                        image: DecorationImage(image: AssetImage(appleGBlackImage)),
+                        image: DecorationImage(
+                            image: AssetImage(appleGBlackImage)),
                       ),
                       SizedBox(width: 6),
-                      CustomText(text: 'company_name',fontSize: 12,),
+                      CustomText(
+                        text: 'company_name',
+                        fontSize: 12,
+                      ),
                       Row(
                         children: [
-                          Icon(Icons.star_rounded,color: Colors.yellow,),
-                          CustomText(text: '4.2',fontSize: 12,),
+                          Icon(
+                            Icons.star_rounded,
+                            color: Colors.yellow,
+                          ),
+                          CustomText(
+                            text: '4.2',
+                            fontSize: 12,
+                          ),
                         ],
                       ),
                     ],
@@ -365,16 +448,19 @@ class FixCardScreen extends StatelessWidget {
                                   height: 56,
                                   width: 56,
                                   borderRadius: BorderRadius.circular(8),
-                                  image: DecorationImage(image: AssetImage(marketImage),fit: BoxFit.fill)
-                              ),
+                                  image: DecorationImage(
+                                      image: AssetImage(marketImage),
+                                      fit: BoxFit.fill)),
                               SizedBox(width: 12),
                               Expanded(
                                 child: CustomContainer(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       CustomText(
-                                        text: 'Lorem ipsum dolor sit amet consectetur adipiscing elit.',
+                                        text:
+                                            'Lorem ipsum dolor sit amet consectetur adipiscing elit.',
                                         fontSize: 14,
                                       ),
                                       CustomText(
@@ -393,20 +479,31 @@ class FixCardScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 24),
+
                   ///listview
                   Row(
                     children: [
                       CustomContainer(
                         width: 18,
                         height: 18,
-                        image: DecorationImage(image: AssetImage(appleGBlackImage)),
+                        image: DecorationImage(
+                            image: AssetImage(appleGBlackImage)),
                       ),
                       SizedBox(width: 6),
-                      CustomText(text: 'company_name',fontSize: 12,),
+                      CustomText(
+                        text: 'company_name',
+                        fontSize: 12,
+                      ),
                       Row(
                         children: [
-                          Icon(Icons.star_rounded,color: Colors.yellow,),
-                          CustomText(text: '4.2',fontSize: 12,),
+                          Icon(
+                            Icons.star_rounded,
+                            color: Colors.yellow,
+                          ),
+                          CustomText(
+                            text: '4.2',
+                            fontSize: 12,
+                          ),
                         ],
                       ),
                     ],
@@ -423,16 +520,19 @@ class FixCardScreen extends StatelessWidget {
                                   height: 56,
                                   width: 56,
                                   borderRadius: BorderRadius.circular(8),
-                                  image: DecorationImage(image: AssetImage(marketImage),fit: BoxFit.fill)
-                              ),
+                                  image: DecorationImage(
+                                      image: AssetImage(marketImage),
+                                      fit: BoxFit.fill)),
                               SizedBox(width: 12),
                               Expanded(
                                 child: CustomContainer(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       CustomText(
-                                        text: 'Lorem ipsum dolor sit amet consectetur adipiscing elit.',
+                                        text:
+                                            'Lorem ipsum dolor sit amet consectetur adipiscing elit.',
                                         fontSize: 14,
                                       ),
                                       CustomText(
@@ -469,7 +569,7 @@ class FixCardScreen extends StatelessWidget {
                   CustomGradientButton(
                     text: 'Continue',
                     onPressed: () {
-                      Get.to(()=> PaymentScreen());
+                      Get.to(() => PaymentScreen());
                     },
                   ),
                   SizedBox(height: 10),
