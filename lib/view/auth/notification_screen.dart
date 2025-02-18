@@ -23,34 +23,33 @@ class NotificationScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 20),
-                // Title
                 CustomText(
-                  text: "Don't miss the show",
+                  text: "dont_miss_show".tr,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'SFProRounded',
                 ),
                 SizedBox(height: 20),
-                // Image
                 CustomContainer(
                   height: 551,
                   width: double.infinity,
                   margin: EdgeInsets.symmetric(horizontal: 20),
                   image: DecorationImage(
-                      image: AssetImage(notificationImage), fit: BoxFit.fill),
+                    image: AssetImage(notificationImage),
+                    fit: BoxFit.fill
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       CustomText(
-                        text: 'Be the first to stream',
+                        text: 'be_first_stream'.tr,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'SFProRounded',
                       ),
                       SizedBox(height: 8),
                       CustomText(
-                        text:
-                            'Receive notifications about streams, notifications when your item is posted, and order updates.',
+                        text: 'receive_notifications'.tr,
                         fontSize: 14,
                         color: Colors.grey,
                         textAlign: TextAlign.center,
@@ -59,12 +58,9 @@ class NotificationScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Subtitle
-
                 SizedBox(height: 20),
-                // Continue button
                 CustomGradientButton(
-                  text: 'Continue',
+                  text: 'continue'.tr,
                   onPressed: () {
                     showDialog(
                       barrierColor: Colors.black.withOpacity(0.5),
@@ -77,8 +73,7 @@ class NotificationScreen extends StatelessWidget {
                             backgroundColor: Colors.transparent,
                             child: Container(
                               width: 550,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 20),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                               decoration: BoxDecoration(
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(14),
@@ -86,14 +81,13 @@ class NotificationScreen extends StatelessWidget {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  // Gradient Title
                                   Center(
                                     child: RichText(
                                       textAlign: TextAlign.center,
                                       text: TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: 'Want! best\nwith ',
+                                            text: 'want_best'.tr,
                                             style: TextStyle(
                                               fontSize: 28,
                                               color: Colors.white,
@@ -101,7 +95,7 @@ class NotificationScreen extends StatelessWidget {
                                             ),
                                           ),
                                           TextSpan(
-                                            text: 'friends',
+                                            text: 'friends'.tr,
                                             style: TextStyle(
                                               fontSize: 28,
                                               fontWeight: FontWeight.bold,
@@ -114,9 +108,7 @@ class NotificationScreen extends StatelessWidget {
                                                   ],
                                                   begin: Alignment.topLeft,
                                                   end: Alignment.bottomRight,
-                                                ).createShader(
-                                                    const Rect.fromLTWH(
-                                                        0, 0, 100, 30)),
+                                                ).createShader(const Rect.fromLTWH(0, 0, 100, 30)),
                                             ),
                                           ),
                                         ],
@@ -124,7 +116,6 @@ class NotificationScreen extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 20),
-                                  // Dialog Content Box
                                   Container(
                                     width: 500,
                                     decoration: BoxDecoration(
@@ -134,21 +125,18 @@ class NotificationScreen extends StatelessWidget {
                                     child: Column(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 19, left: 16, right: 16),
+                                          padding: const EdgeInsets.only(top: 19, left: 16, right: 16),
                                           child: Column(
                                             children: [
                                               CustomText(
-                                                text:
-                                                    '"Want!"\nGain access to your contacts',
+                                                text: 'want_contacts_title'.tr,
                                                 fontSize: 17,
                                                 fontWeight: FontWeight.w600,
                                                 textAlign: TextAlign.center,
                                                 fontFamily: 'SFProRounded',
                                               ),
                                               CustomText(
-                                                text:
-                                                    'Gain access to your contacts. Sync your contacts to easily find people you know on other sites. Your contacts will only be used to help you communicate with your friends.',
+                                                text: 'want_contacts_description'.tr,
                                                 fontSize: 14,
                                                 textAlign: TextAlign.center,
                                                 fontFamily: 'SFProRounded',
@@ -157,27 +145,20 @@ class NotificationScreen extends StatelessWidget {
                                           ),
                                         ),
                                         const SizedBox(height: 20),
-                                        // Button Row
                                         Row(
                                           children: [
                                             Expanded(
                                               child: GestureDetector(
-                                                onTap: () {
-                                                  Get.back();
-                                                },
+                                                onTap: () => Get.back(),
                                                 child: CustomContainer(
                                                   height: 44,
                                                   border: Border(
-                                                    top: BorderSide(
-                                                        color:
-                                                            greyLiteLineColor),
-                                                    right: BorderSide(
-                                                        color:
-                                                            greyLiteLineColor),
+                                                    top: BorderSide(color: greyLiteLineColor),
+                                                    right: BorderSide(color: greyLiteLineColor),
                                                   ),
                                                   child: Center(
                                                     child: CustomText(
-                                                      text: "Don't allow",
+                                                      text: 'dont_allow'.tr,
                                                       fontSize: 16,
                                                       color: Colors.blue,
                                                     ),
@@ -188,23 +169,18 @@ class NotificationScreen extends StatelessWidget {
                                             Expanded(
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  Get.offAll(() =>
-                                                      BottomNavigationBarWidget());
+                                                  Get.offAll(() => BottomNavigationBarWidget());
                                                 },
                                                 child: CustomContainer(
                                                   height: 44,
                                                   conColor: buttonColor,
                                                   border: Border(
-                                                    top: BorderSide(
-                                                        color:
-                                                            greyLiteLineColor),
-                                                    left: BorderSide(
-                                                        color:
-                                                            greyLiteLineColor),
+                                                    top: BorderSide(color: greyLiteLineColor),
+                                                    left: BorderSide(color: greyLiteLineColor),
                                                   ),
                                                   child: Center(
                                                     child: CustomText(
-                                                      text: "OK",
+                                                      text: 'ok'.tr,
                                                       fontSize: 16,
                                                       color: Colors.blue,
                                                     ),

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
@@ -7,6 +8,7 @@ import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
 import 'package:live_app/utils/images_path.dart';
 import 'package:live_app/view/auth/interests_detail_screen.dart';
+import 'package:responsive_grid_list/responsive_grid_list.dart';
 import '../../utils/colors.dart';
 
 class InterestsScreen extends StatefulWidget {
@@ -61,22 +63,22 @@ class _InterestsScreenState extends State<InterestsScreen> {
     dagaImage
   ];
 
-  final List<String> interestNames = [
-    'Cloth',
-    'Shoes',
-    'Electronics',
-    'Bags',
-    'Sport',
-    'Toys',
-    'Beauty',
-    'Accessories',
-    'Furniture',
-    'Pet Supplies',
-    'Automotive products',
-    'Video Games',
-    'For children',
-    'Books',
-    'Hobby',
+  final List<String> interestKeys = [
+    'cloth',
+    'shoes',
+    'electronics',
+    'bags',
+    'sport',
+    'toys',
+    'beauty',
+    'accessories',
+    'furniture',
+    'pet_supplies',
+    'automotive',
+    'video_games',
+    'for_children',
+    'books',
+    'hobby',
   ];
 
   final Set<int> selectedIndices = {};
@@ -88,17 +90,17 @@ class _InterestsScreenState extends State<InterestsScreen> {
     setState(() {
       if (selectedIndices.contains(index)) {
         selectedIndices.remove(index);
-        selectedInterests.remove(interestNames[index]);
+        selectedInterests.remove(interestKeys[index].tr);
       } else {
         selectedIndices.add(index);
-        selectedInterests.add(interestNames[index]);
+        selectedInterests.add(interestKeys[index].tr);
       }
     });
   }
 
   void _registerUser() async {
     if (selectedInterests.isEmpty) {
-      Get.snackbar("Error", "Please select at least one interest.");
+      Get.snackbar("Error", "select_interest".tr);
       return;
     }
 
@@ -133,7 +135,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
 
       await RegistrationEntity.doc(userId: docId).set(registrationEntity);
 
-      Get.snackbar("Success", "Registration completed successfully!");
+      Get.snackbar("Success", "registration_success".tr);
 
       Get.to(() => InterestsDetailScreen(
         country: widget.country,
@@ -164,8 +166,11 @@ class _InterestsScreenState extends State<InterestsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         title: CustomText(
-          text: 'Back',
+          text: 'back'.tr,
           fontSize: 20,
           fontWeight: FontWeight.bold,
           fontFamily: 'SFProRounded',
@@ -173,79 +178,84 @@ class _InterestsScreenState extends State<InterestsScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28),          child: Column(
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomText(
-                text: 'What are you interested in?',
+                text: 'interests_title'.tr,
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'SFProRounded',
               ),
               const SizedBox(height: 8),
               CustomText(
-                text: 'Select a few to get started',
+                text: 'interests_subtitle'.tr,
                 fontSize: 16,
                 color: Colors.grey,
                 fontFamily: 'MontserratAlternates',
               ),
               const SizedBox(height: 20),
               Expanded(
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  children: List.generate(interestImages.length, (index) {
+                child: ResponsiveGridListBuilder(
+                  minItemWidth: 1,
+                  minItemsPerRow: 3,
+                  maxItemsPerRow: 3,
+                  horizontalGridSpacing: 12.h,
+                  verticalGridSpacing: 12.h,
+                  builder: (context, items) => ListView(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    physics: BouncingScrollPhysics(),
+                    children: items,
+                  ),
+                  gridItems: List.generate(interestImages.length, (index) {
                     final isSelected = selectedIndices.contains(index);
                     return GestureDetector(
                       onTap: () => _toggleInterest(index),
                       child: Container(
+                        height: 120.h,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 4,
-                              offset: Offset(2, 2),
-                            ),
-                          ],
+                          borderRadius: BorderRadius.circular(8),
                           border: isSelected
-                              ? Border.all(
-                            width: 0.1,
-                            color: Colors.transparent,
-                          )
+                              ? null
                               : Border.all(color: Colors.white, width: 2),
                           gradient: isSelected
                               ? LinearGradient(
-                            colors: [blueLiteColor, purpleLiteColor, deepPurpleColor],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          )
+                                  colors: [blueLiteColor, purpleLiteColor, deepPurpleColor],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                )
                               : null,
                         ),
                         child: Padding(
-                          padding: isSelected ? const EdgeInsets.all(2.5) : EdgeInsets.zero,
+                          padding: isSelected ? const EdgeInsets.all(1.5) : EdgeInsets.zero,
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                CustomText(
-                                  text: interestNames[index],
-                                  fontSize: 14,
-                                  textAlign: TextAlign.center,
-                                  fontWeight: FontWeight.bold,
+                                Center(
+                                  child: CustomText(
+                                    text: interestKeys[index].tr,
+                                    fontSize: 12.sp,
+                                    textAlign: TextAlign.center,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
                                 ),
-                                CustomContainer(
-                                  height: 50,
-                                  width: 50,
-                                  image: DecorationImage(
-                                    image: AssetImage(interestImages[index]),
-                                    fit: BoxFit.fill,
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      image: DecorationImage(
+                                        image: AssetImage(interestImages[index]),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -259,8 +269,8 @@ class _InterestsScreenState extends State<InterestsScreen> {
               ),
               const SizedBox(height: 20),
               CustomGradientButton(
-                text: isLoading ? "Registering..." : "Continue",
-                onPressed: isLoading ? () {} : _registerUser, // ✅ FIXED
+                text: isLoading ? "registering".tr : "continue".tr,
+                onPressed: isLoading ? null : _registerUser,
               ),
               const SizedBox(height: 20),
             ],
