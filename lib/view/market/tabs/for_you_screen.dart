@@ -8,9 +8,8 @@ import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/custom_widgets/custom_textfield.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/utils/icons_path.dart';
-import 'package:live_app/utils/images_path.dart';
-import 'package:live_app/view/market/tabs/fix_card_screen.dart';
-import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
+
+import '../fetch_goods.dart';
 
 class ForYouScreen extends StatefulWidget {
   const ForYouScreen({super.key});
@@ -111,81 +110,7 @@ class _ForYouScreenState extends State<ForYouScreen> {
             fontWeight: FontWeight.bold,
           ),
           SizedBox(height: 10),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomContainer(
-                        height: 136,
-                        width: 136,
-                        borderRadius: BorderRadius.circular(8),
-                        image: DecorationImage(image: AssetImage(marketImage), fit: BoxFit.fill),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomGradientButton(
-                                  height: 21, width: 31, fontSize: 10, text: 'Fix', onPressed: () {
-                                    Get.to(()=> FixCardScreen());
-                              }),
-                              CustomContainer(
-                                height: 30,
-                                width: 45,
-                                conColor: Colors.white,
-                                borderRadius: BorderRadius.circular(100),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.notifications_none_rounded, size: 16),
-                                    SizedBox(width: 3),
-                                    CustomText(text: '1')
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomText(
-                              text: 'Product name',
-                              fontWeight: FontWeight.bold,
-                            ),
-                            CustomText(
-                              text: 'Description',
-                            ),
-                            CustomText(
-                              text: '1000 ₽',
-                              fontWeight: FontWeight.bold,
-                            ),
-                            SizedBox(height: 25),
-                            CustomGradientButton(
-                              text: 'Add to Card',
-                              onPressed: () {
-                                Get.to(()=> ProductDetailScreen());
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
+          GetAllGoods(),
           SizedBox(height: 10),
         ],
       ),
