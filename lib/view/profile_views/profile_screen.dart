@@ -18,6 +18,7 @@ import 'package:live_app/view/profile_views/trade_profile_screen.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
 import '../livestreaming/live_preview.dart';
+import '../livestreaming/livestreamingview_screen.dart';
 import 'notifications_settings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -187,9 +188,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
 
 
-                      TextButton(onPressed: (){
+                      // TextButton(onPressed: (){
                       //  Get.to(()=>LiveStreamViewScreen());
-                      }, child: Text('Current Lives')),
+                      // }, child: Text('Current Lives')),
                       SizedBox(
                         height: 12,
                       ),

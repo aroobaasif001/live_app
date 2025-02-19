@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
 import 'package:live_app/view/auth/login_screen.dart';
 import 'package:live_app/view/auth/registration_screen.dart';
+import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class SocialsLoginScreen extends StatelessWidget {
@@ -26,6 +28,7 @@ class SocialsLoginScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Column(
                 children: [
+                  // Language selection row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -74,14 +77,14 @@ class SocialsLoginScreen extends StatelessWidget {
                             fontFamily: 'MontserratAlternates',
                           ),
                         ),
-                        Icon(Icons.arrow_forward_ios_rounded,color: Color(0xffE26ADC),size: 15,)
+                        Icon(Icons.arrow_forward_ios_rounded, color: Color(0xffE26ADC), size: 15)
                       ],
                     ),
                   ),
                   /// Login
                   GestureDetector(
                     onTap: () {
-                      Get.to(()=> LoginScreen());
+                      Get.to(() => LoginScreen());
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -95,7 +98,7 @@ class SocialsLoginScreen extends StatelessWidget {
                             fontFamily: 'MontserratAlternates',
                           ),
                         ),
-                        Icon(Icons.arrow_forward_ios_rounded,color: Color(0xffE26ADC),size: 15,)
+                        Icon(Icons.arrow_forward_ios_rounded, color: Color(0xffE26ADC), size: 15)
                       ],
                     ),
                   ),
@@ -120,22 +123,26 @@ class SocialsLoginScreen extends StatelessWidget {
                   // Buttons
                   CustomIconButton(
                     onPressed: () {
-                      signUpGoogle();
+                      // Add Apple sign-in functionality if needed.
                     },
                     text: 'continue_with_apple'.tr,
-                    iconPath: appleIcon
+                    iconPath: appleIcon,
                   ),
                   SizedBox(height: 10),
                   CustomIconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      signUpGoogle();
+                    },
                     text: 'continue_with_google'.tr,
-                    iconPath: googleIcon
+                    iconPath: googleIcon,
                   ),
                   SizedBox(height: 10),
                   CustomIconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // Email sign in functionality here.
+                    },
                     text: 'continue_with_email'.tr,
-                    iconPath: emailIcon
+                    iconPath: emailIcon,
                   ),
                   SizedBox(height: 20),
                   // Terms and conditions
@@ -187,29 +194,45 @@ class SocialsLoginScreen extends StatelessWidget {
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      UserCredential userCredential =
+      await FirebaseAuth.instance.signInWithCredential(credential);
       User? user = userCredential.user;
 
       if (user != null) {
-        List<String> nameParts = (user.displayName ?? "").split(" ");
-        String firstName = nameParts.isNotEmpty ? nameParts[0] : "User";
-        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+        // Check if the user is new or already registered
+        bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? true;
 
+        if (isNewUser) {
+          // For a new user, pre-fill data on the registration screen.
+          List<String> nameParts = (user.displayName ?? "").split(" ");
+          String firstName = nameParts.isNotEmpty ? nameParts[0] : "User";
+          String lastName = nameParts.length > 1 ? nameParts[1] : "";
 
-        Get.offAll(() => RegistrationScreen(
-          firstName: firstName,
-          lastName: lastName,
-          email: user.email ?? "",
-          isSignUpWithGoogle: true,
-        ));
+          Get.offAll(() => RegistrationScreen(
+            firstName: firstName,
+            lastName: lastName,
+            email: user.email ?? "",
+            isSignUpWithGoogle: true,
+          ));
 
-        Get.snackbar(
-          'Success',
-          'Google Sign-In Successful',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+          Get.snackbar(
+            'Success',
+            'Google Sign-In Successful. Please complete registration.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+        } else {
+          Get.offAll(() => BottomNavigationBarWidget());
+
+          Get.snackbar(
+            'Success',
+            'Google Sign-In Successful.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+        }
       }
     } catch (e) {
       Get.snackbar(
