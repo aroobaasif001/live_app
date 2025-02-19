@@ -35,8 +35,8 @@ String? ChannelId;
     _initializeCamera();
     uid = 10000 + Random().nextInt(90000); // Generates a 5-digit number
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-   // ChannelId = List.generate(5, (index) => chars[Random().nextInt(chars.length)]).join();
-  ChannelId = 'testchannel';
+    ChannelId = List.generate(5, (index) => chars[Random().nextInt(chars.length)]).join();
+  // ChannelId = 'testchannel';
   }
 
 

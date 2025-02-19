@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:live_app/translate/controller/translations_controller.dart';
+import 'package:live_app/view/auth/login_screen.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
+import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import 'firebase_options.dart';
 import 'translate/translations_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,7 +54,7 @@ class MyApp extends StatelessWidget {
           title: 'Live App',
           home: SocialsLoginScreen(),
           translations: TranslationsApp(),
-          locale: Get.deviceLocale ?? const Locale('en'), // Ensure fallback for null device locale
+          locale: Get.deviceLocale ?? const Locale('en'), 
           fallbackLocale: const Locale('en'),
         );
       },

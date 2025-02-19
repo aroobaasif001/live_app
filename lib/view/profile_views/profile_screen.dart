@@ -212,6 +212,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   fit: BoxFit.cover)),
                         ),
                       ),
+     TextButton(onPressed: (){
+                        Get.to(()=>LiveStreamViewScreen());
+                      }, child: Text('current_lives'.tr)),
                       CustomText(
                         text: "account".tr,
                         fontSize: 20,
@@ -221,7 +224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                        // Get.to(()=>LivePreviewScreen(name: snapshot.data!.data()!.firstName.toString(), photo: 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
                       }, child: Text('start_live'.tr)),
                       TextButton(onPressed: (){
-                      //  Get.to(()=>LiveStreamViewScreen());
+                       Get.to(()=>LiveStreamViewScreen());
                       }, child: Text('current_lives'.tr)),
                       SizedBox(
                         height: 12,

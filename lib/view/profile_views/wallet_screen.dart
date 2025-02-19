@@ -9,7 +9,7 @@ class WalletScreen extends StatefulWidget {
 
 class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _selectedIndex = 0; // Track selected tab index
+  int _selectedIndex = 0;
 
   @override
   void initState() {
