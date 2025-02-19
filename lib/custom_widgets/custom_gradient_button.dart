@@ -38,6 +38,7 @@ class CustomGradientButton extends StatelessWidget {
           onTap: onPressed,
           child: Center(
             child: Text(
+              textAlign: TextAlign.center,
               text,
               style:  TextStyle(
                 color: Colors.white,
