@@ -228,6 +228,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+      print(e.toString());
     }
 
     setState(() {

@@ -9,7 +9,10 @@ import 'package:live_app/utils/icons_path.dart';
 import 'bid_screen.dart';
 
 class AboutTheProductScreen extends StatelessWidget {
-  const AboutTheProductScreen({super.key});
+
+  final String? productDescription;
+
+  const AboutTheProductScreen({super.key,this.productDescription});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +21,8 @@ class AboutTheProductScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomText(text: """Min: 2000 ₽, Max - 35000 ₽, Avg - 4048 ₽AT THE GRAND GAME SHOW
--48 SEATS-EVERYTHING FROM 1 DOLLAR-NINTENDO SWITCH SET WORTH \$300 (CONSOLE, GAMES AND MORE)-NINTENDO SWITCH, PLAYSTATION 4/5, FOR XBOX-THERE WILL BE A TON OF BUFFERS FOR THOSE OF YOU WHO RECEIVED A GAME THAT WAS NOT INTERESTING TO THEM.
-Rules-48 WHITE BOXES WILL APPEAR ON THE SCREEN-A TOTAL OF 48 AUCTIONS WILL BE HELD, EACH OF WHICH STARTS AT ONLY \$1-WINNING AN AUCTION WILL GIVE YOU ACCESS TO CHOOSE 1 OF THE 48 WHITE BOXES-YOUR NAME WILL BE INDICATED IN THE BOX YOU CHOSEN-IN THE END, THERE ARE 48 AUCTIONS WE WILL OPEN IN ORDER OF PURCHASE-CLIENT NAMES WILL BE CLEARLY STATED BEFORE THE BOXES ARE OPENED-THE GRAND PRIZE WILL CONTAIN A SPECIAL JOKER INSIDE IS THERE A PLAYING CARD? THE SELLER IS ALWAYS HAPPY TO EXPLAIN THE RULES OF THE GAME""",
+          CustomText(
+            text:productDescription!,
             fontSize: 13,
           ),
           SizedBox(height: 20),

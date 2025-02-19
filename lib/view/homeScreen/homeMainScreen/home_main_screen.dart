@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,7 +24,7 @@ class HomeMainScreen extends StatelessWidget {
               child: CategoryTabs(),
             ),
             SizedBox(height: 10),
-            Expanded(child: _buildLiveVideos(context, liveVideos)),
+            Expanded(child: _buildLiveVideos(context,)),
           ],
         ),
       ),
@@ -83,33 +84,92 @@ class HomeMainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLiveVideos(BuildContext context, List<String> videos) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          double screenWidth = constraints.maxWidth;
+  // Widget _buildLiveVideos(BuildContext context, List<String> videos) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 10),
+  //     child: LayoutBuilder(
+  //       builder: (context, constraints) {
+  //         double screenWidth = constraints.maxWidth;
+  //
+  //         return GestureDetector(
+  //           onTap: () {
+  //             Get.to(() => LiveShoppingScreen());
+  //           },
+  //           child: GridView.builder(
+  //             physics: BouncingScrollPhysics(),
+  //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //               crossAxisCount: screenWidth > 600 ? 3 : 2,
+  //               crossAxisSpacing: 10,
+  //               mainAxisSpacing: 10,
+  //               childAspectRatio: 0.42,
+  //             ),
+  //             itemCount: videos.length,
+  //             itemBuilder: (context, index) {
+  //               return LiveVideoCard();
+  //             },
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
+  Widget _buildLiveVideos(BuildContext context) {
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance.collection('livestreams').get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text('No livestreams available'));
+        }
 
-          return GestureDetector(
-            onTap: () {
-              Get.to(() => LiveShoppingScreen());
+        final livestreamsData = snapshot.data!.docs;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              double screenWidth = constraints.maxWidth;
+              return GestureDetector(
+                onTap: () {
+                  Get.to(() => LiveShoppingScreen());
+                },
+                child: GridView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: screenWidth > 600 ? 3 : 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.42,
+                  ),
+                  itemCount: livestreamsData.length,
+                  itemBuilder: (context, index) {
+                    // Cast the document data to a Map
+                    final data = livestreamsData[index].data() as Map<String, dynamic>;
+
+                    // Extract fields with a fallback if necessary.
+                    final adminName = data['adminName'] as String? ?? 'Unknown';
+                    final adminImage = data['adminPhoto'] as String? ?? '';
+                    final viewsCount = data['viewsCount'] as int? ?? 0;
+                    final title = data['title'] as String? ?? '';
+
+                    return LiveVideoCard(
+                      adminName: adminName,
+                      adminImage: adminImage,
+                      viewsCount: viewsCount,
+                      title: title,
+                    );
+                  },
+                ),
+              );
             },
-            child: GridView.builder(
-              physics: BouncingScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: screenWidth > 600 ? 3 : 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 0.42,
-              ),
-              itemCount: videos.length,
-              itemBuilder: (context, index) {
-                return LiveVideoCard();
-              },
-            ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

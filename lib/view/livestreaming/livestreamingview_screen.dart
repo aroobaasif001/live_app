@@ -185,8 +185,7 @@ class LiveStreamCard extends StatelessWidget {
   }
 
   /// Function to join live streaming
-  Future<void> joinLiveStreaming(
-      String channelId, int uid, String name, String photo) async {
+  Future<void> joinLiveStreaming(String channelId, int uid, String name, String photo) async {
     try {
       // Add the user to the "participants" subcollection in Firestore
       await FirebaseFirestore.instance
