@@ -10,6 +10,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:live_app/view/homeScreen/homeMainScreen/home_main_screen.dart';
 import 'package:live_app/view/livestreaming/widgets/current_product.dart';
+import 'package:live_app/view/livestreaming/widgets/highest_bid.dart';
 import 'package:live_app/view/livestreaming/widgets/joinrequest_bottomsheet.dart';
 import 'package:live_app/view/livestreaming/widgets/products_pick.dart';
 import 'package:live_app/view/livestreaming/widgets/text_field.dart';
@@ -309,7 +310,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
               // Top Streamer Info
               if (widget.isAdmin || cohostUid == uid)
                 Positioned(
-                    bottom: MediaQuery.of(context).size.height * 0.45,
+                    bottom: MediaQuery.of(context).size.height * 0.55,
 
                     // Adjust top position based on screen height
                     // Adjust left margin
@@ -376,223 +377,228 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                     0.02, // Adjust left margin
                 right: MediaQuery.of(context).size.width *
                     0.02, // Adjust right margin
-                child: FutureBuilder<Map<String, String>>(
-                  future: fetchAdminDetails(widget.channelId),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center();
-                    } else if (snapshot.hasError) {
-                      return const Text(
-                        'Error loading admin details',
-                        style: TextStyle(color: Colors.red),
-                      );
-                    } else if (snapshot.hasData) {
-                      final adminName = snapshot.data!['adminName']!;
-                      final adminPhoto = snapshot.data!['adminPhoto']!;
-
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Admin Info
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.4),
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 4, vertical: 4),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(adminPhoto),
-                                    radius: MediaQuery.of(context).size.width *
-                                        0.04, // Adjust size
+                child: Column(
+                  children: [
+                    FutureBuilder<Map<String, String>>(
+                      future: fetchAdminDetails(widget.channelId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center();
+                        } else if (snapshot.hasError) {
+                          return const Text(
+                            'Error loading admin details',
+                            style: TextStyle(color: Colors.red),
+                          );
+                        } else if (snapshot.hasData) {
+                          final adminName = snapshot.data!['adminName']!;
+                          final adminPhoto = snapshot.data!['adminPhoto']!;
+                    
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Admin Info
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.4),
+                                    borderRadius: BorderRadius.circular(25),
                                   ),
-                                  const SizedBox(width: 8),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4, vertical: 4),
+                                  child: Row(
                                     children: [
-                                      Row(
+                                      CircleAvatar(
+                                        backgroundImage: NetworkImage(adminPhoto),
+                                        radius: MediaQuery.of(context).size.width *
+                                            0.04, // Adjust size
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          SizedBox(
-                                            width: Get.width * 0.25,
-                                            child: Text(
-                                              adminName,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.03,
-                                                fontWeight: FontWeight.bold,
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: Get.width * 0.25,
+                                                child: Text(
+                                                  adminName,
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.03,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
                                               ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                            ],
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ),
-
-                            // Viewer Count and Action Buttons
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.4),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Image.asset(
-                                        'assets/icons/live.png',
-                                        width: 25,
-                                      ),
-                                      SizedBox(
-                                        width: 2,
-                                      ),
-                                      Text(
-                                        'Live'.tr,
-                                        style: TextStyle(
-                                          color: Colors.red,
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.025,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                 ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.4),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      // widget.isAdmin
-                                      //     ? showCohostsAndViewersBottomSheet(
-                                      //         context, widget.channelId)
-                                      //     : SizedBox();
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.remove_red_eye,
-                                          color: Colors.white,
-                                          size: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.06,
-                                        ),
-                                        // const SizedBox(width: 5),
-                                        // StreamBuilder<DocumentSnapshot>(
-                                        //   stream: FirebaseFirestore.instance
-                                        //       .collection('livestreams')
-                                        //       .doc(widget.channelId)
-                                        //       .snapshots(),
-                                        //   builder: (context, snapshot) {
-                                        //     if (snapshot.connectionState ==
-                                        //         ConnectionState.waiting) {
-                                        //       return Text(
-                                        //         "0",
-                                        //         // Placeholder until data loads
-                                        //         style: TextStyle(
-                                        //           color: Colors.white,
-                                        //           fontSize:
-                                        //               MediaQuery.of(context)
-                                        //                       .size
-                                        //                       .width *
-                                        //                   0.035,
-                                        //         ),
-                                        //       );
-                                        //     }
-                                        //
-                                        //     if (snapshot.hasError) {
-                                        //       return Text(
-                                        //         "",
-                                        //         style: TextStyle(
-                                        //           color: Colors.red,
-                                        //           fontSize:
-                                        //               MediaQuery.of(context)
-                                        //                       .size
-                                        //                       .width *
-                                        //                   0.035,
-                                        //         ),
-                                        //       );
-                                        //     }
-                                        //
-                                        //     final data = snapshot.data?.data()
-                                        //         as Map<String, dynamic>?;
-                                        //     final viewsCount =
-                                        //         data?['viewsCount'] ?? 0;
-                                        //
-                                        //     return Text(
-                                        //       viewsCount.toString(),
-                                        //       style: TextStyle(
-                                        //           color: Colors.white,
-                                        //           fontSize:
-                                        //               MediaQuery.of(context)
-                                        //                       .size
-                                        //                       .width *
-                                        //                   0.04,
-                                        //           fontWeight: FontWeight.bold,
-                                        //           fontFamily: 'Poppins'),
-                                        //     );
-                                        //   },
-                                        // ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-
-                                const SizedBox(width: 5),
-                                // Close Button
-                                Column(
+                    
+                                // Viewer Count and Action Buttons
+                                Row(
                                   children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.close,
-                                        color: Colors.white,
-                                        size:
-                                            MediaQuery.of(context).size.width *
-                                                0.08,
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.4),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
-                                      onPressed: () async {
-                                        await _showExitConfirmationDialog(
-                                            context, widget.isAdmin);
-                                      },
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            'assets/icons/live.png',
+                                            width: 25,
+                                          ),
+                                          SizedBox(
+                                            width: 2,
+                                          ),
+                                          Text(
+                                            'Live'.tr,
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.025,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.4),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          // widget.isAdmin
+                                          //     ? showCohostsAndViewersBottomSheet(
+                                          //         context, widget.channelId)
+                                          //     : SizedBox();
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.remove_red_eye,
+                                              color: Colors.white,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.06,
+                                            ),
+                                            // const SizedBox(width: 5),
+                                            // StreamBuilder<DocumentSnapshot>(
+                                            //   stream: FirebaseFirestore.instance
+                                            //       .collection('livestreams')
+                                            //       .doc(widget.channelId)
+                                            //       .snapshots(),
+                                            //   builder: (context, snapshot) {
+                                            //     if (snapshot.connectionState ==
+                                            //         ConnectionState.waiting) {
+                                            //       return Text(
+                                            //         "0",
+                                            //         // Placeholder until data loads
+                                            //         style: TextStyle(
+                                            //           color: Colors.white,
+                                            //           fontSize:
+                                            //               MediaQuery.of(context)
+                                            //                       .size
+                                            //                       .width *
+                                            //                   0.035,
+                                            //         ),
+                                            //       );
+                                            //     }
+                                            //
+                                            //     if (snapshot.hasError) {
+                                            //       return Text(
+                                            //         "",
+                                            //         style: TextStyle(
+                                            //           color: Colors.red,
+                                            //           fontSize:
+                                            //               MediaQuery.of(context)
+                                            //                       .size
+                                            //                       .width *
+                                            //                   0.035,
+                                            //         ),
+                                            //       );
+                                            //     }
+                                            //
+                                            //     final data = snapshot.data?.data()
+                                            //         as Map<String, dynamic>?;
+                                            //     final viewsCount =
+                                            //         data?['viewsCount'] ?? 0;
+                                            //
+                                            //     return Text(
+                                            //       viewsCount.toString(),
+                                            //       style: TextStyle(
+                                            //           color: Colors.white,
+                                            //           fontSize:
+                                            //               MediaQuery.of(context)
+                                            //                       .size
+                                            //                       .width *
+                                            //                   0.04,
+                                            //           fontWeight: FontWeight.bold,
+                                            //           fontFamily: 'Poppins'),
+                                            //     );
+                                            //   },
+                                            // ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                    
+                                    const SizedBox(width: 5),
+                                    // Close Button
+                                    Column(
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size:
+                                                MediaQuery.of(context).size.width *
+                                                    0.08,
+                                          ),
+                                          onPressed: () async {
+                                            await _showExitConfirmationDialog(
+                                                context, widget.isAdmin);
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return Text(
-                        'no_data_available'.tr,
-                        style: TextStyle(color: Colors.white),
-                      );
-                    }
-                  },
+                          );
+                        } else {
+                          return Text(
+                            'no_data_available'.tr,
+                            style: TextStyle(color: Colors.white),
+                          );
+                        }
+                      },
+                    ),
+                    HighestBidDisplay(channelId: widget.channelId)
+                  ],
                 ),
               ),
 
@@ -616,43 +622,49 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                             itemCount: _controller.comments.length,
                             itemBuilder: (context, index) {
                               final comment = _controller.comments[index];
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    // Profile Picture
-                                    CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(comment['photo']),
-                                      radius: 22,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    // Comment Bubble
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          comment['user'],
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                            color: HexColor('#7A7274'),
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: (comment['message'].contains('Set Bid') ? Colors.purple : Colors.transparent)
+                                ),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      // Profile Picture
+                                      CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(comment['photo']),
+                                        radius: 22,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      // Comment Bubble
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            comment['user'],
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          comment['message'],
-                                          style: TextStyle(
-                                            fontSize: 18.r,
-                                            color: Colors.white,
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            comment['message'],
+                                            style: TextStyle(
+                                              fontSize: 18.r,
+                                              fontWeight: (comment['message'].contains('Set Bid') ? FontWeight.bold : FontWeight.normal),
+                                              color: Colors.white,
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               );
                             },
@@ -734,7 +746,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                 alignment: Alignment.bottomRight,
                 child: Padding(
                   padding: EdgeInsets.only(left: Get.width * .5 , bottom: Get.height * .1),
-                  child: CurrentProductContainer(channelId: widget.channelId,),
+                  child: CurrentProductContainer(channelId: widget.channelId, name: name, photo: photo,),
                 ),
               )
             ],
