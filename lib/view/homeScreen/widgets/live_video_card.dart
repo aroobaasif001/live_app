@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:live_app/utils/images_path.dart';
-
 import '../../../custom_widgets/custom_text.dart';
 import '../../../utils/icons_path.dart';
 
 class LiveVideoCard extends StatelessWidget {
+  final String? adminName;
+  final String? adminImage;
+  final int? viewsCount;
+  final String? title;
+
+  const LiveVideoCard({
+    Key? key,
+     this.adminName,
+     this.adminImage,
+     this.viewsCount,
+    this.title,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -17,70 +27,81 @@ class LiveVideoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Top row with icon and admin name
           Row(
             children: [
               Image.asset('assets/icons/apple1.png'),
-              SizedBox(width: 10,),
-              CustomText(text:'company_name',fontFamily: 'Gilroy-Bold',fontWeight: FontWeight.w400,)
+              const SizedBox(width: 10),
+              CustomText(
+                text: adminName!,
+                fontFamily: 'Gilroy-Bold',
+                fontWeight: FontWeight.w400,
+              )
             ],
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10),
+          // Video thumbnail with overlay details
           Stack(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                child: Image.asset(
-                 liveImage,
+                // Display the admin image (assumed to be a URL)
+                child: Image.network(
+                  adminImage!,
                   width: double.infinity,
-                fit: BoxFit.contain,
+                  fit: BoxFit.contain,
                 ),
               ),
-
+              // Live badge with views count
               Positioned(
                 top: 8,
                 left: 8,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Text("Live • 86",
-                      style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    "Live • $viewsCount",
+                    style: const TextStyle(
+                        color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
+              // Top right bookmark and views count
               Positioned(
                 top: 8,
                 right: 8,
                 child: Column(
                   children: [
-                    Icon(Icons.bookmark,color: Colors.white,),
-                  
-                    SizedBox(width: 4),
-                    Text("161",
-                        style: TextStyle(color: Colors.white, fontSize: 12)),
+                    const Icon(Icons.bookmark, color: Colors.white),
+                    const SizedBox(width: 4),
+                    Text(
+                      "$viewsCount",
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
-
+          // Bottom details with title and extra info
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              
                 Row(
-                  
                   children: [
-                     Image.asset(flagIcon, height: 16, width: 16),
+                    Image.asset(flagIcon, height: 16, width: 16),
                     Flexible(
-                      child: CustomText(text: 
-                        "Lorem ipsum dolor sit amet consectetur adipiscing ",
-                       fontSize: 12, color: Color(0xff2a2a2a),
-                       fontFamily: 'Gilroy-Bold',
+                      child: CustomText(
+                        text: title!,
+                        fontSize: 12,
+                        color: const Color(0xff2a2a2a),
+                        fontFamily: 'Gilroy-Bold',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -89,8 +110,14 @@ class LiveVideoCard extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    CustomText(text:'Lorem ipsum ',color: Color(0xff3438B7),),
-                    Flexible(child: CustomText(text: 'Lorem ipsum ',color: Colors.grey,maxLines: 1,),)
+                    CustomText(text: 'Lorem ipsum ', color: const Color(0xff3438B7)),
+                    Flexible(
+                      child: CustomText(
+                        text: 'Lorem ipsum ',
+                        color: Colors.grey,
+                        maxLines: 1,
+                      ),
+                    )
                   ],
                 )
               ],
