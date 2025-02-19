@@ -14,7 +14,7 @@ import 'package:live_app/view/auth/registration_screen.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class SocialsLoginScreen extends StatelessWidget {
-  final TranslationsController translationController = Get.find<TranslationsController>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,36 +26,6 @@ class SocialsLoginScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Obx(() => TextButton(
-                        onPressed: () => translationController.updateLanguage('en'),
-                        child: Text(
-                          'English',
-                          style: TextStyle(
-                            color: translationController.selectedLanguage.value == 'English'
-                                ? purpleColor
-                                : Colors.grey,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )),
-                      Text(' | '),
-                      Obx(() => TextButton(
-                        onPressed: () => translationController.updateLanguage('ru'),
-                        child: Text(
-                          'Russian',
-                          style: TextStyle(
-                            color: translationController.selectedLanguage.value == 'Russian'
-                                ? purpleColor
-                                : Colors.grey,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )),
-                    ],
-                  ),
 
                   /// Register
                   GestureDetector(

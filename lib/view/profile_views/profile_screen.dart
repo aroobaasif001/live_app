@@ -8,6 +8,7 @@ import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_profile_background_scaffold.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
+import 'package:live_app/translate/controller/translations_controller.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/auth/notification_screen.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
@@ -38,63 +39,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final List<Map<String, dynamic>> settingsOptions = [
       {
         "icon": Icons.payment,
-        "title": "Payment and delivery",
+        "title": "payment_delivery".tr,
         "screen": SettingsScreen()
       },
       {
         "icon": Icons.location_on,
-        "title": "Addresses",
+        "title": "addresses".tr,
         "screen": SettingsScreen()
       },
       {
         "icon": Icons.notifications,
-        "title": "Notifications",
+        "title": "notifications".tr,
         "screen": NotificationScreen()
       },
       {
         "icon": Icons.email,
-        "title": "Change E-Mail",
+        "title": "change_email".tr,
         "screen": SettingsScreen()
       },
       {
         "icon": Icons.lock,
-        "title": "Change password",
+        "title": "change_password".tr,
         "screen": SettingsScreen()
       },
       {
         "icon": Icons.settings,
-        "title": "Settings",
+        "title": "settings".tr,
         "screen": NotificationSettingsScreen()
       },
     ];
     final List<Map<String, dynamic>> helpAndContact = [
       {
         "icon": Icons.perm_contact_cal_sharp,
-        "title": "Contact Us",
+        "title": "contact_us".tr,
         "screen": SettingsScreen()
       },
       {
         "icon": Icons.report_gmailerrorred,
-        "title": "Report Abuse",
+        "title": "report_abuse".tr,
         "screen": SettingsScreen()
       },
       {
         "icon": Icons.notifications,
-        "title": "Sales tax exemption",
+        "title": "sales_tax".tr,
         "screen": NotificationScreen()
       },
       {
         "icon": Icons.email,
-        "title": "Privacy Policy",
+        "title": "privacy_policy".tr,
         "screen": SettingsScreen()
       },
       {
         "icon": Icons.lock,
-        "title": "Terms and Conditions",
+        "title": "terms_conditions".tr,
         "screen": SettingsScreen()
       },
     ];
-
+    final TranslationsController translationController = Get.find<TranslationsController>();
     return CustomProfileBackgroundScaffold(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -116,6 +117,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Obx(() => TextButton(
+                            onPressed: () => translationController.updateLanguage('en'),
+                            child: Text(
+                              'English',
+                              style: TextStyle(
+                                color: translationController.selectedLanguage.value == 'English'
+                                    ? purpleColor
+                                    : Colors.grey,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )),
+                          Text(' | '),
+                          Obx(() => TextButton(
+                            onPressed: () => translationController.updateLanguage('ru'),
+                            child: Text(
+                              'Russian',
+                              style: TextStyle(
+                                color: translationController.selectedLanguage.value == 'Russian'
+                                    ? purpleColor
+                                    : Colors.grey,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )),
+                        ],
+                      ),
                       SizedBox(
                         height: 25,
                       ),
@@ -150,8 +181,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontSize: 13,
                                 height: 30,
                                 borderRadius: 30,
-                                width: 110,
-                                text: "Trade Profile",
+                                width: 130,
+                                text: "trade_profile".tr,
                                 onPressed: () {
                                   Get.to(() => TradeProfileScreen(
                                     userId: FirebaseAuth.instance.currentUser!.uid,
@@ -174,17 +205,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fit: BoxFit.cover)),
                       ),
                       CustomText(
-                        text: "Account",
+                        text: "account".tr,
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
                       TextButton(onPressed: (){
                        // Get.to(()=>LivePreviewScreen(name: snapshot.data!.data()!.firstName.toString(), photo: 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
-                      }, child: Text('Start Live')),
+                      }, child: Text('start_live'.tr)),
 
                       TextButton(onPressed: (){
                       //  Get.to(()=>LiveStreamViewScreen());
-                      }, child: Text('Current Lives')),
+                      }, child: Text('current_lives'.tr)),
                       SizedBox(
                         height: 12,
                       ),
@@ -212,14 +243,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                     FittedBox(
                                       child: CustomText(
-                                        text: "Referrals and points",
+                                        text: "referrals_points".tr,
                                         fontFamily: "SF Pro Rounded",
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                     CustomText(
-                                      text: "Balance: 1000 ₽",
+                                      text: "balance".tr,
                                       fontFamily: "Gilroy-Bold",
                                       color: Colors.grey,
                                       fontSize: 12,
@@ -264,7 +295,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             Get.to(() => RewardsScreen());
                                           },
                                           child: CustomText(
-                                            text: "My Award",
+                                            text: "my_award".tr,
                                             fontFamily: "SF Pro Rounded",
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600,
@@ -272,7 +303,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                       ),
                                       CustomText(
-                                        text: "View coupons",
+                                        text: "view_coupons".tr,
                                         fontFamily: "Gilroy-Bold",
                                         color: Colors.grey,
                                         fontSize: 12,
@@ -339,7 +370,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 16,
                       ),
                       CustomText(
-                        text: "Help, contacts",
+                        text: "help_contacts".tr,
                         fontWeight: FontWeight.w600,
                         fontSize: 20,
                         fontFamily: "SF Pro Rounded",
@@ -403,7 +434,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Icon(Icons.logout_rounded),
                               CustomText(
-                                text: "Log out",
+                                text: "logout".tr,
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16,
                                 fontFamily: "Gilroy-Bold",
@@ -448,7 +479,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height: 15),
               Text(
-                "Confirm Logout",
+                "confirm_logout".tr,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -457,7 +488,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height: 10),
               Text(
-                "Are you sure you want to log out?",
+                "logout_confirmation".tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: Colors.white70),
               ),
@@ -478,7 +509,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       child: Text(
-                        "Cancel",
+                        "cancel".tr,
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
@@ -499,7 +530,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       child: Text(
-                        "Logout",
+                        "logout".tr,
                         style: TextStyle(fontSize: 16, color: Colors.red.shade800),
                       ),
                     ),
