@@ -301,7 +301,7 @@ class LiveShoppingScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      showBetBottomSheet(context);
+                      //showBetBottomSheet(context , 0);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white.withOpacity(0.2),

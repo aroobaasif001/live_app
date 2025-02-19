@@ -332,6 +332,28 @@ class LiveStreamController extends GetxController {
       }
     }
   }
+  void sendBidMessage(String name, String photo, String channelId , String message , double bid) async {
+
+      try {
+        await _firestore
+            .collection('livestreams')
+            .doc(channelId)
+            .collection('comments')
+            .add({
+          'message': message,
+          'bid': bid,
+
+          'timestamp': FieldValue.serverTimestamp(),
+          'user': name,
+          'photo': photo, // Random user identifier
+        });
+        chatController.clear();
+        print('[INFO] Comment added');
+      } catch (e) {
+        print('[ERROR] Failed to add comment: $e');
+      }
+
+  }
 
   Future<void> deleteLiveStream(String channelId) async {
     try {
