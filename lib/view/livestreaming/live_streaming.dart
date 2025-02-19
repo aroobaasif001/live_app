@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math'; // Import for mathematical functions like sin
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -154,11 +155,18 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
   // }
 
   void checkUserDetails() async {
-    name = 'Test';
-    photo =
-        'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D';
+    // Assuming you're fetching from a 'users' collection, with a document that has the user's info
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('UserEntity').doc(FirebaseAuth.instance.currentUser!.uid).get();
 
-    print("Name: $name, Photo: $photo, Email: $email");
+    if (userSnapshot.exists) {
+      var userData = userSnapshot.data() as Map<String, dynamic>;
+       name = userData['firstName'] ?? 'No name found';
+      photo = userData['image'] ??   'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D';
+
+      print("Name: $name, Photo: $photo");
+    } else {
+      print("User not found!");
+    }
   }
 
   @override

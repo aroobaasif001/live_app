@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:typed_data';
@@ -83,14 +84,30 @@ class LiveStreamController extends GetxController {
     }
   }
 
+  Future<String> generateAgoraToken(String channelName, int uid) async {
+    try {
+      // Get the cloud function reference
+      final HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('generateAgoraToken');
 
+      // Call the cloud function and pass the parameters
+      final response = await callable.call({
+        'channelName': channelName,
+        'uid': uid,
+      });
+
+      // Return the token
+      return response.data['token'];
+    } catch (e) {
+      print('Error generating Agora token: $e');
+      return '';
+    }
+  }
 
   Future<void> initializeAgora(
       String channelId, int uid, bool isAdmin, int adminId) async {
     try {
       print('uidid $uid chnn $channelId ');
-      String? token =
-          '007eJxTYAhbHnLzDJdK1KYZp1e+/VRbbrpT/Xyf7ILfdY9UND3a1DsUGFIsU8xNDMyNLS3NEk3SLFIsUgwTDY2SDVIt04xNzQ2MV35Zl94QyMjgGljOwsgAgSA+N0NJanFJckZiXl5qDgMDAInDIyI=';
+      String? token = await generateAgoraToken(channelId, uid);
       print('tokenn $token');
       _rtcEngine = createAgoraRtcEngine();
 
