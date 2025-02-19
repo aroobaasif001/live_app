@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../livestreaming/livestreamingview_screen.dart';
 import '../bottomNaviagtionBar/custom_bottom_bar.dart';
 import '../widgets/live_video_card.dart';
 import '../widgets/category_tab.dart';
@@ -134,43 +138,64 @@ class HomeMainScreen extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) {
               double screenWidth = constraints.maxWidth;
-              return GestureDetector(
-                onTap: () {
-                  Get.to(() => LiveShoppingScreen());
-                },
-                child: GridView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: screenWidth > 600 ? 3 : 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.42,
-                  ),
-                  itemCount: livestreamsData.length,
-                  itemBuilder: (context, index) {
-                    // Cast the document data to a Map
-                    final data = livestreamsData[index].data() as Map<String, dynamic>;
+              return GridView.builder(
+                physics: const BouncingScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: screenWidth > 600 ? 3 : 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 0.42,
+                ),
+                itemCount: livestreamsData.length,
+                itemBuilder: (context, index) {
+                  // Cast the document data to a Map
+                  final data = livestreamsData[index].data() as Map<String, dynamic>;
 
-                    // Extract fields with a fallback if necessary.
-                    final adminName = data['adminName'] as String? ?? 'Unknown';
-                    final adminImage = data['adminPhoto'] as String? ?? '';
-                    final viewsCount = data['viewsCount'] as int? ?? 0;
-                    final title = data['title'] as String? ?? '';
+                  // Extract fields with a fallback if necessary.
+                  final adminName = data['adminName'] as String? ?? 'Unknown';
+                  final adminImage = data['adminPhoto'] as String? ?? '';
+                  final viewsCount = data['viewsCount'] as int? ?? 0;
+                  final title = data['title'] as String? ?? '';
+                 final channelName = data['channelId'] as String? ?? '';
 
-                    return LiveVideoCard(
+                  return GestureDetector(
+                    onTap: (){
+                      joinLiveStreamingWithPrefs(channelName);
+
+                    },
+                    child: LiveVideoCard(
                       adminName: adminName,
                       adminImage: adminImage,
                       viewsCount: viewsCount,
                       title: title,
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               );
             },
           ),
         );
       },
     );
+  }
+
+  Future<void> joinLiveStreamingWithPrefs(String channelId) async {
+    try {
+      // Retrieve data from SharedPreferences
+      final sharedPreferences = await SharedPreferences.getInstance();
+      final uid = 10000 + Random().nextInt(90000); ;
+      final name =  'Guest';
+      final photo = 'https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg';
+
+      if (uid == 0) {
+        print('[ERROR] UID is not available in SharedPreferences.');
+        return;
+      }
+
+      await joinLiveStreaming(channelId, uid, name, photo);
+    } catch (e) {
+      print('[ERROR] Failed to retrieve data from SharedPreferences: $e');
+    }
   }
 }
 

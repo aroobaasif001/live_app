@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:live_app/utils/images_path.dart';
-
 import '../../../custom_widgets/custom_text.dart';
 import '../../../utils/icons_path.dart';
 
