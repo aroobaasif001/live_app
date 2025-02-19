@@ -9,11 +9,11 @@ import 'package:get/get.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:live_app/view/homeScreen/homeMainScreen/home_main_screen.dart';
+import 'package:live_app/view/livestreaming/widgets/current_product.dart';
 import 'package:live_app/view/livestreaming/widgets/joinrequest_bottomsheet.dart';
-import 'package:live_app/view/livestreaming/widgets/music_bottomsheet.dart';
+import 'package:live_app/view/livestreaming/widgets/products_pick.dart';
 import 'package:live_app/view/livestreaming/widgets/text_field.dart';
 import 'package:live_app/view/livestreaming/widgets/viewers_bottomsheet.dart';
-import 'package:live_app/view/livestreaming/widgets/voiceeffect_bottomsheet.dart';
 import 'package:lottie/lottie.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,8 +21,6 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import 'controller/livestreaming_controller.dart';
-
-
 
 // Redirect to Home Page
 
@@ -43,7 +41,6 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
   // Parameter to receive the name
   final LiveStreamController _controller = Get.put(LiveStreamController());
   final FocusNode _focusNode = FocusNode();
-  String? currentlyPlayingMusic; // To track the current music
   Timer? heartbeatTimer;
   late Stream<DocumentSnapshot<Map<String, dynamic>>> documentStream;
   final ScrollController _scrollController = ScrollController();
@@ -73,7 +70,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
 
   void redirectToHomePage() {
     // Navigate to the homepage
-    Get.to(() =>  BottomNavigationBarWidget());
+    Get.to(() => BottomNavigationBarWidget());
   }
 
   void showLiveStreamEndedPopup() {
@@ -91,7 +88,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
             children: [
               Icon(
                 Icons.live_tv,
-                color:Colors.blue,
+                color: Colors.blue,
                 size: 50,
               ),
               SizedBox(height: 20),
@@ -118,17 +115,17 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                 onPressed: () {
                   Navigator.pop(context); // Close the dialog
                   redirectToHomePage();
-                //  _controller.postDelete(widget.channelId);
+                  //  _controller.postDelete(widget.channelId);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:Colors.blue,
+                  backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
                 child: Text(
                   "Go to Home",
-                  style: TextStyle(fontSize: 16 , color: Colors.black),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ),
             ],
@@ -156,18 +153,20 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
   // }
 
   void checkUserDetails() async {
-
-
     name = 'Test';
-    photo = 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D';
+    photo =
+        'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D';
 
     print("Name: $name, Photo: $photo, Email: $email");
   }
+
   @override
   void dispose() {
-    _scrollController.dispose(); // Dispose of the controller to prevent memory leaks
+    _scrollController
+        .dispose(); // Dispose of the controller to prevent memory leaks
     super.dispose();
   }
+
   @override
   void initState() {
     super.initState();
@@ -182,13 +181,14 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
       });
     });
     if (widget.isAdmin) {
-      startHeartbeat();
+      //startHeartbeat();
     }
     monitorDocument();
 
     // TODO: implement initState
-   // checkUserDetails();
-_controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 0);
+    // checkUserDetails();
+    _controller.initializeAgora(
+        widget.channelId, uid, widget.isAdmin, adminUid ?? 0);
     initializeFirestore(widget.channelId);
     FirebaseFirestore.instance
         .collection('livestreams')
@@ -268,7 +268,8 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
         if (exitConfirmed) {
           await _controller.leaveStream();
           _controller.deleteLiveStream(widget.channelId);
-          Get.offAll(() =>  BottomNavigationBarWidget()); // Redirect to Home Page
+          Get.offAll(
+              () => BottomNavigationBarWidget()); // Redirect to Home Page
         }
         return false;
       },
@@ -277,520 +278,29 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
         body: Obx(() {
           return Stack(
             children: [
-              StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('livestreams')
-                    .doc(widget.channelId)
-                    .collection('cohosts')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  // Handle the connection state
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SizedBox
-                        .shrink(); // Show nothing while loading
-                  }
-
-                  // Check if there are cohosts available
-                  final hasCohost =
-                      snapshot.hasData && snapshot.data!.docs.isNotEmpty;
-
-                  // Check if the current user is a cohost
-                  final isCohost = snapshot.hasData &&
-                      snapshot.data!.docs.any((doc) => doc['uid'] == uid);
-                  final isPk = snapshot.hasData &&
-                      snapshot.data!.docs.any((doc) => doc['isPk'] == true);
-                  // Update the reactive state safely after the build phase
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (_controller.hasCohosts.value != hasCohost) {
-                      _controller.hasCohosts.value =
-                          hasCohost; // Update only if the value changes
-                    }
-                    _controller.isPk.value = isPk;
-                    // Switch the client role if needed
-                    _controller.switchClientRole(isCohost);
-                    if (widget.isAdmin) {
-                      _controller.switchClientRole(true);
-                    }
-                  });
-
-                  print(isPk);
-
-                  // Optionally return UI
-                  return SizedBox(); // Replace with your desired UI
-                },
-              ),
-              // Agora Video View (Local or Remote User)
-
               Positioned.fill(
                 child: _controller.isJoined.value
                     ? Stack(
                         children: [
                           // Center(child: Text(adminUid.toString())),
 
-                          (!_controller.hasCohosts.value)
-                              ? (widget.isAdmin)
-                                  ? StreamBuilder<DocumentSnapshot>(
-                                      stream: FirebaseFirestore.instance
-                                          .collection('livestreams')
-                                          .doc(widget.channelId)
-                                          .snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData &&
-                                            snapshot.data != null) {
-                                          final filterString =
-                                              snapshot.data!['currentFilter'];
-                                          print(
-                                              "Filter string from Firestore: $filterString");
-
-                                          if (filterString != null &&
-                                              filterString.isNotEmpty) {
-                                            final filterColor =
-                                                parseColorFromString(
-                                                    filterString);
-                                            print('colors');
-                                            return Stack(
-                                              children: [
-                                                AgoraVideoView(
-                                                  controller:
-                                                      VideoViewController(
-                                                    rtcEngine: _controller
-                                                        .agoraEngine!,
-                                                    canvas: const VideoCanvas(
-                                                        uid: 0),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: Get.height,
-                                                  width: Get.width,
-                                                  color: filterColor,
-                                                )
-                                              ],
-                                            );
-                                          }
-                                        }
-
-                                        return AgoraVideoView(
-                                          controller: VideoViewController(
-                                            rtcEngine: _controller.agoraEngine!,
-                                            canvas: const VideoCanvas(uid: 0),
-                                          ),
-                                        ); // Default UI
-                                      },
-                                    )
-                                  : StreamBuilder<DocumentSnapshot>(
-                                      stream: FirebaseFirestore.instance
-                                          .collection('livestreams')
-                                          .doc(widget.channelId)
-                                          .snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData &&
-                                            snapshot.data != null) {
-                                          final filterString =
-                                              snapshot.data!['currentFilter'];
-
-                                          if (filterString != null) {
-                                            // Parse the filter from the string
-                                            final filterColor =
-                                                parseColorFromString(
-                                                    filterString);
-
-                                            return Stack(
-                                              children: [
-                                                AgoraVideoView(
-                                                  controller:
-                                                      VideoViewController
-                                                          .remote(
-                                                    rtcEngine: _controller
-                                                        .agoraEngine!,
-                                                    canvas: VideoCanvas(
-                                                        uid: adminUid),
-                                                    // Replace with remote user UID
-                                                    connection: RtcConnection(
-                                                        channelId:
-                                                            widget.channelId),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: Get.height,
-                                                  width: Get.width,
-                                                  color: filterColor,
-                                                )
-                                              ],
-                                            );
-                                          }
-                                        }
-
-                                        return AgoraVideoView(
-                                          controller:
-                                              VideoViewController.remote(
-                                            rtcEngine: _controller.agoraEngine!,
-                                            canvas: VideoCanvas(
-                                                uid:
-                                                    adminUid), // Replace with remote user UID
-                                            connection: RtcConnection(
-                                                channelId: widget.channelId),
-                                          ),
-                                        ); // Default UI
-                                      },
-                                    )
-                              : Padding(
-                                  padding:
-                                      EdgeInsets.only(top: Get.height * .16),
-                                  child: Column(
-                                    children: [
-                                      (_controller.isPk.value == true)
-                                          ? StreamBuilder<DocumentSnapshot>(
-                                              stream: FirebaseFirestore.instance
-                                                  .collection('livestreams')
-                                                  .doc(widget.channelId)
-                                                  .collection('battles')
-                                                  .doc('currentBattle')
-                                                  .snapshots(),
-                                              builder: (context, snapshot) {
-                                                if (!snapshot.hasData) {
-                                                  return Center(
-                                                      child:
-                                                          CircularProgressIndicator());
-                                                }
-
-                                                var battleData = snapshot.data!
-                                                        .data()
-                                                    as Map<String, dynamic>?;
-                                                if (battleData == null ||
-                                                    battleData[
-                                                            'participants'] ==
-                                                        null) {
-                                                  return Center(
-                                                      child: Text(
-                                                          'Battle data not available'));
-                                                }
-
-                                                // Extract scores
-                                                var adminScore =
-                                                    battleData['adminScore'] ??
-                                                        0;
-                                                var cohostScore =
-                                                    battleData['cohostScore'] ??
-                                                        0;
-                                                int totalScore =
-                                                    adminScore + cohostScore;
-                                                double adminProgress =
-                                                    totalScore > 0
-                                                        ? adminScore /
-                                                            totalScore
-                                                        : 0.5;
-
-                                                // Extract participant details
-                                                var participants =
-                                                    battleData['participants']
-                                                        as List<dynamic>;
-                                                var admin =
-                                                    participants.firstWhere(
-                                                  (participant) =>
-                                                      participant['uid'] ==
-                                                      'adminUid',
-                                                  orElse: () => {
-                                                    'name': 'Admin',
-                                                    'photo': '',
-                                                    'uid': 'adminUid'
-                                                  },
-                                                );
-                                                var cohost =
-                                                    participants.firstWhere(
-                                                  (participant) =>
-                                                      participant['uid'] ==
-                                                      'cohostUid',
-                                                  orElse: () => {
-                                                    'name': 'Cohost',
-                                                    'photo': '',
-                                                    'uid': 'cohostUid'
-                                                  },
-                                                );
-
-                                                return Stack(
-                                                  alignment: Alignment.center,
-                                                  children: [
-                                                    // Progress Bars
-                                                    Stack(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      children: [
-                                                        LinearProgressIndicator(
-                                                            value: 1.0,
-                                                            color: Colors.cyan,
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .transparent,
-                                                            minHeight: 25),
-                                                        LinearProgressIndicator(
-                                                          value: adminProgress,
-                                                          color: Colors.blue,
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                          minHeight: 25,
-                                                        ),
-                                                      ],
-                                                    ),
-
-                                                    // Diamond counts and labels
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        // Admin
-                                                        Text(
-                                                          adminScore.toString(),
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 45,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-
-                                                        // Cohost
-                                                        Text(
-                                                          cohostScore
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 45,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            )
-                                          : SizedBox(),
-                                      Container(
-                                        height: Get.height * .5,
-                                        child: Stack(
-                                          children: [
-                                            Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                (widget.isAdmin)
-                                                    ? SizedBox(
-                                                        width: Get.width * .5,
-                                                        child: AgoraVideoView(
-                                                          controller:
-                                                              VideoViewController(
-                                                            rtcEngine: _controller
-                                                                .agoraEngine!,
-                                                            canvas:
-                                                                const VideoCanvas(
-                                                                    uid: 0),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : SizedBox(
-                                                        width: Get.width * .5,
-                                                        child: AgoraVideoView(
-                                                          controller:
-                                                              VideoViewController
-                                                                  .remote(
-                                                            rtcEngine: _controller
-                                                                .agoraEngine!,
-                                                            canvas: VideoCanvas(
-                                                                uid: adminUid),
-                                                            // Replace with remote user UID
-                                                            connection: RtcConnection(
-                                                                channelId: widget
-                                                                    .channelId),
-                                                          ),
-                                                        )),
-                                                StreamBuilder<QuerySnapshot>(
-                                                  stream: FirebaseFirestore
-                                                      .instance
-                                                      .collection('livestreams')
-                                                      .doc(widget.channelId)
-                                                      .collection('cohosts')
-                                                      .snapshots(),
-                                                  builder: (context, snapshot) {
-                                                    if (snapshot
-                                                            .connectionState ==
-                                                        ConnectionState
-                                                            .waiting) {
-                                                      return const Center();
-                                                    }
-
-                                                    if (snapshot.hasError ||
-                                                        !snapshot.hasData ||
-                                                        snapshot.data!.docs
-                                                            .isEmpty) {
-                                                      WidgetsBinding.instance
-                                                          .addPostFrameCallback(
-                                                              (_) {
-                                                        _controller.hasCohosts
-                                                                .value =
-                                                            false; // True if cohosts available, false otherwise
-                                                      });
-                                                      return const Center(
-                                                        child: Text(
-                                                          'No Cohosts Available',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 16),
-                                                        ),
-                                                      );
-                                                    }
-
-                                                    // Cohosts exist
-                                                    // _controller.hasCohosts.value = true; // Update reactive state
-
-                                                    // Get the first cohost's UID
-                                                    cohostUid = snapshot.data!
-                                                        .docs.first['uid'];
-
-                                                    return SizedBox(
-                                                      width: Get.width * .5,
-                                                      child: (uid == cohostUid)
-                                                          ? AgoraVideoView(
-                                                              controller:
-                                                                  VideoViewController(
-                                                                rtcEngine:
-                                                                    _controller
-                                                                        .agoraEngine!,
-                                                                canvas:
-                                                                    const VideoCanvas(
-                                                                        uid: 0),
-                                                              ),
-                                                            )
-                                                          : AgoraVideoView(
-                                                              controller:
-                                                                  VideoViewController
-                                                                      .remote(
-                                                                rtcEngine:
-                                                                    _controller
-                                                                        .agoraEngine!,
-                                                                canvas: VideoCanvas(
-                                                                    uid:
-                                                                        cohostUid),
-                                                                connection:
-                                                                    RtcConnection(
-                                                                        channelId:
-                                                                            widget.channelId),
-                                                              ),
-                                                            ),
-                                                    );
-                                                  },
-                                                )
-                                              ],
-                                            ),
-                                            (_controller.isPk.value == true)
-                                                ? Align(
-                                                    alignment:
-                                                        Alignment.topCenter,
-                                                    child: StreamBuilder<
-                                                        DocumentSnapshot>(
-                                                      stream: FirebaseFirestore
-                                                          .instance
-                                                          .collection(
-                                                              'livestreams')
-                                                          .doc(widget.channelId)
-                                                          .collection('battles')
-                                                          .doc('currentBattle')
-                                                          .snapshots(),
-                                                      builder:
-                                                          (context, snapshot) {
-                                                        if (!snapshot.hasData) {
-                                                          return Center(
-                                                              child:
-                                                                  CircularProgressIndicator());
-                                                        }
-
-                                                        var battleData =
-                                                            snapshot.data!
-                                                                    .data()
-                                                                as Map<String,
-                                                                    dynamic>?;
-                                                        if (battleData ==
-                                                                null ||
-                                                            battleData[
-                                                                    'status'] !=
-                                                                'ongoing') {
-                                                          return Center(
-                                                              child: Text(
-                                                                  'No ongoing battle'));
-                                                        }
-
-                                                        int remainingTime =
-                                                            battleData[
-                                                                    'timer'] ??
-                                                                0;
-                                                        String formattedTime =
-                                                            _formatTime(
-                                                                remainingTime);
-
-                                                        // End the battle if the timer reaches 0
-                                                        // if (remainingTime <= 0) {
-                                                        //   _controller.endBattle(widget.channelId , cohostUid.toString());
-                                                        // }
-
-                                                        return Container(
-                                                          width:
-                                                              Get.width * .25,
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 4,
-                                                                  horizontal:
-                                                                      8),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.7),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Image.asset(
-                                                                  'assets/icons/box1.png'),
-                                                              Image.asset(
-                                                                  'assets/icons/box2.png'),
-                                                              SizedBox(
-                                                                width: 5,
-                                                              ),
-                                                              Text(
-                                                                formattedTime,
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontFamily:
-                                                                        'Poppins',
-                                                                    fontSize:
-                                                                        18.r),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                      },
-                                                    ))
-                                                : SizedBox()
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
+                          (widget.isAdmin)
+                              ? AgoraVideoView(
+            controller: VideoViewController(
+              rtcEngine: _controller.agoraEngine!,
+              canvas: const VideoCanvas(uid: 0),
+            ),
+          )
+                              :AgoraVideoView(
+                            controller: VideoViewController.remote(
+                              rtcEngine: _controller.agoraEngine!,
+                              canvas: VideoCanvas(
+                                  uid:
+                                  adminUid), // Replace with remote user UID
+                              connection: RtcConnection(
+                                  channelId: widget.channelId),
+                            ),
+                          )
                         ],
                       )
                     : const Center(),
@@ -799,9 +309,7 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
               // Top Streamer Info
               if (widget.isAdmin || cohostUid == uid)
                 Positioned(
-                    bottom: !_controller.hasCohosts.value
-                        ? MediaQuery.of(context).size.height * 0.45
-                        : MediaQuery.of(context).size.height * 0.38,
+                    bottom: MediaQuery.of(context).size.height * 0.45,
 
                     // Adjust top position based on screen height
                     // Adjust left margin
@@ -809,31 +317,6 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if (_controller.hasCohosts.value)
-                          GestureDetector(
-                              onTap: () {
-                                _controller.startBattleDialog(
-                                    context,
-                                    widget.channelId,
-                                    adminUid.toString(),
-                                    cohostUid.toString());
-                              },
-                              child: Image.asset(
-                                'assets/icons/live_startbattle.png',
-                                height: 32.r,
-                              )),
-                        GestureDetector(
-                          onTap: () {
-                            showMusicSelectionSheet(context, widget.channelId);
-                          },
-                          child: Image.asset(
-                            'assets/icons/live_music.png',
-                            height: 50.r,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
                         GestureDetector(
                             onTap: () {
                               _controller.toggleMute();
@@ -859,7 +342,19 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
                                   _controller.isCameraOn.value ? 22.r : 35.r,
                             )),
                         SizedBox(
-                          height: _controller.isCameraOn.value ? 10 : 2,
+                          height: 15,
+                        ),
+                        GestureDetector(
+                            onTap: () {
+                              showUserProductsBottomSheet(
+                                  context, widget.channelId);
+                            },
+                            child: Icon(
+                              Icons.shop,
+                              color: Colors.white,
+                            )),
+                        SizedBox(
+                          height: 2,
                         ),
                         GestureDetector(
                             onTap: () {
@@ -869,15 +364,9 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
                               'assets/icons/live_rotate.png',
                               height: 50.r,
                             )),
-                        SizedBox(height: 5,),
-                        GestureDetector(
-                            onTap: () {
-                              _showVoiceEffectsBottomSheet(context);
-                            },
-                            child: Image.asset(
-                              'assets/icons/live_voicefilters.png',
-                              height: 35.r,
-                            )),
+                        SizedBox(
+                          height: 5,
+                        ),
                       ],
                     )),
               Positioned(
@@ -910,9 +399,7 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
                             // Admin Info
                             Container(
                               decoration: BoxDecoration(
-                                color: (!_controller.hasCohosts.value)
-                                    ? Colors.black.withOpacity(0.4)
-                                    : Colors.blue.withOpacity(0.7),
+                                color: Colors.black.withOpacity(0.4),
                                 borderRadius: BorderRadius.circular(25),
                               ),
                               padding: const EdgeInsets.symmetric(
@@ -949,7 +436,6 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
                                           ),
                                         ],
                                       ),
-
                                     ],
                                   ),
                                 ],
@@ -966,21 +452,31 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
                                     color: Colors.black.withOpacity(0.4),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
-
-                                  child: Row(children: [Image.asset('assets/icons/live.png' , width: 25,),
-                                SizedBox(width: 2,),
-                                  Text(
-                                    'Live'.tr,
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: MediaQuery.of(context)
-                                          .size
-                                          .width *
-                                          0.025,
-                                    ),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/icons/live.png',
+                                        width: 25,
+                                      ),
+                                      SizedBox(
+                                        width: 2,
+                                      ),
+                                      Text(
+                                        'Live'.tr,
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.025,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],),),
-                                SizedBox(width: 5,),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 2),
@@ -990,10 +486,10 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
                                   ),
                                   child: GestureDetector(
                                     onTap: () {
-                                      widget.isAdmin
-                                          ? showCohostsAndViewersBottomSheet(
-                                              context, widget.channelId)
-                                          : SizedBox();
+                                      // widget.isAdmin
+                                      //     ? showCohostsAndViewersBottomSheet(
+                                      //         context, widget.channelId)
+                                      //     : SizedBox();
                                     },
                                     child: Row(
                                       children: [
@@ -1005,87 +501,67 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
                                                   .width *
                                               0.06,
                                         ),
-                                        const SizedBox(width: 5),
-                                        StreamBuilder<DocumentSnapshot>(
-                                          stream: FirebaseFirestore.instance
-                                              .collection('livestreams')
-                                              .doc(widget.channelId)
-                                              .snapshots(),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.waiting) {
-                                              return Text(
-                                                "0",
-                                                // Placeholder until data loads
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width *
-                                                          0.035,
-                                                ),
-                                              );
-                                            }
-
-                                            if (snapshot.hasError) {
-                                              return Text(
-                                                "",
-                                                style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width *
-                                                          0.035,
-                                                ),
-                                              );
-                                            }
-
-                                            final data = snapshot.data?.data()
-                                                as Map<String, dynamic>?;
-                                            final viewsCount =
-                                                data?['viewsCount'] ?? 0;
-
-                                            return Text(
-                                              viewsCount.toString(),
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width *
-                                                          0.04,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily: 'Poppins'),
-                                            );
-                                          },
-                                        ),
+                                        // const SizedBox(width: 5),
+                                        // StreamBuilder<DocumentSnapshot>(
+                                        //   stream: FirebaseFirestore.instance
+                                        //       .collection('livestreams')
+                                        //       .doc(widget.channelId)
+                                        //       .snapshots(),
+                                        //   builder: (context, snapshot) {
+                                        //     if (snapshot.connectionState ==
+                                        //         ConnectionState.waiting) {
+                                        //       return Text(
+                                        //         "0",
+                                        //         // Placeholder until data loads
+                                        //         style: TextStyle(
+                                        //           color: Colors.white,
+                                        //           fontSize:
+                                        //               MediaQuery.of(context)
+                                        //                       .size
+                                        //                       .width *
+                                        //                   0.035,
+                                        //         ),
+                                        //       );
+                                        //     }
+                                        //
+                                        //     if (snapshot.hasError) {
+                                        //       return Text(
+                                        //         "",
+                                        //         style: TextStyle(
+                                        //           color: Colors.red,
+                                        //           fontSize:
+                                        //               MediaQuery.of(context)
+                                        //                       .size
+                                        //                       .width *
+                                        //                   0.035,
+                                        //         ),
+                                        //       );
+                                        //     }
+                                        //
+                                        //     final data = snapshot.data?.data()
+                                        //         as Map<String, dynamic>?;
+                                        //     final viewsCount =
+                                        //         data?['viewsCount'] ?? 0;
+                                        //
+                                        //     return Text(
+                                        //       viewsCount.toString(),
+                                        //       style: TextStyle(
+                                        //           color: Colors.white,
+                                        //           fontSize:
+                                        //               MediaQuery.of(context)
+                                        //                       .size
+                                        //                       .width *
+                                        //                   0.04,
+                                        //           fontWeight: FontWeight.bold,
+                                        //           fontFamily: 'Poppins'),
+                                        //     );
+                                        //   },
+                                        // ),
                                       ],
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10,),
-                                GestureDetector(
-                                  onTap: () {
-                                    shareLiveStream(widget.channelId);
-                                  },
-                                  child: Column(
-                                    children: [
-                                     Icon(Icons.share , color: Colors.white,)
-                                      // SizedBox(
-                                      //   height: 2,
-                                      // ),
-                                      // Text(
-                                      //   'Share',
-                                      //   style: TextStyle(
-                                      //       fontFamily: 'Poppins',
-                                      //       color: Colors.white,
-                                      //       fontSize: 13.r),
-                                      // )
-                                    ],
-                                  ),
-                                ),
+
                                 const SizedBox(width: 5),
                                 // Close Button
                                 Column(
@@ -1128,55 +604,59 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
                 right: 10,
                 child: Obx(() {
                   return Container(
-                    height: !_controller.hasCohosts.value ? 220 : 150,
+                    height: 220,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: _controller.comments.isNotEmpty
                         ? ListView.builder(
-                      controller: _scrollController, // Attach the scroll controller
-                      itemCount: _controller.comments.length,
-                      itemBuilder: (context, index) {
-                        final comment = _controller.comments[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              // Profile Picture
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(comment['photo']),
-                                radius: 22,
-                              ),
-                              const SizedBox(width: 10),
-                              // Comment Bubble
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    comment['user'],
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: HexColor('#7A7274'),
+                            controller:
+                                _scrollController, // Attach the scroll controller
+                            itemCount: _controller.comments.length,
+                            itemBuilder: (context, index) {
+                              final comment = _controller.comments[index];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    // Profile Picture
+                                    CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(comment['photo']),
+                                      radius: 22,
                                     ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    comment['message'],
-                                    style: TextStyle(
-                                      fontSize: 18.r,
-                                      color: Colors.white,
+                                    const SizedBox(width: 10),
+                                    // Comment Bubble
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          comment['user'],
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold,
+                                            color: HexColor('#7A7274'),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          comment['message'],
+                                          style: TextStyle(
+                                            fontSize: 18.r,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          )
                         : const Center(),
                   );
                 }),
@@ -1231,189 +711,17 @@ _controller.initializeAgora(widget.channelId, uid, widget.isAdmin,  adminUid ?? 
                         ),
 
                         const SizedBox(width: 8),
-          Expanded(
-            child: ChatInputField(
-            chatController: _controller.chatController,
-            focusNode: _focusNode,
-            onSend: (message) {
-            _controller.sendMessage(
-            name, photo, widget.channelId);          },
-            ),
-          ),
-
-                        SizedBox(
-                          width: 3,
-                        ),
-                        if (widget.isAdmin)
-                          GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.black.withOpacity(0.8),
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20)),
-                                ),
-                                builder: (context) => Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: JoinRequestsBar(
-                                    channelId: widget.channelId,
-                                    onAccept: (userId, name, photo) {
-                                      _controller.acceptJoinRequest(
-                                          widget.channelId, userId);
-                                    },
-                                    onReject: (userId) {
-                                      _controller.rejectJoinRequest(
-                                          widget.channelId, userId);
-                                    },
-                                  ),
-                                ),
-                              );
+                        Expanded(
+                          child: ChatInputField(
+                            chatController: _controller.chatController,
+                            focusNode: _focusNode,
+                            onSend: (message) {
+                              _controller.sendMessage(
+                                  name, photo, widget.channelId);
                             },
-                            child: Column(
-                              children: [
-                                Image.asset('assets/icons/live_requests.png',
-                                    height: 50.r),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                Text(
-                                  'Requests',
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      color: Colors.white,
-                                      fontSize: 13.r),
-                                )
-                              ],
-                            ),
                           ),
-
-                        if (!widget.isAdmin)
-                          GestureDetector(
-                            onTap: () {
-                              _controller.requestToJoinStream(widget.channelId,
-                                  uid.toString(), name, photo);
-                              if(widget.isAdmin)
-                              Get.snackbar(
-                                'Request Received',
-                                '$name requested to join the live',
-                                snackPosition: SnackPosition.TOP,
-                                backgroundColor: Colors.black.withOpacity(0.9),
-                                colorText: Colors.white,
-                                margin: const EdgeInsets.all(10),
-                                borderRadius: 12,
-                                duration: const Duration(seconds: 4),
-                                icon: const Icon(Icons.person_add,
-                                    color: Colors.white),
-                                mainButton: TextButton(
-                                  onPressed: () {
-                                    Get.back(); // Close snackbar
-                                    showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor:
-                                          Colors.black.withOpacity(0.8),
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(20)),
-                                      ),
-                                      builder: (context) => Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: JoinRequestsBar(
-                                          channelId: widget.channelId,
-                                          onAccept: (userId, name, photo) {
-                                            _controller.acceptJoinRequest(
-                                              widget.channelId,
-                                              userId,
-                                            );
-                                            print('Accepted: $userId, $name');
-                                            Get.back();
-                                          },
-                                          onReject: (userId) {
-                                            _controller.rejectJoinRequest(
-                                                widget.channelId, userId);
-                                            print('Rejected: $userId');
-                                            Get.back();
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'View',
-                                    style: TextStyle(
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                animationDuration:
-                                    const Duration(milliseconds: 500),
-                                barBlur: 10,
-                                overlayBlur: 2,
-                              );
-                            },
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/icons/live_requests.png',
-                                  height: 50.r,
-                                ),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                Text(
-                                  'Request',
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      color: Colors.white,
-                                      fontSize: 13.r),
-                                )
-                              ],
-                            ),
-                          ),
-SizedBox(width: 5,),
-SizedBox(width: 5,),
-
-                        SizedBox(
-                          width: 3,
                         ),
 
-
-                        // if (!widget.isAdmin)
-                        //   GestureDetector(
-                        //     onTap: () {
-                        //       showModalBottomSheet(
-                        //         context: context,
-                        //         isScrollControlled: true,
-                        //         backgroundColor: Colors.black.withOpacity(0.8),
-                        //         builder: (context) => GiftsBottomSheet(
-                        //           roomId: widget.channelId ?? '',
-                        //           isBattleSatrted:
-                        //               _controller.isPk.value ?? false,
-                        //         ),
-                        //       );
-                        //     },
-                        //     child: Column(
-                        //       children: [
-                        //         Image.asset('assets/icons/live_gift.png',
-                        //             height: 50.r),
-                        //         SizedBox(
-                        //           height: 2,
-                        //         ),
-                        //         Text(
-                        //           'Gifts',
-                        //           style: TextStyle(
-                        //               fontFamily: 'Poppins',
-                        //               color: Colors.white,
-                        //               fontSize: 13.r),
-                        //         )
-                        //       ],
-                        //     ),
-                        //   ),
-                        SizedBox(
-                          width: 3,
-                        ),
 
 
                         const SizedBox(width: 8),
@@ -1422,43 +730,13 @@ SizedBox(width: 5,),
                   ],
                 ),
               ),
-              StreamBuilder<DocumentSnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('livestreams')
-                    .doc(widget.channelId)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data != null) {
-                    final musicPath = snapshot.data!['currentmusic'];
-                    final musicId = snapshot.data!['currentmusic_id'];
-
-                    if (musicPath != null) {
-                      // Check if the music is new
-                      if (currentlyPlayingMusic != musicPath) {
-                        currentlyPlayingMusic = musicPath; // Update the flag
-
-                        // Play music from the path
-                        _controller.playMusic(musicId, widget.channelId);
-                      }
-                    } else {
-                      // Stop the music if currentmusic is null
-                      if (currentlyPlayingMusic != null) {
-                        currentlyPlayingMusic = null; // Reset the flag
-
-                        // Send a message indicating the music has stopped
-
-                        _controller.stopMusic();
-                      }
-                    }
-                  }
-                  return Container(); // UI for your users
-                },
-              ),
-
-              // Center(
-              //     child: RecentGiftsWidget(
-              //   roomId: widget.channelId ?? '',
-              // )),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: EdgeInsets.only(left: Get.width * .5 , bottom: Get.height * .1),
+                  child: CurrentProductContainer(channelId: widget.channelId,),
+                ),
+              )
             ],
           );
         }),
@@ -1469,90 +747,98 @@ SizedBox(width: 5,),
   Future<bool> _showExitConfirmationDialog(
       BuildContext context, bool isAdmin) async {
     return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10), // Adjusted border radius
-          ),
-          backgroundColor:HexColor('#2C2D2A'), // Set background to match the image
-          child: Padding(
-            padding: const EdgeInsets.only(top: 40 , left: 20 , right: 20 , bottom: 40), // Add padding around content
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Do you want to end Live video?', // Static text as shown in image
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white, // White text color
-                    fontSize: 18, // Adjusted font size
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Button color to match the image
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15), // Match button style
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(10), // Adjusted border radius
+              ),
+              backgroundColor:
+                  HexColor('#2C2D2A'), // Set background to match the image
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 40,
+                    left: 20,
+                    right: 20,
+                    bottom: 40), // Add padding around content
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Do you want to end Live video?', // Static text as shown in image
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white, // White text color
+                        fontSize: 18, // Adjusted font size
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 60, vertical: 10), // Adjust padding
-                  ),
-                  onPressed: () async {
-                    heartbeatTimer?.cancel(); // Cancel the timer when the widget is disposed
-                    await _controller.leaveStream();
-                    if (isAdmin) {
-                      _controller.deleteLiveStream(widget.channelId);
-                    } else {
-                      _controller.leaveStreamUser(
-                          widget.channelId, uid.toString());
-                    }
-                  },
-                  child: Text(
-                    'Yes', // Button text
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18, // Adjust font size
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Colors.blue, // Button color to match the image
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(15), // Match button style
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 60, vertical: 10), // Adjust padding
+                      ),
+                      onPressed: () async {
+                        heartbeatTimer
+                            ?.cancel(); // Cancel the timer when the widget is disposed
+                        await _controller.leaveStream();
+                        if (isAdmin) {
+                          _controller.deleteLiveStream(widget.channelId);
+                        } else {
+                          _controller.leaveStreamUser(
+                              widget.channelId, uid.toString());
+                        }
+                      },
+                      child: Text(
+                        'Yes', // Button text
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18, // Adjust font size
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text(
-                    'No', // Button text
-                    style: TextStyle(
-                      color: Colors.white, // Match text color
-                      fontSize: 18, // Adjust font size
+                    const SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text(
+                        'No', // Button text
+                        style: TextStyle(
+                          color: Colors.white, // Match text color
+                          fontSize: 18, // Adjust font size
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        );
-      },
-    ) ??
+              ),
+            );
+          },
+        ) ??
         false;
   }
 
-
-  void showCohostsAndViewersBottomSheet(
-      BuildContext context, String channelId) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => FullScreenBottomSheetContent(channelId: channelId),
-    );
-  }
+  // void showCohostsAndViewersBottomSheet(
+  //     BuildContext context, String channelId) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //     ),
+  //     builder: (context) => FullScreenBottomSheetContent(channelId: channelId),
+  //   );
+  // }
 
   void shareLiveStream(String channelId) {
     // Use a web-based URL instead of a custom scheme
@@ -1608,32 +894,14 @@ SizedBox(width: 5,),
     });
   }
 
-  void _showVoiceEffectsBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return VoiceEffectsBottomSheet(
-          onEffectSelected: (AudioEffectPreset? effect) {
-            _applyVoiceEffect(effect);
-          },
-        );
-      },
-    );
-  }
   void _applyVoiceEffect(AudioEffectPreset? effect) async {
-    if (_controller
-        .agoraEngine == null) return;
+    if (_controller.agoraEngine == null) return;
 
     if (effect == null || effect == AudioEffectPreset.audioEffectOff) {
-      await _controller
-          .agoraEngine?.setAudioEffectPreset(AudioEffectPreset.audioEffectOff);
+      await _controller.agoraEngine
+          ?.setAudioEffectPreset(AudioEffectPreset.audioEffectOff);
     } else {
-      await _controller
-          .agoraEngine?.setAudioEffectPreset(effect);
+      await _controller.agoraEngine?.setAudioEffectPreset(effect);
     }
   }
-
 }
