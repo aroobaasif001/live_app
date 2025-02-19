@@ -168,6 +168,54 @@ class TranslationsApp extends Translations {
       'success': 'Success',
       'error': 'Error',
       'registration_completed': 'Registration completed successfully!',
+      
+      // Profile Screen
+      'trade_profile': 'Trade Profile',
+      'account': 'Account',
+      'start_live': 'Start Live',
+      'current_lives': 'Current Lives',
+      'referrals_points': 'Referrals and points',
+      'balance': 'Balance: 1000 ₽',
+      'my_award': 'My Award',
+      'view_coupons': 'View coupons',
+      
+      // Settings Options
+      'payment_delivery': 'Payment and delivery',
+      'addresses': 'Addresses',
+      'notifications': 'Notifications',
+      'change_email': 'Change E-Mail',
+      'change_password': 'Change password',
+      'settings': 'Settings',
+      
+      // Help & Contact
+      'help_contacts': 'Help, contacts',
+      'contact_us': 'Contact Us',
+      'report_abuse': 'Report Abuse',
+      'sales_tax': 'Sales tax exemption',
+      'privacy_policy': 'Privacy Policy',
+      'terms_conditions': 'Terms and Conditions',
+      
+      // Logout
+      'logout': 'Log out',
+      'confirm_logout': 'Confirm Logout',
+      'logout_confirmation': 'Are you sure you want to log out?',
+      'cancel': 'Cancel',
+      
+      // Trade Profile Screen
+      'rating': 'Rating',
+      'reviews': 'Reviews',
+      'sold_out': 'Sold out',
+      'delivery': 'Delivery',
+      'goods': 'Goods',
+      'streams': 'Streams',
+      'wallet': 'Wallet',
+      'orders': 'Orders',
+      'invite_friend_title': 'Invite a friend and get up to 10,000 ₽',
+      'balance_amount': 'Balance: 0 ₽',
+      'tips': 'Tips',
+      'analytics': 'Analytics',
+      'edit_profile': 'Edit Profile',
+      'back': 'Back',
     },
     'ru': {
       // Auth screens (Corrected Russian Translations)
@@ -334,6 +382,54 @@ class TranslationsApp extends Translations {
       'success': 'Успех',
       'error': 'Ошибка',
       'registration_completed': 'Регистрация успешно завершена!',
+      
+      // Profile Screen
+      'trade_profile': 'Торговый профиль',
+      'account': 'Аккаунт',
+      'start_live': 'Начать трансляцию',
+      'current_lives': 'Текущие трансляции',
+      'referrals_points': 'Рефералы и баллы',
+      'balance': 'Баланс: 1000 ₽',
+      'my_award': 'Мои награды',
+      'view_coupons': 'Посмотреть купоны',
+      
+      // Settings Options
+      'payment_delivery': 'Оплата и доставка',
+      'addresses': 'Адреса',
+      'notifications': 'Уведомления',
+      'change_email': 'Изменить E-Mail',
+      'change_password': 'Изменить пароль',
+      'settings': 'Настройки',
+      
+      // Help & Contact
+      'help_contacts': 'Помощь, контакты',
+      'contact_us': 'Связаться с нами',
+      'report_abuse': 'Сообщить о нарушении',
+      'sales_tax': 'Освобождение от налога с продаж',
+      'privacy_policy': 'Политика конфиденциальности',
+      'terms_conditions': 'Условия использования',
+      
+      // Logout
+      'logout': 'Выйти',
+      'confirm_logout': 'Подтвердите выход',
+      'logout_confirmation': 'Вы уверены, что хотите выйти?',
+      'cancel': 'Отмена',
+      
+      // Trade Profile Screen
+      'rating': 'Рейтинг',
+      'reviews': 'Отзывы',
+      'sold_out': 'Продано',
+      'delivery': 'Доставка',
+      'goods': 'Товары',
+      'streams': 'Трансляции',
+      'wallet': 'Кошелек',
+      'orders': 'Заказы',
+      'invite_friend_title': 'Пригласите друга и получите до 10 000 ₽',
+      'balance_amount': 'Баланс: 0 ₽',
+      'tips': 'Чаевые',
+      'analytics': 'Аналитика',
+      'edit_profile': 'Редактировать профиль',
+      'back': 'Назад',
     },
   };
 }
