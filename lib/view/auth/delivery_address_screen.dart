@@ -66,7 +66,6 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
       apartment: _apartmentController.text.trim(),
       entrance: _entranceController.text.trim(),
       index: _indexController.text.trim(),
-      isSignUpWithGoogle:widget.isSignUpWithGoogle,
     ));
   }
 

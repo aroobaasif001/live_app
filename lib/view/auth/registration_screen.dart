@@ -49,14 +49,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     _passwordController = TextEditingController(text: widget.password ?? '');
   }
 
+
+
   void _storeUser() async {
     if (!_formKey.currentState!.validate()) return;
 
     if (!isAgreedToTerms || !isAbove18) {
-      Get.snackbar(
-        "Error",
-        "accept_terms_age".tr,
-        snackPosition: SnackPosition.BOTTOM,
+      Get.snackbar("Error", "accept_terms_age".tr,snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -71,7 +70,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             firstName: _firstNameController.text.trim(),
             gender: gender,
             password: _passwordController.text.trim(),
-            isSignUpWithGoogle: widget.isSignUpWithGoogle,
           ));
     } catch (e) {
       print(e);
@@ -141,18 +139,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     if (value == null || value.isEmpty) {
                       return 'enter_email'.tr;
                     }
-                    if (!RegExp(
-                            r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+                    if (!RegExp(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
                         .hasMatch(value)) {
                       return 'invalid_email'.tr;
                     }
                     return null;
                   },
                 ),
-                isSignUpWithGoogle == false ? SizedBox(height: 20) : SizedBox(),
                 isSignUpWithGoogle == false
+                    ? SizedBox(height: 20)
+                    : SizedBox(),
+               isSignUpWithGoogle == false
                     ? CustomTextField(
-                        hintText: 'password'.tr,
+                 hintText: 'password'.tr,
                         controller: _passwordController,
                         isPassword: true, // ✅ Enables visibility toggle
                         validator: (value) {
@@ -182,12 +181,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     'male'.tr,
                     'female'.tr,
                     'other'.tr,
-                  ]
-                      .map((gender) => DropdownMenuItem(
-                            value: gender,
-                            child: Text(gender),
-                          ))
-                      .toList(),
+                  ].map((gender) => DropdownMenuItem(
+                    value: gender,
+                    child: Text(gender),
+                  )).toList(),
                   onChanged: (value) => setState(() => gender = value),
                 ),
                 SizedBox(height: 20),
@@ -206,12 +203,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     'russia'.tr,
                     'usa'.tr,
                     'india'.tr,
-                  ]
-                      .map((country) => DropdownMenuItem(
-                            value: country,
-                            child: Text(country),
-                          ))
-                      .toList(),
+                  ].map((country) => DropdownMenuItem(
+                    value: country,
+                    child: Text(country),
+                  )).toList(),
                   onChanged: (value) => setState(() => country = value),
                 ),
                 SizedBox(height: 20),
@@ -219,8 +214,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   children: [
                     Checkbox(
                       value: isAgreedToTerms,
-                      onChanged: (value) =>
-                          setState(() => isAgreedToTerms = value!),
+                      onChanged: (value) => setState(() => isAgreedToTerms = value!),
                     ),
                     Expanded(
                       child: CustomText(

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,7 +5,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:live_app/custom_widgets/custom_background_scaffold.dart';
 import 'package:live_app/custom_widgets/custom_icon_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
-import 'package:live_app/translate/controller/translations_controller.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
@@ -28,38 +26,6 @@ class SocialsLoginScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Column(
                 children: [
-                  // Language selection row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Obx(() => TextButton(
-                        onPressed: () => translationController.updateLanguage('en'),
-                        child: Text(
-                          'English',
-                          style: TextStyle(
-                            color: translationController.selectedLanguage.value == 'English'
-                                ? purpleColor
-                                : Colors.grey,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )),
-                      Text(' | '),
-                      Obx(() => TextButton(
-                        onPressed: () => translationController.updateLanguage('ru'),
-                        child: Text(
-                          'Russian',
-                          style: TextStyle(
-                            color: translationController.selectedLanguage.value == 'Russian'
-                                ? purpleColor
-                                : Colors.grey,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )),
-                    ],
-                  ),
-
                   /// Register
                   GestureDetector(
                     onTap: () {
