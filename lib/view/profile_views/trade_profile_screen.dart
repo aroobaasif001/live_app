@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/utils/images_path.dart';
 import 'package:live_app/view/profile_views/edit_trade_profile.dart';
 import 'package:live_app/view/profile_views/item_for_auction.dart';
@@ -120,15 +121,22 @@ Future<void> _fetchUserProfile() async {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Icon(Icons.arrow_back,
+                                Icon(Icons.arrow_back,
                                     color: Colors.white, size: 24),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => EditTradeProfile(
-                                        userId: widget.userId));
-                                  },
-                                  child: const Icon(Icons.edit,
-                                      color: Colors.white, size: 24),
+                                CustomContainer(
+                                  height: 32,
+                                  width: 32,
+                                  shape: BoxShape.circle,
+                                  conColor: Colors.white,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Get.to(() => EditTradeProfile(
+                                          userId: widget.userId));
+                                    },
+                                    child: const Icon(Icons.edit_outlined,
+                                        color: Colors.black87, size: 24,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -198,13 +206,13 @@ Future<void> _fetchUserProfile() async {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(child: profileStatBox('4.7', 'Rating')),
+                          Expanded(child: profileStatBox('4.7', 'rating'.tr)),
                           verticalDivider(),
-                          Expanded(child: profileStatBox('33.8K', 'Reviews')),
+                          Expanded(child: profileStatBox('33.8K', 'reviews'.tr)),
                           verticalDivider(),
-                          Expanded(child: profileStatBox('169.7K', 'Sold out')),
+                          Expanded(child: profileStatBox('169.7K', 'sold_out'.tr)),
                           verticalDivider(),
-                          Expanded(child: profileStatBox('+2d.', 'Delivery')),
+                          Expanded(child: profileStatBox('+2d.', 'delivery'.tr)),
                         ],
                       ),
                     ),
@@ -218,20 +226,20 @@ Future<void> _fetchUserProfile() async {
                       children: [
                         Row(
                           children: [
-                            actionBox(Icons.shopping_bag, 'Goods', () {
+                            actionBox(Icons.shopping_bag, 'goods'.tr, () {
                               Get.to(() => MyProductsScreen());
                             }),
                             const SizedBox(width: 10),
-                            actionBox(Icons.stream, 'Streams', () {}),
+                            actionBox(Icons.stream, 'streams'.tr, () {}),
                           ],
                         ),
                         const SizedBox(height: 10),
                         Row(
                           children: [
                             actionBox(
-                                Icons.account_balance_wallet, 'Wallet', () {}),
+                                Icons.account_balance_wallet, 'wallet'.tr, () {}),
                             const SizedBox(width: 10),
-                            actionBox(Icons.list_alt, 'Orders', () {
+                            actionBox(Icons.list_alt, 'orders'.tr, () {
                               Get.to(()=>ItemAuctionScreen());
                             },
                                 badgeCount: 1),
@@ -253,9 +261,9 @@ Future<void> _fetchUserProfile() async {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
-                        optionTile(Icons.attach_money, "Tips"),
-                        optionTile(Icons.local_shipping, "Delivery"),
-                        optionTile(Icons.analytics, "Analytics"),
+                        optionTile(Icons.attach_money, "tips".tr),
+                        optionTile(Icons.local_shipping, "delivery".tr),
+                        optionTile(Icons.analytics, "analytics".tr),
                       ],
                     ),
                   ),
@@ -365,29 +373,31 @@ Future<void> _fetchUserProfile() async {
             BoxShadow(color: Colors.black12, blurRadius: 5),
           ],
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomText(
-                  text: 'Invite a friend and get up to 10,000 ₽',
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Gilroy-Bold",
-                ),
-                const SizedBox(height: 4),
-                CustomText(
-                  text: 'Balance: 0 ₽',
-                  fontSize: 12,
-                  color: Colors.grey,
-                  fontFamily: "Gilroy-Bold",
-                ),
-              ],
-            ),
-            const Icon(Icons.chevron_right, color: Colors.black),
-          ],
+        child: FittedBox(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText(
+                    text: 'invite_friend_title'.tr,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "Gilroy-Bold",
+                  ),
+                  const SizedBox(height: 4),
+                  CustomText(
+                    text: 'balance_amount'.tr,
+                    fontSize: 12,
+                    color: Colors.grey,
+                    fontFamily: "Gilroy-Bold",
+                  ),
+                ],
+              ),
+              const Icon(Icons.chevron_right, color: Colors.black),
+            ],
+          ),
         ),
       ),
     );
