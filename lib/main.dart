@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:live_app/translate/controller/translations_controller.dart';
-import 'package:live_app/view/auth/delivery_address_screen.dart';
-import 'package:live_app/view/auth/interests_screen.dart';
-import 'package:live_app/view/auth/notification_screen.dart';
+import 'package:live_app/view/auth/login_screen.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
 import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
-import 'package:live_app/view/homeScreen/homeMainScreen/home_main_screen.dart';
 import 'firebase_options.dart';
 import 'translate/translations_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,9 +52,9 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Live App',
-          home: BottomNavigationBarWidget(),
+          home: SocialsLoginScreen(),
           translations: TranslationsApp(),
-          locale: Get.deviceLocale ?? const Locale('en'), // Ensure fallback for null device locale
+          locale: Get.deviceLocale ?? const Locale('en'), 
           fallbackLocale: const Locale('en'),
         );
       },

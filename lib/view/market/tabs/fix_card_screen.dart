@@ -18,10 +18,12 @@ class FixCardScreen extends StatefulWidget {
   final String? productPrice;
   final String? productName;
   final String? productCompanyId;
+  final String? productDescription;
 
   FixCardScreen(
       {this.productImage,
       this.productPrice,
+      this.productDescription,
       this.productName,
       this.productCompanyId});
 
@@ -30,7 +32,7 @@ class FixCardScreen extends StatefulWidget {
 }
 
 class _FixCardScreenState extends State<FixCardScreen> {
-  String? companyName; // Variable to store the company name
+  String? companyName;
 
   @override
   void initState() {
@@ -322,10 +324,14 @@ class _FixCardScreenState extends State<FixCardScreen> {
                 child: TabBarView(
                   children: [
                     /// **First Tab: About the Product**
-                    AboutTheProductScreen(),
+                    AboutTheProductScreen(
+                      productDescription: widget.productDescription,
+                    ),
 
                     /// **Second Tab: Seller Information**
-                    SellerInformationScreen(),
+                    SellerInformationScreen(
+                      sellerProfileId:widget.productCompanyId,
+                    ),
                   ],
                 ),
               ),

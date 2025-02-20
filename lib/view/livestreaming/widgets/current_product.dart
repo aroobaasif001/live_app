@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../../homeScreen/widgets/show_bet_bottom_sheet.dart';
 
 class CurrentProductContainer extends StatelessWidget {
   final String channelId;
-  const CurrentProductContainer({Key? key, required this.channelId}) : super(key: key);
+  final String name;
+  final String photo;
+
+  const CurrentProductContainer({Key? key, required this.channelId, required this.name, required this.photo}) : super(key: key);
+
+  // Function to show bottom sheet for placing a bid
+
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      // Add styling or constraints as needed:
+      height: Get.height * .4,
       padding: const EdgeInsets.all(10),
       child: StreamBuilder<DocumentSnapshot>(
-        // 1) Listen to the livestreams doc for the given channelId.
         stream: FirebaseFirestore.instance
             .collection('livestreams')
             .doc(channelId)
@@ -33,13 +42,11 @@ class CurrentProductContainer extends StatelessWidget {
             return const Text('');
           }
 
-          // Extract the currentProduct field
           final currentProductId = data['currentProduct'] as String?;
           if (currentProductId == null || currentProductId.isEmpty) {
             return const Text('');
           }
 
-          // 2) If we have a currentProduct ID, listen to that product doc.
           return StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('products')
@@ -61,45 +68,40 @@ class CurrentProductContainer extends StatelessWidget {
                 return Text('Product data is empty for ID: $currentProductId');
               }
 
-              // Extract product fields
               final productTitle = productData['title'] ?? 'No Title';
               final productCategory = productData['category'] ?? 'No Category';
               final productDescription = productData['description'] ?? 'No Description';
               final productImages = productData['images'] as List<dynamic>? ?? [];
-              final productImage =
-              productImages.isNotEmpty ? productImages[0] : null;
+              final productImage = productImages.isNotEmpty ? productImages[0] : null;
               final productPrice = productData['price'];
               final productSaleType = productData['saleType'] ?? '';
               final productStartingBid = productData['startingBid'];
               final productDelivery = productData['delivery'] ?? 'No Delivery';
 
-              // Display the product info in a Card or any layout you prefer
               return Card(
-                elevation: 4,
+                elevation: 8,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min, // Adjusts to fit content
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Display the first image or a placeholder
                       if (productImage != null)
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                           child: Image.network(
                             productImage,
                             width: double.infinity,
-                            height: 80,
+                            height: 90,
                             fit: BoxFit.cover,
                           ),
                         )
                       else
                         Container(
                           width: double.infinity,
-                          height: 80,
+                          height: 90,
                           color: Colors.grey.shade200,
                           child: const Icon(
                             Icons.image_not_supported,
@@ -107,45 +109,62 @@ class CurrentProductContainer extends StatelessWidget {
                             color: Colors.grey,
                           ),
                         ),
-                      const SizedBox(height: 10),
-
-                      // Title
+                      const SizedBox(height: 4),
                       Text(
                         productTitle,
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
-                      const SizedBox(height: 8),
-
-                      // Category and Delivery
-                      Text(
-                        'Category: $productCategory\nDelivery: $productDelivery',
-                        style: const TextStyle(fontSize: 14),
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      // Description
+                      // const SizedBox(height: 4),
+                      // Text(
+                      //   'Category: $productCategory\nDelivery: $productDelivery',
+                      //   style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      // ),
+                      // const SizedBox(height: 2),
                       Text(
                         productDescription,
-                        style: const TextStyle(fontSize: 14),
+                        style: const TextStyle(fontSize: 16, color: Colors.black87),
                       ),
-
-                      const SizedBox(height: 8),
-
-                      // Price or starting bid
+                      const SizedBox(height: 2),
                       Text(
                         productSaleType == 'Auction'
-                            ? 'Starting Bid: ${productStartingBid ?? 0}'
-                            : 'Price: ${productPrice ?? 0}',
+                            ? 'Starting Bid: \$${productStartingBid ?? 0}'
+                            : 'Price: \$${productPrice ?? 0}',
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           color: Colors.blueAccent,
                         ),
                       ),
+                      const SizedBox(height: 16),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Ensure the minimum bid is parsed as a double if it's coming as a String
+                            double minimumBid = 0.0;
+                            if (productStartingBid is String) {
+                              minimumBid = double.tryParse(productStartingBid) ?? 0.0;
+                            } else if (productStartingBid is double) {
+                              minimumBid = productStartingBid;
+                            }
+
+                            // Show the bottom sheet with the minimum bid
+                            showBetBottomSheet(context, minimumBid , name ,photo , channelId);
+                          },
+                          child: const Text('Bid Now'),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 40,
+                              vertical: 5,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                      ),
+
                     ],
                   ),
                 ),

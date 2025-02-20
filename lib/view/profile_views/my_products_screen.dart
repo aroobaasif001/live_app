@@ -53,7 +53,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                 unselectedBorderColor: Colors.transparent,
                 borderColor: Colors.transparent,
                 contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 labelStyle: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -144,7 +144,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         // Convert each doc into a ProductEntity
         List<ProductEntity> products = snapshot.data!.docs
             .map((doc) =>
-            ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
 
         // Filter logic
@@ -153,9 +153,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         } else if (filter == "Auction") {
           products = products.where((p) => p.saleType == "Auction").toList();
         } else if (filter == "Active") {
-          products =
-              products.where((p) => (p.isActive ?? false) && !(p.isSold ?? false))
-                  .toList();
+          products = products
+              .where((p) => (p.isActive ?? false) && !(p.isSold ?? false))
+              .toList();
         } else if (filter == "Sold") {
           products = products.where((p) => p.isSold ?? false).toList();
         }
@@ -254,22 +254,20 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                   fontSize: 14,
                   color: Colors.grey,
                 ),
-                // Price
                 CustomText(
-                  text: product.price == null
+                  text: product.saleType == "Auction"
                       ? "${product.startingBid ?? '0'} ₽"
-                      : "${product.price} ₽",
+                      : "${product.price ?? '0'} ₽", 
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
-
                 const SizedBox(height: 8),
-              
                 CustomText(
                   text: (product.isActive ?? false) ? "Active" : "Inactive",
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: (product.isActive ?? false) ? Colors.green : Colors.red,
+                  color:
+                      (product.isActive ?? false) ? Colors.green : Colors.red,
                 ),
               ],
             ),
@@ -279,7 +277,3 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     );
   }
 }
-
-
-
-

@@ -72,6 +72,7 @@ class _GetAllGoodsState extends State<GetAllGoods> {
                                 text: 'Fix',
                                 onPressed: () {
                                   Get.to(() => FixCardScreen(
+                                    productDescription:productResponse.description,
                                     productImage:productResponse.images!.first,
                                     productName:productResponse.title,
                                     productPrice: productResponse.startingBid,
@@ -121,7 +122,13 @@ class _GetAllGoodsState extends State<GetAllGoods> {
                           CustomGradientButton(
                             text: 'Add to Card',
                             onPressed: () {
-                              Get.to(() => ProductDetailScreen());
+                              Get.to(() => ProductDetailScreen(
+                                productDescription:productResponse.description,
+                                productImage:productResponse.images!.first,
+                                productName:productResponse.title,
+                                productPrice: productResponse.startingBid,
+                                productCompanyId:productResponse.id,
+                              ));
                             },
                           ),
                         ],

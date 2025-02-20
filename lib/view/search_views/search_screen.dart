@@ -1,9 +1,11 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/search_views/search_by_application.dart';
-
 import '../../custom_widgets/custom_gradient_button.dart';
 import '../../custom_widgets/custom_text.dart';
 import '../../utils/icons_path.dart';
@@ -30,9 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 15),
-
                 // Search Bar
-
                 Container(
                   height: 40,
                   decoration: BoxDecoration(
@@ -43,7 +43,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: TextField(
                     onTap: () {
                       // Opens "SearchByApplication" screen
-
                       Get.to(() => const SearchByApplication());
                     },
                     decoration: InputDecoration(
@@ -53,11 +52,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 12),
-
                 // Top-level TabBar
-
                 ButtonsTabBar(
                   unselectedBackgroundColor: Colors.white,
                   borderWidth: 0,
@@ -93,9 +89,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     Tab(text: 'categories'.tr),
                   ],
                 ),
-
                 const SizedBox(height: 12),
-
                 Expanded(
                   child: TabBarView(
                     children: [
@@ -116,22 +110,17 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ===========================================================================
-
   // =============================  TOP TAB  ====================================
-
   // ===========================================================================
-
   Widget _buildTopTab() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16), // extra bottom spacing
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // STREAM SECTION
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -150,13 +139,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
-
-            _buildStreamGrid(itemCount: 4), // 2×2
-
+            _buildStreamGrid(context), // 2×2
             const SizedBox(height: 12),
-
             // "Watch more streams" button
 
             CustomGradientButton(text: "watch_more_streams".tr),
@@ -164,7 +149,6 @@ class _SearchScreenState extends State<SearchScreen> {
             const SizedBox(height: 12),
 
             // USERS SECTION
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -183,26 +167,19 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
-
             _buildHorizontalUsers(itemCount: 3),
-
             const SizedBox(height: 12),
 
             // PRODUCTS SECTION
-
             CustomText(
               text: "all_products".tr,
               fontWeight: FontWeight.w400,
               fontSize: 16,
               fontFamily: "Gilroy-Bold",
             ),
-
             const SizedBox(height: 12),
-
             // Updated to match your screenshot design
-
             _buildProductList(itemCount: 3),
           ],
         ),
@@ -211,11 +188,8 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ===========================================================================
-
   // ============================  GOODS TAB  ===================================
-
   // ===========================================================================
-
   Widget _buildGoodsTab() {
     return ListView.builder(
       itemCount: 6,
@@ -225,8 +199,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Icon + "company_name" + "2.4K Subscribers"
-
+              // Icon + “company_name” + “2.4K Subscribers”
               Expanded(
                 child: Row(
                   children: [
@@ -257,7 +230,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   ],
                 ),
               ),
-
               CustomGradientButton(
                 text: "Subscribe",
                 width: 100,
@@ -271,11 +243,8 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ===========================================================================
-
   // ===========================  STREAMS TAB  ==================================
-
   // ===========================================================================
-
   Widget _buildStreamsTab() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -284,7 +253,9 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildStreamGrid(itemCount: 4),
+            _buildStreamGrid(
+              context
+            ),
           ],
         ),
       ),
@@ -292,11 +263,8 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ===========================================================================
-
   // ============================  USERS TAB  ===================================
-
   // ===========================================================================
-
   Widget _buildUsersTab() {
     return ListView.builder(
       itemCount: 6,
@@ -349,11 +317,8 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ===========================================================================
-
   // =========================  CATEGORIES TAB  =================================
-
   // ===========================================================================
-
   Widget _buildCategoriesTab() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -399,7 +364,6 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             SizedBox(
               height: 500, // enough space for sub-tab content
-
               child: TabBarView(
                 children: [
                   _buildCategoryList(),
@@ -422,7 +386,6 @@ class _SearchScreenState extends State<SearchScreen> {
       "Shoes",
       "Cloth",
     ];
-
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -497,42 +460,6 @@ class _SearchScreenState extends State<SearchScreen> {
       },
     );
   }
-
-  // ===========================================================================
-
-  // =============  SHARED HELPERS for Streams, Users, Products  ===============
-
-  // ===========================================================================
-
-  /// 2×2 (or more) grid of live streams
-
-  Widget _buildStreamGrid({required int itemCount}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-
-          crossAxisSpacing: 10,
-
-          mainAxisSpacing: 10,
-
-          // Keep ratio low to avoid overflow in LiveVideoCard
-
-          childAspectRatio: 0.45,
-        ),
-        itemCount: itemCount,
-        itemBuilder: (context, index) {
-          return LiveVideoCard();
-        },
-      ),
-    );
-  }
-
-  /// Horizontal user list (for "Users" in the Top tab)
-
   Widget _buildHorizontalUsers({required int itemCount}) {
     return SizedBox(
       height: 165,
@@ -564,27 +491,21 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 8),
-
                     CustomText(
                       text: "company_name".tr,
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
                       fontFamily: "Gilroy-Bold",
                     ),
-
                     const SizedBox(height: 2),
-
                     CustomText(
                       text: "2.3K Subscribers",
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
                       fontFamily: "Gilroy-Bold",
                     ),
-
                     const SizedBox(height: 8),
-
                     CustomGradientButton(
                       text: "Subscribe",
                       height: 35,
@@ -599,15 +520,6 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
-
-  /// Products list, updated to match the screenshot:
-
-  /// - Image on the left with a small top-right badge showing (chat icon + "3")
-
-  /// - On the right: brand name + star rating, "Product name", "Description", "1000 ₽"
-
-  /// - Divider after each row
-
   Widget _buildProductList({required int itemCount}) {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
@@ -623,7 +535,6 @@ class _SearchScreenState extends State<SearchScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Left side: product image with small badge (icon + "3")
-
             SizedBox(
               width: 120,
               height: 120,
@@ -671,17 +582,13 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
             ),
-
             const SizedBox(width: 12),
-
             // Right side: brand name + rating, product name, description, price
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // brand name + star rating row
-
                   Row(
                     children: [
                       Image.asset(
@@ -695,6 +602,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                       ),
+
                       const SizedBox(width: 6),
                       const Icon(
                         Icons.star,
@@ -710,30 +618,22 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 4),
-
                   // product name
-
                   CustomText(
                     text: 'Product name',
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
-
                   // description
-
                   const CustomText(
                     text: 'Description',
                     fontWeight: FontWeight.w400,
                     fontSize: 13,
                     color: Colors.grey,
                   ),
-
                   const SizedBox(height: 4),
-
                   // price
-
                   CustomText(
                     text: '1,000 ₽',
                     fontWeight: FontWeight.bold,
@@ -747,4 +647,66 @@ class _SearchScreenState extends State<SearchScreen> {
       },
     );
   }
+}
+Widget _buildStreamGrid(BuildContext context) {
+  return FutureBuilder<QuerySnapshot>(
+    future: FirebaseFirestore.instance.collection('livestreams').get(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      }
+      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return const Center(child: Text('No livestreams available'));
+      };
+
+      final livestreamsData = snapshot.data!.docs;
+
+      return SizedBox( // Ensure bounded height
+        height: 500, // Set an appropriate height
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              double screenWidth = constraints.maxWidth;
+              return GridView.builder(
+                physics: const BouncingScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: screenWidth > 600 ? 3 : 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 0.42,
+                ),
+                itemCount: livestreamsData.length,
+                itemBuilder: (context, index) {
+                  // Cast the document data to a Map
+                  final data = livestreamsData[index].data() as Map<String, dynamic>;
+
+                  // Extract fields with a fallback if necessary.
+                  final adminName = data['adminName'] as String? ?? 'Unknown';
+                  final adminImage = data['adminPhoto'] as String? ?? '';
+                  final viewsCount = data['viewsCount'] as int? ?? 0;
+                  final title = data['title'] as String? ?? '';
+
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigate to live stream or any action
+                    },
+                    child: LiveVideoCard(
+                      adminName: adminName,
+                      adminImage: adminImage,
+                      viewsCount: viewsCount,
+                      title: title,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      );
+    },
+  );
 }
