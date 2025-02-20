@@ -15,6 +15,7 @@ import 'package:live_app/view/auth/socials_login_screen.dart';
 import 'package:live_app/view/homeScreen/paymentMethodScreen/reward_screen.dart';
 import 'package:live_app/view/profile_views/my_rewards_screen.dart';
 import 'package:live_app/view/profile_views/settings_screen.dart';
+import 'package:live_app/view/profile_views/sold_products_screen.dart';
 import 'package:live_app/view/profile_views/trade_profile_screen.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
@@ -243,6 +244,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Get.to(() => LiveStreamViewScreen());
                           },
                           child: Text('current_lives'.tr)),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      CustomGradientButton(
+                        text: "Sold Products",
+                        onPressed: () {
+                          Get.to(()=>SoldProductsScreen());
+                        },
+                      ),
                       SizedBox(
                         height: 12,
                       ),
