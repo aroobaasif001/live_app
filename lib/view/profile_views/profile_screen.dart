@@ -18,6 +18,7 @@ import 'package:live_app/view/profile_views/settings_screen.dart';
 import 'package:live_app/view/profile_views/trade_profile_screen.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
+import '../../utils/store_services.dart';
 import '../livestreaming/live_preview.dart';
 import '../livestreaming/livestreamingview_screen.dart';
 import 'notifications_settings_screen.dart';
@@ -97,7 +98,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         "screen": SettingsScreen()
       },
     ];
-    final TranslationsController translationController = Get.find<TranslationsController>();
+    final TranslationsController translationController =
+        Get.find<TranslationsController>();
     return CustomProfileBackgroundScaffold(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -123,30 +125,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Obx(() => TextButton(
-                            onPressed: () => translationController.updateLanguage('en'),
-                            child: Text(
-                              'English',
-                              style: TextStyle(
-                                color: translationController.selectedLanguage.value == 'English'
-                                    ? purpleColor
-                                    : Colors.grey,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )),
+                                onPressed: () =>
+                                    translationController.updateLanguage('en'),
+                                child: Text(
+                                  'English',
+                                  style: TextStyle(
+                                    color: translationController
+                                                .selectedLanguage.value ==
+                                            'English'
+                                        ? purpleColor
+                                        : Colors.grey,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )),
                           Text(' | '),
                           Obx(() => TextButton(
-                            onPressed: () => translationController.updateLanguage('ru'),
-                            child: Text(
-                              'Russian',
-                              style: TextStyle(
-                                color: translationController.selectedLanguage.value == 'Russian'
-                                    ? purpleColor
-                                    : Colors.grey,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )),
+                                onPressed: () =>
+                                    translationController.updateLanguage('ru'),
+                                child: Text(
+                                  'Russian',
+                                  style: TextStyle(
+                                    color: translationController
+                                                .selectedLanguage.value ==
+                                            'Russian'
+                                        ? purpleColor
+                                        : Colors.grey,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )),
                         ],
                       ),
                       SizedBox(
@@ -187,8 +195,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 text: "trade_profile".tr,
                                 onPressed: () {
                                   Get.to(() => TradeProfileScreen(
-                                    userId: FirebaseAuth.instance.currentUser!.uid,
-                                    ));
+                                        userId: FirebaseAuth
+                                            .instance.currentUser!.uid,
+                                      ));
                                 },
                               )
                             ],
@@ -199,9 +208,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 25,
                       ),
                       GestureDetector(
-                        onTap: (){
-                          Get.to(()=>LivePreviewScreen(name: snapshot.data!.data()!.firstName.toString(), photo: 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
-
+                        onTap: () {
+                          Get.to(() => LivePreviewScreen(
+                              name: snapshot.data!.data()!.firstName.toString(),
+                              photo:
+                                  'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
                         },
                         child: Container(
                           height: 155,
@@ -212,20 +223,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   fit: BoxFit.cover)),
                         ),
                       ),
-     TextButton(onPressed: (){
-                        Get.to(()=>LiveStreamViewScreen());
-                      }, child: Text('current_lives'.tr)),
+                      TextButton(
+                          onPressed: () {
+                            Get.to(() => LiveStreamViewScreen());
+                          },
+                          child: Text('current_lives'.tr)),
                       CustomText(
                         text: "account".tr,
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
-                      TextButton(onPressed: (){
-                       // Get.to(()=>LivePreviewScreen(name: snapshot.data!.data()!.firstName.toString(), photo: 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
-                      }, child: Text('start_live'.tr)),
-                      TextButton(onPressed: (){
-                       Get.to(()=>LiveStreamViewScreen());
-                      }, child: Text('current_lives'.tr)),
+                      TextButton(
+                          onPressed: () {
+                            // Get.to(()=>LivePreviewScreen(name: snapshot.data!.data()!.firstName.toString(), photo: 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
+                          },
+                          child: Text('start_live'.tr)),
+                      TextButton(
+                          onPressed: () {
+                            Get.to(() => LiveStreamViewScreen());
+                          },
+                          child: Text('current_lives'.tr)),
                       SizedBox(
                         height: 12,
                       ),
@@ -476,9 +493,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Container(
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: primaryGradientColor
-          ),
+              borderRadius: BorderRadius.circular(20),
+              gradient: primaryGradientColor),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -529,9 +545,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
+                        await StorageService.logout();
                         await FirebaseAuth.instance.signOut();
                         Get.back(); // Close dialog
-                        Get.offAll(()=>SocialsLoginScreen()); // Navigate to login screen
+                        Get.offAll(() =>
+                            SocialsLoginScreen()); // Navigate to login screen
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -541,7 +559,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: Text(
                         "logout".tr,
-                        style: TextStyle(fontSize: 16, color: Colors.red.shade800),
+                        style:
+                            TextStyle(fontSize: 16, color: Colors.red.shade800),
                       ),
                     ),
                   ),

@@ -13,6 +13,8 @@ import 'package:live_app/view/auth/registration_screen.dart';
 import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
+import '../../utils/store_services.dart';
+
 class SocialsLoginScreen extends StatelessWidget {
 
 
@@ -169,7 +171,6 @@ class SocialsLoginScreen extends StatelessWidget {
         bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? true;
 
         if (isNewUser) {
-          // For a new user, pre-fill data on the registration screen.
           List<String> nameParts = (user.displayName ?? "").split(" ");
           String firstName = nameParts.isNotEmpty ? nameParts[0] : "User";
           String lastName = nameParts.length > 1 ? nameParts[1] : "";
@@ -189,6 +190,7 @@ class SocialsLoginScreen extends StatelessWidget {
             colorText: Colors.white,
           );
         } else {
+          await StorageService.setLoggedIn(true);
           Get.offAll(() => BottomNavigationBarWidget());
 
           Get.snackbar(
