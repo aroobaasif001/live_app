@@ -25,15 +25,16 @@ Future<void> main() async {
       webProvider: ReCaptchaV3Provider('PASTE_YOUR_RECAPTCHA_SITE_KEY_HERE'),
     );
 
-    debugPrint("🔥 Firebase initialized successfully.");
+    debugPrint(" Firebase initialized successfully.");
   } catch (e) {
-    debugPrint("🔥 Firebase Initialization Error: $e");
+    debugPrint(" Firebase Initialization Error: $e");
   }
 
   Get.put(TranslationsController());
 
   runApp(MyApp(isLoggedIn: isLoggedIn));
 }
+
 
 class MyApp extends StatelessWidget {
   final bool? isLoggedIn;
