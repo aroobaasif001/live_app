@@ -19,6 +19,7 @@ import 'package:live_app/view/profile_views/sold_products_screen.dart';
 import 'package:live_app/view/profile_views/trade_profile_screen.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
+import '../../utils/store_services.dart';
 import '../livestreaming/live_preview.dart';
 import '../livestreaming/livestreamingview_screen.dart';
 import 'notifications_settings_screen.dart';
@@ -554,6 +555,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
+                        await StorageService.logout();
                         await FirebaseAuth.instance.signOut();
                         Get.back(); // Close dialog
                         Get.offAll(() =>
