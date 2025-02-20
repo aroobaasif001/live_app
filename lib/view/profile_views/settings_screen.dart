@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../custom_widgets/custom_text.dart';
+import '../../translate/translations_app.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -19,8 +21,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const CustomText(
-          text: 'Settings',
+        title: CustomText(
+          text: 'settings'.tr,
           fontSize: 18,
           fontWeight: FontWeight.bold,
           color: Colors.black,
@@ -36,8 +38,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           settingsSection(
-            'Country of Residence',
-            'Your country of residence affects trade show and product recommendations. Your address may determine whether your product is shipped to you.',
+            'country_of_residence'.tr,
+            'country_description'.tr,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.grey[200],
@@ -54,51 +56,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           buildCustomSwitchTile(
-            'Direct messages',
-            'Enable this feature if you want to receive direct messages from other users.',
+            'direct_messages'.tr,
+            'direct_messages_description'.tr,
             directMessages,
                 (val) {
               setState(() => directMessages = val);
             },
           ),
           buildCustomSwitchTile(
-            'Receive gifts',
-            'Enable this option if you want other Grab! users to be able to see you buying gifts.',
+            'receive_gifts'.tr,
+            'receive_gifts_description'.tr,
             receiveGifts,
                 (val) {
               setState(() => receiveGifts = val);
             },
           ),
           buildCustomSwitchTile(
-            'Display status in Rewards Club',
-            'Let other shoppers see your reward badge live and send congratulatory messages in chat.',
+            'display_rewards_status'.tr,
+            'display_rewards_status_description'.tr,
             displayRewardsStatus,
                 (val) {
               setState(() => displayRewardsStatus = val);
             },
           ),
           buildCustomSwitchTile(
-            'Activity status',
-            'Turn on if you want to share your actions with friends.',
+            'activity_status'.tr,
+            'activity_status_description'.tr,
             activityStatus,
                 (val) {
               setState(() => activityStatus = val);
             },
           ),
           buildCustomSwitchTile(
-            'Suggest you to other users',
-            'Hewlot will suggest your account to your contacts. It will be activated as soon as you add a phone number or sync your contacts.',
+            'suggest_to_others'.tr,
+            'suggest_to_others_description'.tr,
             suggestToOthers,
                 (val) {
               setState(() => suggestToOthers = val);
             },
           ),
           settingsSection(
-            'Account Management',
+            'account_management'.tr,
             '',
             child: ListTile(
-              title: const CustomText(
-                text: 'Delete account',
+              title: CustomText(
+                text: 'delete_account'.tr,
                 fontSize: 16,
                 color: Colors.red,
                 fontWeight: FontWeight.bold,
