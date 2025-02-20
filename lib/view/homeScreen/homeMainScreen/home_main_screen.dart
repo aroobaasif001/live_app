@@ -185,7 +185,7 @@ class HomeMainScreen extends StatelessWidget {
     try {
       // Retrieve data from SharedPreferences
       final sharedPreferences = await SharedPreferences.getInstance();
-      final uid = 10000 + Random().nextInt(90000); ;
+      final uid = 10000 + Random().nextInt(90000);
       final name =  'Guest';
       final photo = 'https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg';
 

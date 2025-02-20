@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
+import 'package:live_app/utils/colors.dart';
+import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
 import 'package:live_app/view/profile_views/edit_trade_profile.dart';
 import 'package:live_app/view/profile_views/item_for_auction.dart';
+import '../../custom_widgets/custom_review.dart';
 import '../../custom_widgets/custom_text.dart';
 import '../../entities/registration_entity.dart';
 import 'my_products_screen.dart';
@@ -167,7 +170,8 @@ Future<void> _fetchUserProfile() async {
                                       fontWeight: FontWeight.w400,
                                       fontSize: 20,
                                       color: Colors.white,
-                                    ),
+                           
+                                   ),
                                     CustomText(
                                       text: userProfile?.lastName ??
                                           "User Last Name",
@@ -195,29 +199,43 @@ Future<void> _fetchUserProfile() async {
                   ),
                   const SizedBox(height: 16),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(child: profileStatBox('4.7', 'rating'.tr)),
-                          verticalDivider(),
-                          Expanded(child: profileStatBox('33.8K', 'reviews'.tr)),
-                          verticalDivider(),
-                          Expanded(child: profileStatBox('169.7K', 'sold_out'.tr)),
-                          verticalDivider(),
-                          Expanded(child: profileStatBox('+2d.', 'delivery'.tr)),
-                        ],
+    
+  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: CustomContainer(
+                      height: 68,
+                      width: double.infinity,
+                      conColor: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: conLineColor),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              CustomReview(
+                                  value: userProfile?.rating?.toString() ?? '0',
+                                  label: 'Rating',
+                                  iconPath: 'assets/icons/star.png'),
+                              VerticalDivider(color: conLineColor),
+                              CustomReview(
+                                  value: userProfile?.reviews?.toString() ?? '0',
+                                  label: 'Reviews'),
+                              VerticalDivider(color: conLineColor),
+                              CustomReview(
+                                  value: userProfile?.sold?.toString() ?? '0',
+                                  label: 'Sold'),
+                              VerticalDivider(color: conLineColor),
+                              CustomReview(
+                                  value: userProfile?.delivery?.toString() ?? '0',
+                                  label: 'Delivery'),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 16),
 
                   Padding(
