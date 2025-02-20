@@ -62,7 +62,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       padding: EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.7),
+        color: Colors.black.withOpacity(0.2),
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
