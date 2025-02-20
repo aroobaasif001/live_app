@@ -98,8 +98,8 @@ class HomeMainScreen extends StatelessWidget {
   }
 
   Widget _buildLiveVideos(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-      future: FirebaseFirestore.instance.collection('livestreams').get(),
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('livestreams').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -129,10 +129,9 @@ class HomeMainScreen extends StatelessWidget {
                 itemCount: livestreamsData.length,
                 itemBuilder: (context, index) {
                   // Cast the document data to a Map
-                  final data =
-                      livestreamsData[index].data() as Map<String, dynamic>;
+                  final data = livestreamsData[index].data() as Map<String, dynamic>;
 
-                  // Extract fields with a fallback if necessary.
+                  // Extract fields with fallback values
                   final adminName = data['adminName'] as String? ?? 'Unknown';
                   final adminImage = data['adminPhoto'] as String? ?? '';
                   final viewsCount = data['viewsCount'] as int? ?? 0;
@@ -158,6 +157,7 @@ class HomeMainScreen extends StatelessWidget {
       },
     );
   }
+
 
   Future<void> joinLiveStreamingWithPrefs(String channelId) async {
     try {
