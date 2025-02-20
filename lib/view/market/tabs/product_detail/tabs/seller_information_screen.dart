@@ -9,6 +9,7 @@ import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
+import 'package:live_app/translate/translations_app.dart';
 
 class SellerInformationScreen extends StatelessWidget {
   const SellerInformationScreen({super.key});
@@ -49,7 +50,7 @@ class SellerInformationScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 12),
                             CustomText(
-                              text: 'Company_Name',
+                              text: 'company_name'.tr,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -128,7 +129,7 @@ class SellerInformationScreen extends StatelessWidget {
                               children: [
                                 SizedBox(height: 10),
                                 CustomText(
-                                  text: "WELCOME TO GRAND GAMING\nINCREDIBLE DEALS, ENERGY BOOSTS, FAST AUCTIONS\nFAIRFUNFAST\nPLEASE CONTACT ME WITH ANY QUESTIONS OR PROBLEMS, I'M HERE TO HELP!",
+                                  text: 'welcome_message'.tr,
                                 ),
                                 SizedBox(height: 20),
                                 GestureDetector(
@@ -146,7 +147,11 @@ class SellerInformationScreen extends StatelessWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    CustomText(text: 'Reviews about the seller', fontSize: 18, fontWeight: FontWeight.bold),
+                                    CustomText(
+                                      text: 'reviews_about_seller'.tr,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                     GestureDetector(
                                       onTap: () {},
                                       child: Row(
@@ -427,7 +432,7 @@ class SellerInformationScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: 20),
                                 CustomText(
-                                  text: 'More from this seller',
+                                  text: 'more_from_seller'.tr,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -525,12 +530,12 @@ class SellerInformationScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     CustomText(
-                                      text: 'Created 01/28/25',
+                                      text: 'created 01/28/25'.tr,
                                       fontSize: 14,
                                       color: Colors.grey,
                                     ),
                                     CustomText(
-                                      text: 'Report Abuse',
+                                      text: 'report_abuse'.tr,
                                       fontSize: 14,
                                       color: Colors.red,
                                     ),

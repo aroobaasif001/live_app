@@ -9,6 +9,7 @@ import 'package:live_app/view/profile_views/trade_profile_screen.dart';
 import '../../entities/registration_entity.dart';
 import '../../utils/images_path.dart';
 import '../../custom_widgets/custom_text.dart';
+import '../../translate/translations_app.dart';
 
 class EditTradeProfile extends StatefulWidget {
   final String userId;
@@ -60,7 +61,7 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
         });
       }
     } catch (e) {
-      print("Error fetching profile: $e");
+      print("error_fetching".tr.replaceAll("{0}", e.toString()));
       setState(() {
         _isLoading = false;
       });
@@ -80,13 +81,13 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Profile updated successfully!")),
+        SnackBar(content: Text("profile_updated".tr)),
       );
       Get.off(() => TradeProfileScreen(userId: widget.userId));
     } catch (e) {
-      print("Error updating profile: $e");
+      print("error_updating".tr.replaceAll("{0}", e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Failed to update profile")),
+        SnackBar(content: Text("update_failed".tr)),
       );
     }
   }
@@ -138,8 +139,8 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          "Edit Profile",
+        title: Text(
+          "edit_profile_title".tr,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -150,8 +151,8 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
         actions: [
           TextButton(
             onPressed: _updateProfile,
-            child: const Text(
-              "Save",
+            child: Text(
+              "save".tr,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -216,8 +217,8 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
-                        const CustomText(
-                          text: "Personal Details",
+                        CustomText(
+                          text: "personal_details".tr,
                           fontFamily: "Gilroy-Bold",
                           fontSize: 18,
                           fontWeight: FontWeight.w400,
@@ -225,19 +226,19 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
                         const SizedBox(height: 16),
                         EditProfileTextField(
                             controller: _firstNameController,
-                            label: "First Name",
+                            label: "first_name".tr,
                             maxLines: 1,
                             isBold: true),
                         const SizedBox(height: 16),
                         EditProfileTextField(
                             controller: _lastNameController,
-                            label: "Last Name",
+                            label: "last_name".tr,
                             maxLines: 1,
                             isBold: true),
                         const SizedBox(height: 16),
                         EditProfileTextField(
                             controller: _emailController,
-                            label: "Email",
+                            label: "email".tr,
                             maxLines: 1,
                             isBold: false),
                       ],

@@ -7,10 +7,10 @@ class CategoryTabs extends StatelessWidget {
   final RxInt selectedIndex = 0.obs; 
 
   final List<String> categories = [
-    "For you",
-    "Subscriptions",
-    "Electronics",
-    "Cloth"
+    "For you".tr,
+    "subscriptions".tr,
+    "Electronics".tr,
+    "Cloth".tr
   ];
 
   @override

@@ -97,7 +97,9 @@ class SocialsLoginScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   CustomIconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      signUpGoogle();
+                    },
                     text: 'continue_with_google'.tr,
                     iconPath: googleIcon
                   ),

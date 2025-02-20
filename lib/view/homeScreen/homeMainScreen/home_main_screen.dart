@@ -5,6 +5,7 @@ import '../bottomNaviagtionBar/custom_bottom_bar.dart';
 import '../widgets/live_video_card.dart';
 import '../widgets/category_tab.dart';
 import 'liveShoppingScreens/live_shopping_screen.dart';
+
 class HomeMainScreen extends StatelessWidget {
   final int notificationCount = 2;
   final List<String> liveVideos = List.generate(6, (index) => "Live $index");
@@ -30,6 +31,7 @@ class HomeMainScreen extends StatelessWidget {
       // bottomNavigationBar: CustomBottomNavBar(),
     );
   }
+
   Widget _buildTopBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -42,7 +44,7 @@ class HomeMainScreen extends StatelessWidget {
                   padding: EdgeInsets.all(12),
                   child: Image.asset('assets/icons/search.png', width: 20, height: 20),
                 ),
-                hintText: "Search by application",
+                hintText: "${'search_hint'.tr}",
                 hintStyle: TextStyle(fontFamily: 'SFProRounded', color: Colors.grey),
                 filled: true,
                 fillColor: Colors.grey[200],
@@ -56,7 +58,7 @@ class HomeMainScreen extends StatelessWidget {
           SizedBox(width: 10),
           _buildNotificationIcon(notificationCount),
           SizedBox(width: 10),
-          Image.asset('assets/icons/gift.png')
+          Image.asset('assets/icons/gift.png', semanticLabel: "${'gift_icon'.tr}"),
         ],
       ),
     );

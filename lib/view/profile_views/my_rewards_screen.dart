@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/utils/images_path.dart';
 
@@ -30,7 +31,7 @@ class _MyRewardsScreenState extends State<MyRewardsScreen> {
         ),
         centerTitle: true,
         title: CustomText(
-          text: "My Rewards",
+          text: "my_rewards".tr,
           fontWeight: FontWeight.w600,
           fontSize: 16,
           fontFamily: "SF Pro Rounded",

@@ -9,6 +9,7 @@ import '../../custom_widgets/custom_container.dart';
 import '../../custom_widgets/custom_gradient_button.dart';
 import '../../custom_widgets/custom_text.dart';
 import '../../utils/images_path.dart';
+import '../../translate/translations_app.dart';
 
 class MyProductsScreen extends StatefulWidget {
   const MyProductsScreen({super.key});
@@ -29,12 +30,10 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
           ),
-          title: const Text(
-            "My Products",
+          title: Text(
+            "my_products".tr,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -73,12 +72,12 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                     end: Alignment.bottomRight,
                   ),
                 ),
-                tabs: const [
-                  Tab(text: "All"),
-                  Tab(text: "Active"),
-                  Tab(text: "Sold"),
-                  Tab(text: "Fix"),
-                  Tab(text: "Auction"),
+                tabs: [
+                  Tab(text: "all".tr),
+                  Tab(text: "active".tr),
+                  Tab(text: "sold".tr),
+                  Tab(text: "fix".tr),
+                  Tab(text: "auction".tr),
                 ],
               ),
 
@@ -92,10 +91,10 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: const TextField(
+                child: TextField(
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "Search",
+                    hintText: "search".tr,
                     prefixIcon: Icon(Icons.search, color: Colors.grey),
                   ),
                 ),
@@ -122,10 +121,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         // Floating Action Button
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.purpleAccent,
-          onPressed: () {
-            Get.to(() => const CreateProductScreen());
-          },
+          onPressed: () => Get.to(() => const CreateProductScreen()),
           child: const Icon(Icons.add, size: 28, color: Colors.white),
+          tooltip: "create_product".tr,
         ),
       ),
     );
@@ -140,7 +138,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text("No products found"));
+          return Center(child: Text("no_products".tr));
         }
 
         // Convert each doc into a ProductEntity
@@ -209,7 +207,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                     end: Alignment.bottomRight,
                   ),
                   child: CustomText(
-                    text: product.saleType == "Auction" ? "Auction" : "Buy Now",
+                    text: product.saleType == "Auction" ? "auction".tr : "buy_now".tr,
                     fontSize: 10,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

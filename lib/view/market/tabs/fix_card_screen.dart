@@ -121,7 +121,7 @@ class _FixCardScreenState extends State<FixCardScreen> {
                     Row(
                       children: [
                         CustomText(
-                          text: 'Current rate',
+                          text: 'Current rate'.tr,
                           color: Color(0xff2A2A2A).withOpacity(0.5),
                         ),
                         SizedBox(width: 13),
@@ -163,30 +163,31 @@ class _FixCardScreenState extends State<FixCardScreen> {
                         ),
                         SizedBox(width: 12),
                         Expanded(
-                            child: GestureDetector(
-                          onTap: () {},
-                          child: CustomContainer(
-                            height: 32,
-                            border: Border.all(color: Color(0xffC9C9C9)),
-                            borderRadius: BorderRadius.circular(8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomContainer(
-                                  height: 14,
-                                  width: 14,
-                                  image: DecorationImage(
-                                      image: AssetImage(shareIcon)),
-                                ),
-                                SizedBox(width: 6),
-                                CustomText(
-                                  text: 'Share',
-                                  color: Colors.black,
-                                ),
-                              ],
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: CustomContainer(
+                              height: 32,
+                              border: Border.all(color: Color(0xffC9C9C9)),
+                              borderRadius: BorderRadius.circular(8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomContainer(
+                                    height: 14,
+                                    width: 14,
+                                    image: DecorationImage(
+                                        image: AssetImage(shareIcon)),
+                                  ),
+                                  SizedBox(width: 6),
+                                  CustomText(
+                                    text: 'Share'.tr,
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        )),
+                        ),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -259,16 +260,15 @@ class _FixCardScreenState extends State<FixCardScreen> {
                                 children: [
                                   CustomReview(
                                       value: '4.7',
-                                      label: 'Rating',
+                                      label: 'Rating'.tr,
                                       iconPath: startIcon),
                                   VerticalDivider(color: conLineColor),
                                   CustomReview(
-                                      value: '33.8K', label: 'Reviews'),
+                                      value: '33.8K', label: 'Reviews'.tr),
                                   VerticalDivider(color: conLineColor),
-                                  CustomReview(value: '169.7K', label: 'Sold'),
+                                  CustomReview(value: '169.7K', label: 'Sold'.tr),
                                   VerticalDivider(color: conLineColor),
-                                  CustomReview(
-                                      value: '+-2d', label: 'Delivery'),
+                                  CustomReview(value: '+-2d', label: 'Delivery'.tr),
                                 ],
                               ),
                             ),
@@ -309,8 +309,8 @@ class _FixCardScreenState extends State<FixCardScreen> {
                         ),
                       ),
                       tabs: [
-                        Tab(text: 'About the product'),
-                        Tab(text: 'Seller Information'),
+                        Tab(text: 'About the product'.tr),
+                        Tab(text: 'Seller Information'.tr),
                       ],
                     ),
                     SizedBox(height: 12),
@@ -336,7 +336,7 @@ class _FixCardScreenState extends State<FixCardScreen> {
           height: 92,
           padding: EdgeInsets.all(16),
           child: CustomGradientButton(
-            text: 'Add to cart',
+            text: 'Add to cart'.tr,
           ),
         ),
         floatingActionButton: GestureDetector(
@@ -396,7 +396,7 @@ class _FixCardScreenState extends State<FixCardScreen> {
                     children: [
                       SizedBox(width: 50),
                       CustomText(
-                        text: 'Backet',
+                        text: 'Basket'.tr,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -478,83 +478,11 @@ class _FixCardScreenState extends State<FixCardScreen> {
                       },
                     ),
                   ),
-                  SizedBox(height: 24),
-
-                  ///listview
-                  Row(
-                    children: [
-                      CustomContainer(
-                        width: 18,
-                        height: 18,
-                        image: DecorationImage(
-                            image: AssetImage(appleGBlackImage)),
-                      ),
-                      SizedBox(width: 6),
-                      CustomText(
-                        text: 'company_name',
-                        fontSize: 12,
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star_rounded,
-                            color: Colors.yellow,
-                          ),
-                          CustomText(
-                            text: '4.2',
-                            fontSize: 12,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      controller: scrollController,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 3),
-                          child: Row(
-                            children: [
-                              CustomContainer(
-                                  height: 56,
-                                  width: 56,
-                                  borderRadius: BorderRadius.circular(8),
-                                  image: DecorationImage(
-                                      image: AssetImage(marketImage),
-                                      fit: BoxFit.fill)),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: CustomContainer(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      CustomText(
-                                        text:
-                                            'Lorem ipsum dolor sit amet consectetur adipiscing elit.',
-                                        fontSize: 14,
-                                      ),
-                                      CustomText(
-                                        text: '1,000 ₽',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomText(
-                        text: 'Total:',
+                        text: 'Total:'.tr,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -567,7 +495,7 @@ class _FixCardScreenState extends State<FixCardScreen> {
                   ),
                   SizedBox(height: 10),
                   CustomGradientButton(
-                    text: 'Continue',
+                    text: 'Continue'.tr,
                     onPressed: () {
                       Get.to(() => PaymentScreen());
                     },

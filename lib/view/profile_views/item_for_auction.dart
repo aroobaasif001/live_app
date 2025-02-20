@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:live_app/utils/images_path.dart';
 import 'package:live_app/entities/product_entity.dart';
+import 'package:live_app/translate/translations_app.dart';
 
 class ItemAuctionScreen extends StatefulWidget {
   const ItemAuctionScreen({super.key});
@@ -39,8 +41,8 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
                     Expanded(
                       child: TextField(
                         controller: _searchController,
-                        decoration: const InputDecoration(
-                          hintText: "Search by product name...",
+                        decoration: InputDecoration(
+                          hintText: "search_product".tr,
                           border: InputBorder.none,
                         ),
                         onChanged: (value) {
@@ -66,9 +68,9 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  _buildFilterButton("Sort", Icons.sort),
+                  _buildFilterButton("sort".tr, Icons.sort),
                   const SizedBox(width: 8),
-                  _buildFilterButton("Category", Icons.category),
+                  _buildFilterButton("category".tr, Icons.category),
                 ],
               ),
               const SizedBox(height: 16),
@@ -81,8 +83,8 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
                     }
 
                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return const Center(
-                        child: Text("No auction products available"),
+                      return Center(
+                        child: Text("no_auctions".tr),
                       );
                     }
                     List<ProductEntity> products = snapshot.data!.docs
@@ -99,8 +101,8 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
                     }
 
                     if (products.isEmpty) {
-                      return const Center(
-                        child: Text("No matching products found"),
+                      return Center(
+                        child: Text("no_matches".tr),
                       );
                     }
 
@@ -186,15 +188,15 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product.title ?? "No Title",
+                  product.title ?? "no_title".tr,
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   overflow: TextOverflow.ellipsis,
                 ),
-                Text(product.description ?? "No Description",
+                Text(product.description ?? "no_description".tr,
                     style: const TextStyle(fontSize: 12, color: Colors.grey)),
                 const SizedBox(height: 6),
                 Text(
-                  "${product.startingBid ?? 0} ₽ current bid",
+                  "current_bid".tr.replaceAll("{0}", product.startingBid ?? "0"),
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold),
                 ),
@@ -221,8 +223,8 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
                       ),
-                      child: const Text(
-                        "Put on stream",
+                      child: Text(
+                        "put_on_stream".tr,
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,

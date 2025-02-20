@@ -1,12 +1,9 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/search_views/search_by_application.dart';
 
-import '../../custom_widgets/custom_container.dart';
 import '../../custom_widgets/custom_gradient_button.dart';
 import '../../custom_widgets/custom_text.dart';
 import '../../utils/icons_path.dart';
@@ -33,7 +30,9 @@ class _SearchScreenState extends State<SearchScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 15),
+
                 // Search Bar
+
                 Container(
                   height: 40,
                   decoration: BoxDecoration(
@@ -44,17 +43,21 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: TextField(
                     onTap: () {
                       // Opens "SearchByApplication" screen
+
                       Get.to(() => const SearchByApplication());
                     },
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Search",
+                      hintText: 'search'.tr,
                       prefixIcon: Icon(Icons.search, color: Colors.grey),
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 12),
+
                 // Top-level TabBar
+
                 ButtonsTabBar(
                   unselectedBackgroundColor: Colors.white,
                   borderWidth: 0,
@@ -82,15 +85,17 @@ class _SearchScreenState extends State<SearchScreen> {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  tabs: const [
-                    Tab(text: "Top"),
-                    Tab(text: "Goods"),
-                    Tab(text: "Streams"),
-                    Tab(text: "Users"),
-                    Tab(text: "Categories"),
+                  tabs: [
+                    Tab(text: 'top'.tr),
+                    Tab(text: 'goods'.tr),
+                    Tab(text: 'streams'.tr),
+                    Tab(text: 'users'.tr),
+                    Tab(text: 'categories'.tr),
                   ],
                 ),
+
                 const SizedBox(height: 12),
+
                 Expanded(
                   child: TabBarView(
                     children: [
@@ -111,28 +116,33 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ===========================================================================
+
   // =============================  TOP TAB  ====================================
+
   // ===========================================================================
+
   Widget _buildTopTab() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16), // extra bottom spacing
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // STREAM SECTION
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomText(
-                  text: "Stream",
+                  text: "stream".tr,
                   fontWeight: FontWeight.w400,
                   fontSize: 16,
                   fontFamily: "Gilroy-Bold",
                 ),
                 CustomText(
-                  text: "See All",
+                  text: "see_all".tr,
                   color: const Color(0xff815BFF),
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -140,25 +150,32 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ],
             ),
+
             const SizedBox(height: 12),
+
             _buildStreamGrid(itemCount: 4), // 2×2
+
             const SizedBox(height: 12),
+
             // "Watch more streams" button
-            CustomGradientButton(text: "Watch more streams"),
+
+            CustomGradientButton(text: "watch_more_streams".tr),
+
             const SizedBox(height: 12),
 
             // USERS SECTION
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomText(
-                  text: "Users",
+                  text: "users".tr,
                   fontWeight: FontWeight.w400,
                   fontSize: 16,
                   fontFamily: "Gilroy-Bold",
                 ),
                 CustomText(
-                  text: "See All",
+                  text: "see_all".tr,
                   color: const Color(0xff815BFF),
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -166,19 +183,26 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ],
             ),
+
             const SizedBox(height: 12),
+
             _buildHorizontalUsers(itemCount: 3),
+
             const SizedBox(height: 12),
 
             // PRODUCTS SECTION
+
             CustomText(
-              text: "All products",
+              text: "all_products".tr,
               fontWeight: FontWeight.w400,
               fontSize: 16,
               fontFamily: "Gilroy-Bold",
             ),
+
             const SizedBox(height: 12),
+
             // Updated to match your screenshot design
+
             _buildProductList(itemCount: 3),
           ],
         ),
@@ -187,8 +211,11 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ===========================================================================
+
   // ============================  GOODS TAB  ===================================
+
   // ===========================================================================
+
   Widget _buildGoodsTab() {
     return ListView.builder(
       itemCount: 6,
@@ -198,7 +225,8 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Icon + “company_name” + “2.4K Subscribers”
+              // Icon + "company_name" + "2.4K Subscribers"
+
               Expanded(
                 child: Row(
                   children: [
@@ -212,7 +240,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText(
-                          text: 'company_name',
+                          text: 'company_name'.tr,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           fontFamily: "Gilroy-Bold",
@@ -229,6 +257,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ],
                 ),
               ),
+
               CustomGradientButton(
                 text: "Subscribe",
                 width: 100,
@@ -242,8 +271,11 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ===========================================================================
+
   // ===========================  STREAMS TAB  ==================================
+
   // ===========================================================================
+
   Widget _buildStreamsTab() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -260,8 +292,11 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ===========================================================================
+
   // ============================  USERS TAB  ===================================
+
   // ===========================================================================
+
   Widget _buildUsersTab() {
     return ListView.builder(
       itemCount: 6,
@@ -284,7 +319,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText(
-                          text: 'company_name',
+                          text: 'company_name'.tr,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           fontFamily: "Gilroy-Bold",
@@ -314,8 +349,11 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ===========================================================================
+
   // =========================  CATEGORIES TAB  =================================
+
   // ===========================================================================
+
   Widget _buildCategoriesTab() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -361,6 +399,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             SizedBox(
               height: 500, // enough space for sub-tab content
+
               child: TabBarView(
                 children: [
                   _buildCategoryList(),
@@ -383,6 +422,7 @@ class _SearchScreenState extends State<SearchScreen> {
       "Shoes",
       "Cloth",
     ];
+
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -459,9 +499,13 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // ===========================================================================
+
   // =============  SHARED HELPERS for Streams, Users, Products  ===============
+
   // ===========================================================================
+
   /// 2×2 (or more) grid of live streams
+
   Widget _buildStreamGrid({required int itemCount}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -470,9 +514,13 @@ class _SearchScreenState extends State<SearchScreen> {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
+
           crossAxisSpacing: 10,
+
           mainAxisSpacing: 10,
+
           // Keep ratio low to avoid overflow in LiveVideoCard
+
           childAspectRatio: 0.45,
         ),
         itemCount: itemCount,
@@ -484,6 +532,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   /// Horizontal user list (for "Users" in the Top tab)
+
   Widget _buildHorizontalUsers({required int itemCount}) {
     return SizedBox(
       height: 165,
@@ -494,14 +543,13 @@ class _SearchScreenState extends State<SearchScreen> {
           return Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Container(
-              width: 120,
+              width: 150,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
                 child: Column(
                   children: [
                     // user image
@@ -516,21 +564,27 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 8),
+
                     CustomText(
-                      text: "company_name",
+                      text: "company_name".tr,
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
                       fontFamily: "Gilroy-Bold",
                     ),
+
                     const SizedBox(height: 2),
+
                     CustomText(
                       text: "2.3K Subscribers",
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
                       fontFamily: "Gilroy-Bold",
                     ),
+
                     const SizedBox(height: 8),
+
                     CustomGradientButton(
                       text: "Subscribe",
                       height: 35,
@@ -547,9 +601,13 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   /// Products list, updated to match the screenshot:
+
   /// - Image on the left with a small top-right badge showing (chat icon + "3")
+
   /// - On the right: brand name + star rating, "Product name", "Description", "1000 ₽"
+
   /// - Divider after each row
+
   Widget _buildProductList({required int itemCount}) {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
@@ -565,6 +623,7 @@ class _SearchScreenState extends State<SearchScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Left side: product image with small badge (icon + "3")
+
             SizedBox(
               width: 120,
               height: 120,
@@ -612,13 +671,17 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
             ),
+
             const SizedBox(width: 12),
+
             // Right side: brand name + rating, product name, description, price
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // brand name + star rating row
+
                   Row(
                     children: [
                       Image.asset(
@@ -628,11 +691,10 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       const SizedBox(width: 6),
                       CustomText(
-                        text: 'company_name',
+                        text: 'company_name'.tr,
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                       ),
-
                       const SizedBox(width: 6),
                       const Icon(
                         Icons.star,
@@ -648,22 +710,30 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 4),
+
                   // product name
+
                   CustomText(
                     text: 'Product name',
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
+
                   // description
+
                   const CustomText(
                     text: 'Description',
                     fontWeight: FontWeight.w400,
                     fontSize: 13,
                     color: Colors.grey,
                   ),
+
                   const SizedBox(height: 4),
+
                   // price
+
                   CustomText(
                     text: '1,000 ₽',
                     fontWeight: FontWeight.bold,
@@ -678,1686 +748,3 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
-
-/// /// ///
-
-// import 'package:buttons_tabbar/buttons_tabbar.dart';
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:get/get_core/src/get_main.dart';
-// import 'package:live_app/utils/colors.dart';
-// import 'package:live_app/view/search_views/search_by_application.dart';
-//
-// import '../../custom_widgets/custom_container.dart';
-// import '../../custom_widgets/custom_gradient_button.dart';
-// import '../../custom_widgets/custom_text.dart';
-// import '../../utils/icons_path.dart';
-// import '../../utils/images_path.dart';
-// import '../homeScreen/widgets/live_video_card.dart';
-//
-// class SearchScreen extends StatefulWidget {
-//   const SearchScreen({super.key});
-//
-//   @override
-//   State<SearchScreen> createState() => _SearchScreenState();
-// }
-//
-// class _SearchScreenState extends State<SearchScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return DefaultTabController(
-//       length: 5,
-//       child: Scaffold(
-//         body: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 8),
-//           child: SafeArea(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 const SizedBox(height: 15),
-//                 // Search Bar
-//                 Container(
-//                   height: 40,
-//                   decoration: BoxDecoration(
-//                     color: Colors.grey[200],
-//                     borderRadius: BorderRadius.circular(12),
-//                   ),
-//                   padding: const EdgeInsets.symmetric(horizontal: 12),
-//                   child: TextField(
-//                     onTap: () {
-//                       // Opens "SearchByApplication" screen
-//                       Get.to(() => const SearchByApplication());
-//                     },
-//                     decoration: const InputDecoration(
-//                       border: InputBorder.none,
-//                       hintText: "Search",
-//                       prefixIcon: Icon(Icons.search, color: Colors.grey),
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(height: 12),
-//                 // Top-level TabBar: Top, Goods, Streams, Users, Categories
-//                 ButtonsTabBar(
-//                   unselectedBackgroundColor: Colors.white,
-//                   borderWidth: 0,
-//                   unselectedBorderColor: Colors.transparent,
-//                   borderColor: Colors.transparent,
-//                   contentPadding: const EdgeInsets.symmetric(
-//                     horizontal: 16,
-//                     vertical: 10,
-//                   ),
-//                   labelStyle: const TextStyle(
-//                     color: Colors.white,
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 14,
-//                   ),
-//                   unselectedLabelStyle: const TextStyle(
-//                     color: Colors.black,
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 14,
-//                   ),
-//                   decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(12),
-//                     gradient: const LinearGradient(
-//                       colors: [Colors.blue, Colors.pinkAccent],
-//                       begin: Alignment.topLeft,
-//                       end: Alignment.bottomRight,
-//                     ),
-//                   ),
-//                   tabs: const [
-//                     Tab(text: "Top"),
-//                     Tab(text: "Goods"),
-//                     Tab(text: "Streams"),
-//                     Tab(text: "Users"),
-//                     Tab(text: "Categories"),
-//                   ],
-//                 ),
-//                 const SizedBox(height: 12),
-//                 // Each tab's content
-//                 Expanded(
-//                   child: TabBarView(
-//                     children: [
-//                       // TOP TAB
-//                       _buildTopTab(),
-//                       // GOODS TAB
-//                       _buildGoodsTab(),
-//                       // STREAMS TAB
-//                       _buildStreamsTab(),
-//                       // USERS TAB
-//                       _buildUsersTab(),
-//                       // CATEGORIES TAB
-//                       _buildCategoriesTab(),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   // ===========================================================================
-//   // =============================  TOP TAB  ====================================
-//   // ===========================================================================
-//   Widget _buildTopTab() {
-//     return SingleChildScrollView(
-//       physics: const BouncingScrollPhysics(),
-//       child: Padding(
-//         padding: const EdgeInsets.only(bottom: 16), // extra padding if needed
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             // STREAM SECTION
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 CustomText(
-//                   text: "Stream",
-//                   fontWeight: FontWeight.w400,
-//                   fontSize: 16,
-//                   fontFamily: "Gilroy-Bold",
-//                 ),
-//                 CustomText(
-//                   text: "See All",
-//                   color: const Color(0xff815BFF),
-//                   fontWeight: FontWeight.w400,
-//                   fontSize: 14,
-//                   fontFamily: "Gilroy-Bold",
-//                 ),
-//               ],
-//             ),
-//             const SizedBox(height: 12),
-//             _buildStreamGrid(itemCount: 4), // 2×2 = 4
-//             const SizedBox(height: 12),
-//             // "Watch more streams" button
-//             CustomGradientButton(text: "Watch more streams"),
-//             const SizedBox(height: 12),
-//
-//             // USERS SECTION (horizontal)
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 CustomText(
-//                   text: "Users",
-//                   fontWeight: FontWeight.w400,
-//                   fontSize: 16,
-//                   fontFamily: "Gilroy-Bold",
-//                 ),
-//                 CustomText(
-//                   text: "See All",
-//                   color: const Color(0xff815BFF),
-//                   fontWeight: FontWeight.w400,
-//                   fontSize: 14,
-//                   fontFamily: "Gilroy-Bold",
-//                 ),
-//               ],
-//             ),
-//             const SizedBox(height: 12),
-//             _buildHorizontalUsers(itemCount: 3), // 3 horizontal items
-//             const SizedBox(height: 12),
-//
-//             // PRODUCTS SECTION
-//             CustomText(
-//               text: "All products",
-//               fontWeight: FontWeight.w400,
-//               fontSize: 16,
-//               fontFamily: "Gilroy-Bold",
-//             ),
-//             const SizedBox(height: 12),
-//             _buildProductList(itemCount: 3), // 3 products
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-//   // ===========================================================================
-//   // ============================  GOODS TAB  ===================================
-//   // ===========================================================================
-//   Widget _buildGoodsTab() {
-//     // As shown in your screenshot for “Goods,” it’s a vertical list of companies
-//     return ListView.builder(
-//       itemCount: 6, // show 6 items
-//       itemBuilder: (context, index) {
-//         return Padding(
-//           padding: const EdgeInsets.symmetric(vertical: 5),
-//           child: Row(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               // Icon + “company_name” + “2.4K Subscribers”
-//               Expanded(
-//                 child: Row(
-//                   children: [
-//                     Image.asset(
-//                       appleIcon,
-//                       height: 40,
-//                       width: 40,
-//                     ),
-//                     const SizedBox(width: 10),
-//                     Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         CustomText(
-//                           text: 'company_name',
-//                           fontSize: 14,
-//                           fontWeight: FontWeight.w400,
-//                           fontFamily: "Gilroy-Bold",
-//                         ),
-//                         CustomText(
-//                           color: const Color(0xff8C8C8C),
-//                           fontSize: 14,
-//                           fontFamily: "Gilroy-Bold",
-//                           text: '2.4K Subscribers',
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               // “Subscribe” button on the right
-//               CustomGradientButton(
-//                 text: "Subscribe",
-//                 width: 100,
-//                 height: 35,
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-//
-//   // ===========================================================================
-//   // ===========================  STREAMS TAB  ==================================
-//   // ===========================================================================
-//   Widget _buildStreamsTab() {
-//     // The screenshot suggests it’s also a 2×2 grid of streams
-//     return SingleChildScrollView(
-//       physics: const BouncingScrollPhysics(),
-//       child: Padding(
-//         padding: const EdgeInsets.only(bottom: 16),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             // Could add a heading if you like, or just the grid
-//             _buildStreamGrid(itemCount: 4),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-//   // ===========================================================================
-//   // ============================  USERS TAB  ===================================
-//   // ===========================================================================
-//   Widget _buildUsersTab() {
-//     // Another vertical list of users (like the Goods tab),
-//     // if that’s what your screenshot shows for “Users.”
-//     return ListView.builder(
-//       itemCount: 6,
-//       itemBuilder: (context, index) {
-//         return Padding(
-//           padding: const EdgeInsets.symmetric(vertical: 5),
-//           child: Row(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               // Icon + “company_name” + “2.4K Subscribers”
-//               Expanded(
-//                 child: Row(
-//                   children: [
-//                     Image.asset(
-//                       appleIcon,
-//                       height: 40,
-//                       width: 40,
-//                     ),
-//                     const SizedBox(width: 10),
-//                     Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         CustomText(
-//                           text: 'company_name',
-//                           fontSize: 14,
-//                           fontWeight: FontWeight.w400,
-//                           fontFamily: "Gilroy-Bold",
-//                         ),
-//                         CustomText(
-//                           color: const Color(0xff8C8C8C),
-//                           fontSize: 14,
-//                           fontFamily: "Gilroy-Bold",
-//                           text: '2.4K Subscribers',
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               // “Subscribe” button on the right
-//               CustomGradientButton(
-//                 text: "Subscribe",
-//                 width: 100,
-//                 height: 35,
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-//
-//   // ===========================================================================
-//   // =========================  CATEGORIES TAB  =================================
-//   // ===========================================================================
-//   Widget _buildCategoriesTab() {
-//     return SingleChildScrollView(
-//       physics: const BouncingScrollPhysics(),
-//       child: DefaultTabController(
-//         length: 3,
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             // Big heading
-//             CustomText(
-//               text: "Search by category",
-//               fontSize: 18,
-//               fontWeight: FontWeight.w800,
-//             ),
-//             const SizedBox(height: 8),
-//             // Sub-TabBar: "Recommended", "Popular", "A-Z"
-//             ButtonsTabBar(
-//               unselectedBackgroundColor: Colors.white,
-//               borderWidth: 0,
-//               unselectedBorderColor: Colors.transparent,
-//               borderColor: Colors.transparent,
-//               contentPadding: const EdgeInsets.symmetric(
-//                 horizontal: 16,
-//                 vertical: 10,
-//               ),
-//               labelStyle: const TextStyle(
-//                 color: Colors.white,
-//                 fontWeight: FontWeight.bold,
-//                 fontSize: 14,
-//               ),
-//               unselectedLabelStyle: const TextStyle(
-//                 color: Colors.black,
-//                 fontWeight: FontWeight.bold,
-//                 fontSize: 14,
-//               ),
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(12),
-//                 gradient: primaryGradientColor,
-//               ),
-//               tabs: const [
-//                 Tab(text: "Recommended"),
-//                 Tab(text: "Popular"),
-//                 Tab(text: "A-Z"),
-//               ],
-//             ),
-//             // TabBarView inside the category tab
-//             SizedBox(
-//               height: 500, // give it some height for the sub-Tabs
-//               child: TabBarView(
-//                 children: [
-//                   // RECOMMENDED
-//                   _buildCategoryList(),
-//                   // POPULAR
-//                   _buildCategoryList(),
-//                   // A-Z
-//                   _buildCategoryList(),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-//   /// Build the purple category list of items
-//   Widget _buildCategoryList() {
-//     // Match the screenshot: 5–6 items (Luxury, Electronics, etc.)
-//     final categories = [
-//       "Luxury accessories",
-//       "Everyday Electronics",
-//       "Video games",
-//       "Shoes",
-//       "Cloth",
-//     ];
-//     return ListView.builder(
-//       physics: const NeverScrollableScrollPhysics(),
-//       shrinkWrap: true,
-//       itemCount: categories.length,
-//       itemBuilder: (context, index) {
-//         return Padding(
-//           padding: const EdgeInsets.symmetric(vertical: 5),
-//           child: Container(
-//             height: 95,
-//             width: double.infinity,
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.circular(10),
-//               gradient: primaryGradientColor,
-//             ),
-//             child: Row(
-//               children: [
-//                 Expanded(
-//                   child: Row(
-//                     children: [
-//                       // The small category icon
-//                       Image.asset(watchVerticalImage),
-//                       const SizedBox(width: 10),
-//                       // Category name + views
-//                       Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           CustomText(
-//                             text: categories[index],
-//                             fontSize: 18,
-//                             fontWeight: FontWeight.w400,
-//                             color: const Color(0xffFFFFFF),
-//                           ),
-//                           const SizedBox(height: 10),
-//                           Row(
-//                             children: [
-//                               Container(
-//                                 width: 20,
-//                                 height: 20,
-//                                 decoration: const BoxDecoration(
-//                                   color: Colors.redAccent,
-//                                   shape: BoxShape.circle,
-//                                 ),
-//                               ),
-//                               const SizedBox(width: 20),
-//                               CustomText(
-//                                 text: "1.1K Views",
-//                                 fontSize: 12,
-//                                 fontWeight: FontWeight.w400,
-//                                 color: const Color(0xffFFFFFF),
-//                               ),
-//                             ],
-//                           ),
-//                         ],
-//                       ),
-//                       const Spacer(),
-//                       const Padding(
-//                         padding: EdgeInsets.only(right: 10),
-//                         child: Icon(
-//                           Icons.arrow_forward_ios_outlined,
-//                           color: Colors.white,
-//                           size: 15,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-//
-//   // ===========================================================================
-//   // =============  SHARED HELPERS for Streams, Users, Products  ===============
-//   // ===========================================================================
-//   /// Builds a 2×2 (or more) grid of live streams
-//   Widget _buildStreamGrid({required int itemCount}) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 10),
-//       child: GridView.builder(
-//         shrinkWrap: true,
-//         physics: const NeverScrollableScrollPhysics(),
-//         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//           crossAxisCount: 2,     // 2 columns
-//           crossAxisSpacing: 10,
-//           mainAxisSpacing: 10,
-//           // Keep ratio low to avoid overflow in LiveVideoCard
-//           childAspectRatio: 0.45,
-//         ),
-//         itemCount: itemCount,
-//         itemBuilder: (context, index) {
-//           return LiveVideoCard();
-//         },
-//       ),
-//     );
-//   }
-//
-//   /// Builds a horizontal user list (like “Users” on the Top tab)
-//   Widget _buildHorizontalUsers({required int itemCount}) {
-//     return SizedBox(
-//       height: 165,
-//       child: ListView.builder(
-//         scrollDirection: Axis.horizontal,
-//         itemCount: itemCount,
-//         itemBuilder: (context, index) {
-//           return Padding(
-//             padding: const EdgeInsets.only(right: 10),
-//             child: Container(
-//               width: 120,
-//               decoration: BoxDecoration(
-//                 color: Colors.white,
-//                 borderRadius: BorderRadius.circular(12),
-//               ),
-//               child: Padding(
-//                 padding: const EdgeInsets.symmetric(
-//                   horizontal: 12,
-//                   vertical: 15,
-//                 ),
-//                 child: Column(
-//                   children: [
-//                     // user image
-//                     Container(
-//                       height: 45,
-//                       width: 45,
-//                       decoration: BoxDecoration(
-//                         shape: BoxShape.circle,
-//                         image: DecorationImage(
-//                           image: AssetImage(appleIcon),
-//                           fit: BoxFit.cover,
-//                         ),
-//                       ),
-//                     ),
-//                     const SizedBox(height: 8),
-//                     // user name
-//                     CustomText(
-//                       text: "company_name",
-//                       fontWeight: FontWeight.w400,
-//                       fontSize: 12,
-//                       fontFamily: "Gilroy-Bold",
-//                     ),
-//                     const SizedBox(height: 2),
-//                     // user subscribers
-//                     CustomText(
-//                       text: "2.3K Subscribers",
-//                       fontWeight: FontWeight.w400,
-//                       fontSize: 12,
-//                       fontFamily: "Gilroy-Bold",
-//                     ),
-//                     const SizedBox(height: 8),
-//                     // Subscribe button
-//                     CustomGradientButton(
-//                       text: "Subscribe",
-//                       height: 35,
-//                       width: 100,
-//                     )
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-//
-//   /// Builds a simple list of products (“All Products”)
-//   Widget _buildProductList({required int itemCount}) {
-//     return ListView.builder(
-//       physics: const NeverScrollableScrollPhysics(),
-//       shrinkWrap: true,
-//       itemCount: itemCount,
-//       itemBuilder: (context, index) {
-//         return Padding(
-//           padding: const EdgeInsets.symmetric(vertical: 5),
-//           child: Row(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               // Product image + “Fix” + notification
-//               CustomContainer(
-//                 height: 136,
-//                 width: 136,
-//                 borderRadius: BorderRadius.circular(8),
-//                 image: DecorationImage(
-//                   image: AssetImage(marketImage),
-//                   fit: BoxFit.fill,
-//                 ),
-//                 child: Padding(
-//                   padding:
-//                   const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-//                   child: Row(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       CustomGradientButton(
-//                         height: 21,
-//                         width: 31,
-//                         fontSize: 10,
-//                         text: 'Fix',
-//                         onPressed: () {},
-//                       ),
-//                       CustomContainer(
-//                         height: 30,
-//                         width: 45,
-//                         conColor: Colors.white,
-//                         borderRadius: BorderRadius.circular(100),
-//                         child: Row(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: [
-//                             const Icon(
-//                               Icons.notifications_none_rounded,
-//                               size: 16,
-//                             ),
-//                             const SizedBox(width: 3),
-//                             CustomText(text: '1'),
-//                           ],
-//                         ),
-//                       )
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(width: 12),
-//               // Product info
-//               Expanded(
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     CustomText(
-//                       text: 'Product name',
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                     const CustomText(text: 'Description'),
-//                     CustomText(
-//                       text: '1000 ₽',
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                     const SizedBox(height: 25),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
-
-/// ///
-
-// import 'package:buttons_tabbar/buttons_tabbar.dart';
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:get/get_core/src/get_main.dart';
-// import 'package:live_app/utils/colors.dart';
-// import 'package:live_app/view/search_views/search_by_application.dart';
-//
-// import '../../custom_widgets/custom_container.dart';
-// import '../../custom_widgets/custom_gradient_button.dart';
-// import '../../custom_widgets/custom_text.dart';
-// import '../../utils/icons_path.dart';
-// import '../../utils/images_path.dart';
-// import '../homeScreen/widgets/live_video_card.dart';
-//
-// class SearchScreen extends StatefulWidget {
-//   const SearchScreen({super.key});
-//
-//   @override
-//   State<SearchScreen> createState() => _SearchScreenState();
-// }
-//
-// class _SearchScreenState extends State<SearchScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return DefaultTabController(
-//       length: 5,
-//       child: Scaffold(
-//         body: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 8),
-//           child: SafeArea(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 const SizedBox(height: 15),
-//                 Container(
-//                   height: 40,
-//                   decoration: BoxDecoration(
-//                     color: Colors.grey[200],
-//                     borderRadius: BorderRadius.circular(12),
-//                   ),
-//                   padding: const EdgeInsets.symmetric(horizontal: 12),
-//                   child: TextField(
-//                     onTap: () {
-//                       // Keep your original navigation:
-//                       Get.to(() => SearchByApplication());
-//                     },
-//                     decoration: const InputDecoration(
-//                       border: InputBorder.none,
-//                       hintText: "Search",
-//                       prefixIcon: Icon(Icons.search, color: Colors.grey),
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(height: 12),
-//                 ButtonsTabBar(
-//                   unselectedBackgroundColor: Colors.white,
-//                   borderWidth: 0,
-//                   unselectedBorderColor: Colors.transparent,
-//                   borderColor: Colors.transparent,
-//                   contentPadding:
-//                   const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-//                   labelStyle: const TextStyle(
-//                     color: Colors.white,
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 14,
-//                   ),
-//                   unselectedLabelStyle: const TextStyle(
-//                     color: Colors.black,
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 14,
-//                   ),
-//                   decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(12),
-//                     gradient: const LinearGradient(
-//                       colors: [Colors.blue, Colors.pinkAccent],
-//                       begin: Alignment.topLeft,
-//                       end: Alignment.bottomRight,
-//                     ),
-//                   ),
-//                   tabs: const [
-//                     Tab(text: "Top"),
-//                     Tab(text: "Goods"),
-//                     Tab(text: "Streams"),
-//                     Tab(text: "Users"),
-//                     Tab(text: "Categories"),
-//                   ],
-//                 ),
-//                 const SizedBox(height: 12),
-//                 // Tab Content
-//                 Expanded(
-//                   child: TabBarView(
-//                     children: [
-//                       _buildTabContent(),
-//                       _userListView(),
-//                       const Center(child: Text("Streams Tab")),
-//                       const Center(child: Text("Users Tab")),
-//                       _categoryListView(),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   /// 1) TOP TAB CONTENT
-//   Widget _buildTabContent() {
-//     return SingleChildScrollView(
-//       physics: const BouncingScrollPhysics(),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           // Stream Section
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               CustomText(
-//                 text: "Stream",
-//                 fontWeight: FontWeight.w400,
-//                 fontSize: 16,
-//                 fontFamily: "Gilroy-Bold",
-//               ),
-//               CustomText(
-//                 text: "See All",
-//                 color: const Color(0xff815BFF),
-//                 fontWeight: FontWeight.w400,
-//                 fontSize: 14,
-//                 fontFamily: "Gilroy-Bold",
-//               ),
-//             ],
-//           ),
-//           const SizedBox(height: 12),
-//           _buildLiveVideos(context),
-//           const SizedBox(height: 12),
-//           // "Watch more streams" button
-//           CustomGradientButton(text: "Watch more streams"),
-//           const SizedBox(height: 12),
-//           // Users Section
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               CustomText(
-//                 text: "Users",
-//                 fontWeight: FontWeight.w400,
-//                 fontSize: 16,
-//                 fontFamily: "Gilroy-Bold",
-//               ),
-//               CustomText(
-//                 text: "See All",
-//                 color: const Color(0xff815BFF),
-//                 fontWeight: FontWeight.w400,
-//                 fontSize: 14,
-//                 fontFamily: "Gilroy-Bold",
-//               ),
-//             ],
-//           ),
-//           const SizedBox(height: 12),
-//           _buildUsers(),
-//           const SizedBox(height: 12),
-//           // Products Section
-//           CustomText(
-//             text: "All products",
-//             fontWeight: FontWeight.w400,
-//             fontSize: 16,
-//             fontFamily: "Gilroy-Bold",
-//           ),
-//           const SizedBox(height: 12),
-//           _buildProductList(),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   /// 2) LIVE VIDEOS GRID — Adjusted `childAspectRatio` to prevent overflow
-//   Widget _buildLiveVideos(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 10),
-//       child: LayoutBuilder(
-//         builder: (context, constraints) {
-//           return GridView.builder(
-//             shrinkWrap: true,
-//             physics: const NeverScrollableScrollPhysics(),
-//             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//               crossAxisCount: 2,
-//               crossAxisSpacing: 10,
-//               mainAxisSpacing: 10,
-//               // Lower ratio => taller cells => fixes overflow in the card
-//               childAspectRatio: 0.45,
-//             ),
-//             itemCount: 4,
-//             itemBuilder: (context, index) {
-//               return LiveVideoCard();
-//             },
-//           );
-//         },
-//       ),
-//     );
-//   }
-//
-//   /// 3) HORIZONTAL USER LIST
-//   Widget _buildUsers() {
-//     return SizedBox(
-//       height: 165,
-//       child: ListView.builder(
-//         scrollDirection: Axis.horizontal,
-//         itemCount: 4,
-//         itemBuilder: (context, index) {
-//           return Padding(
-//             padding: const EdgeInsets.only(right: 10),
-//             child: Container(
-//               width: 120,
-//               decoration: BoxDecoration(
-//                 color: Colors.white,
-//                 borderRadius: BorderRadius.circular(12),
-//               ),
-//               child: Padding(
-//                 padding:
-//                 const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-//                 child: Column(
-//                   children: [
-//                     Container(
-//                       height: 45,
-//                       width: 45,
-//                       decoration: BoxDecoration(
-//                         shape: BoxShape.circle,
-//                         image: DecorationImage(
-//                           image: AssetImage(appleIcon),
-//                           fit: BoxFit.cover,
-//                         ),
-//                       ),
-//                     ),
-//                     const SizedBox(height: 8),
-//                     CustomText(
-//                       text: "company_name",
-//                       fontWeight: FontWeight.w400,
-//                       fontSize: 12,
-//                       fontFamily: "Gilroy-Bold",
-//                     ),
-//                     const SizedBox(height: 2),
-//                     CustomText(
-//                       text: "2.3K Subscribers",
-//                       fontWeight: FontWeight.w400,
-//                       fontSize: 12,
-//                       fontFamily: "Gilroy-Bold",
-//                     ),
-//                     const SizedBox(height: 8),
-//                     CustomGradientButton(
-//                       text: "Subscribe",
-//                       height: 35,
-//                       width: 100,
-//                     )
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-//
-//   /// 4) PRODUCTS LIST
-//   Widget _buildProductList() {
-//     return ListView.builder(
-//       physics: const NeverScrollableScrollPhysics(),
-//       itemCount: 2,
-//       shrinkWrap: true,
-//       itemBuilder: (context, index) {
-//         return Padding(
-//           padding: const EdgeInsets.symmetric(vertical: 5),
-//           child: Row(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               CustomContainer(
-//                 height: 136,
-//                 width: 136,
-//                 borderRadius: BorderRadius.circular(8),
-//                 image: DecorationImage(
-//                   image: AssetImage(marketImage),
-//                   fit: BoxFit.fill,
-//                 ),
-//                 child: Padding(
-//                   padding:
-//                   const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-//                   child: Row(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       CustomGradientButton(
-//                         height: 21,
-//                         width: 31,
-//                         fontSize: 10,
-//                         text: 'Fix',
-//                         onPressed: () {},
-//                       ),
-//                       CustomContainer(
-//                         height: 30,
-//                         width: 45,
-//                         conColor: Colors.white,
-//                         borderRadius: BorderRadius.circular(100),
-//                         child: Row(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: [
-//                             const Icon(Icons.notifications_none_rounded,
-//                                 size: 16),
-//                             const SizedBox(width: 3),
-//                             CustomText(text: '1'),
-//                           ],
-//                         ),
-//                       )
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(width: 12),
-//               Expanded(
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     CustomText(
-//                       text: 'Product name',
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                     const CustomText(text: 'Description'),
-//                     CustomText(
-//                       text: '1000 ₽',
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                     const SizedBox(height: 25),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-//
-//   /// OTHER TABS BELOW (unchanged)
-//   Widget _userListView() {
-//     return ListView.builder(
-//       physics: const NeverScrollableScrollPhysics(),
-//       itemCount: 6,
-//       shrinkWrap: true,
-//       itemBuilder: (context, index) {
-//         return Padding(
-//           padding: const EdgeInsets.symmetric(vertical: 5),
-//           child: Row(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Expanded(
-//                 child: Row(
-//                   children: [
-//                     Image.asset(
-//                       appleIcon,
-//                       height: 40,
-//                       width: 40,
-//                     ),
-//                     const SizedBox(width: 10),
-//                     Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         CustomText(
-//                           text: 'company_name',
-//                           fontSize: 14,
-//                           fontWeight: FontWeight.w400,
-//                           fontFamily: "Gilroy-Bold",
-//                         ),
-//                         CustomText(
-//                           color: const Color(0xff8C8C8C),
-//                           fontSize: 14,
-//                           fontFamily: "Gilroy-Bold",
-//                           text: '2.4K Subscribers',
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                       ],
-//                     ),
-//                     const Spacer(),
-//                     CustomGradientButton(
-//                       text: "Subscribe",
-//                       width: 100,
-//                       height: 35,
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-//
-//   Widget _categoryListView() {
-//     return SingleChildScrollView(
-//       child: DefaultTabController(
-//         length: 3,
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             CustomText(
-//               text: "Search by category",
-//               fontSize: 18,
-//               fontWeight: FontWeight.w800,
-//             ),
-//             ButtonsTabBar(
-//               unselectedBackgroundColor: Colors.white,
-//               borderWidth: 0,
-//               unselectedBorderColor: Colors.transparent,
-//               borderColor: Colors.transparent,
-//               contentPadding:
-//               const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-//               labelStyle: const TextStyle(
-//                 color: Colors.white,
-//                 fontWeight: FontWeight.bold,
-//                 fontSize: 14,
-//               ),
-//               unselectedLabelStyle: const TextStyle(
-//                 color: Colors.black,
-//                 fontWeight: FontWeight.bold,
-//                 fontSize: 14,
-//               ),
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(12),
-//                 gradient: primaryGradientColor,
-//               ),
-//               tabs: const [
-//                 Tab(text: "Recommended"),
-//                 Tab(text: "Popular"),
-//                 Tab(text: "A-Z"),
-//               ],
-//             ),
-//             ListView.builder(
-//               physics: const NeverScrollableScrollPhysics(),
-//               shrinkWrap: true,
-//               itemCount: 6,
-//               itemBuilder: (context, index) {
-//                 return Padding(
-//                   padding: const EdgeInsets.symmetric(vertical: 5),
-//                   child: Container(
-//                     height: 95,
-//                     width: double.infinity,
-//                     decoration: BoxDecoration(
-//                       borderRadius: BorderRadius.circular(10),
-//                       gradient: primaryGradientColor,
-//                     ),
-//                     child: Row(
-//                       children: [
-//                         Expanded(
-//                           child: Row(
-//                             children: [
-//                               Image.asset(watchVerticalImage),
-//                               const SizedBox(width: 10),
-//                               Column(
-//                                 mainAxisAlignment: MainAxisAlignment.center,
-//                                 children: [
-//                                   CustomText(
-//                                     text: "Luxury \naccessories",
-//                                     fontSize: 18,
-//                                     fontWeight: FontWeight.w400,
-//                                     color: const Color(0xffFFFFFF),
-//                                   ),
-//                                   const SizedBox(height: 10),
-//                                   Row(
-//                                     children: [
-//                                       Container(
-//                                         width: 20,
-//                                         height: 20,
-//                                         decoration: const BoxDecoration(
-//                                           color: Colors.redAccent,
-//                                           shape: BoxShape.circle,
-//                                         ),
-//                                       ),
-//                                       const SizedBox(width: 20),
-//                                       CustomText(
-//                                         text: "1.1K Views",
-//                                         fontSize: 12,
-//                                         fontWeight: FontWeight.w400,
-//                                         color: const Color(0xffFFFFFF),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 ],
-//                               ),
-//                               const Spacer(),
-//                               const Padding(
-//                                 padding: EdgeInsets.only(right: 10),
-//                                 child: Icon(
-//                                   Icons.arrow_forward_ios_outlined,
-//                                   color: Colors.white,
-//                                   size: 15,
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 );
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-///
-
-// import 'package:buttons_tabbar/buttons_tabbar.dart';
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:get/get_core/src/get_main.dart';
-// import 'package:live_app/utils/colors.dart';
-// import 'package:live_app/view/search_views/search_by_application.dart';
-// import '../../custom_widgets/custom_container.dart';
-// import '../../custom_widgets/custom_gradient_button.dart';
-// import '../../custom_widgets/custom_text.dart';
-// import '../../utils/icons_path.dart';
-// import '../../utils/images_path.dart';
-// import '../homeScreen/widgets/live_video_card.dart';
-//
-// class SearchScreen extends StatefulWidget {
-//   const SearchScreen({super.key});
-//
-//   @override
-//   State<SearchScreen> createState() => _SearchScreenState();
-// }
-//
-// class _SearchScreenState extends State<SearchScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return DefaultTabController(
-//       length: 5,
-//       child: Scaffold(
-//         body: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 8),
-//           child: SafeArea(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 SizedBox(
-//                   height: 15,
-//                 ),
-//                 Container(
-//                   height: 40,
-//                   decoration: BoxDecoration(
-//                     color: Colors.grey[200],
-//                     borderRadius: BorderRadius.circular(12),
-//                   ),
-//                   padding: const EdgeInsets.symmetric(horizontal: 12),
-//                   child:  TextField(
-//                     onTap: () {
-//                       Get.to(()=>SearchByApplication());
-//                     },
-//                     decoration: InputDecoration(
-//                       border: InputBorder.none,
-//                       hintText: "Search",
-//                       prefixIcon: Icon(Icons.search, color: Colors.grey),
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(height: 12),
-//                 ButtonsTabBar(
-//                   unselectedBackgroundColor: Colors.white,
-//                   borderWidth: 0,
-//                   unselectedBorderColor: Colors.transparent,
-//                   borderColor: Colors.transparent,
-//                   contentPadding:
-//                       EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-//                   labelStyle: TextStyle(
-//                     color: Colors.white,
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 14,
-//                   ),
-//                   unselectedLabelStyle: TextStyle(
-//                     color: Colors.black,
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 14,
-//                   ),
-//                   decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(12),
-//                     gradient: LinearGradient(
-//                       colors: [Colors.blue, Colors.pinkAccent],
-//                       begin: Alignment.topLeft,
-//                       end: Alignment.bottomRight,
-//                     ),
-//                   ),
-//                   tabs: [
-//                     Tab(text: "Top"),
-//                     Tab(text: "Goods"),
-//                     Tab(text: "Streams"),
-//                     Tab(text: "Users"),
-//                     Tab(text: "Categories"),
-//                   ],
-//                 ),
-//                 const SizedBox(height: 12),
-//                 // Tab Content
-//                 Expanded(
-//                   child: TabBarView(
-//                     children: [
-//                       _buildTabContent(),
-//                       _userListView(),
-//                       Center(child: Text("Streams Tab")),
-//                       Center(child: Text("Users Tab")),
-//                       _categoryListView(),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildTabContent() {
-//     return SingleChildScrollView(
-//       physics: BouncingScrollPhysics(),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           // Stream Section
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               CustomText(
-//                 text: "Stream",
-//                 fontWeight: FontWeight.w400,
-//                 fontSize: 16,
-//                 fontFamily: "Gilroy-Bold",
-//               ),
-//               CustomText(
-//                 text: "See All",
-//                 color: Color(0xff815BFF),
-//                 fontWeight: FontWeight.w400,
-//                 fontSize: 14,
-//                 fontFamily: "Gilroy-Bold",
-//               ),
-//             ],
-//           ),
-//           const SizedBox(height: 12),
-//           _buildLiveVideos(context),
-//           const SizedBox(height: 12),
-//           CustomGradientButton(text: "Watch More Stream"),
-//           const SizedBox(height: 12),
-//           // Users Section
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               CustomText(
-//                 text: "Users",
-//                 fontWeight: FontWeight.w400,
-//                 fontSize: 16,
-//                 fontFamily: "Gilroy-Bold",
-//               ),
-//               CustomText(
-//                 text: "See All",
-//                 color: Color(0xff815BFF),
-//                 fontWeight: FontWeight.w400,
-//                 fontSize: 14,
-//                 fontFamily: "Gilroy-Bold",
-//               ),
-//             ],
-//           ),
-//           const SizedBox(height: 12),
-//           _buildUsers(),
-//           const SizedBox(height: 12),
-//           // Products Section
-//           CustomText(
-//             text: "All products",
-//             fontWeight: FontWeight.w400,
-//             fontSize: 16,
-//             fontFamily: "Gilroy-Bold",
-//           ),
-//           const SizedBox(height: 12),
-//           _buildProductList(),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildLiveVideos(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 10),
-//       child: LayoutBuilder(
-//         builder: (context, constraints) {
-//           double screenWidth = constraints.maxWidth;
-//           return GridView.builder(
-//             shrinkWrap: true,
-//             physics: NeverScrollableScrollPhysics(),
-//             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//               crossAxisCount: screenWidth > 600 ? 3 : 2,
-//               crossAxisSpacing: 10,
-//               mainAxisSpacing: 10,
-//               childAspectRatio: 0.44,
-//             ),
-//             itemCount: 6,
-//             itemBuilder: (context, index) {
-//               return LiveVideoCard();
-//             },
-//           );
-//         },
-//       ),
-//     );
-//   }
-//
-//   Widget _buildUsers() {
-//     return SizedBox(
-//       height: 165,
-//       child: ListView.builder(
-//         scrollDirection: Axis.horizontal,
-//         itemBuilder: (context, index) {
-//           return Padding(
-//             padding: const EdgeInsets.only(right: 10),
-//             child: Container(
-//               decoration: BoxDecoration(
-//                 color: Colors.white,
-//                 borderRadius: BorderRadius.circular(12),
-//               ),
-//               child: Padding(
-//                 padding:
-//                     const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-//                 child: Column(
-//                   children: [
-//                     Container(
-//                       height: 45,
-//                       width: 45,
-//                       decoration: BoxDecoration(
-//                           shape: BoxShape.circle,
-//                           image: DecorationImage(
-//                             image: AssetImage(appleIcon),
-//                             fit: BoxFit.cover,
-//                           )),
-//                     ),
-//                     SizedBox(height: 8),
-//                     CustomText(
-//                       text: "company_name",
-//                       fontWeight: FontWeight.w400,
-//                       fontSize: 12,
-//                       fontFamily: "Gilroy-Bold",
-//                     ),
-//                     SizedBox(height: 2),
-//                     CustomText(
-//                       text: "2.3K Subscribers",
-//                       fontWeight: FontWeight.w400,
-//                       fontSize: 12,
-//                       fontFamily: "Gilroy-Bold",
-//                     ),
-//                     SizedBox(height: 8),
-//                     CustomGradientButton(
-//                       text: "Subscribe",
-//                       height: 35,
-//                       width: 100,
-//                     )
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-//
-//   Widget _buildProductList() {
-//     return ListView.builder(
-//       physics: NeverScrollableScrollPhysics(),
-//       itemCount: 6,
-//       shrinkWrap: true,
-//       itemBuilder: (context, index) {
-//         return Padding(
-//           padding: const EdgeInsets.symmetric(vertical: 5),
-//           child: Row(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               CustomContainer(
-//                 height: 136,
-//                 width: 136,
-//                 borderRadius: BorderRadius.circular(8),
-//                 image: DecorationImage(
-//                     image: AssetImage(marketImage), fit: BoxFit.fill),
-//                 child: Padding(
-//                   padding:
-//                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-//                   child: Row(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       CustomGradientButton(
-//                         height: 21,
-//                         width: 31,
-//                         fontSize: 10,
-//                         text: 'Fix',
-//                         onPressed: () {},
-//                       ),
-//                       CustomContainer(
-//                         height: 30,
-//                         width: 45,
-//                         conColor: Colors.white,
-//                         borderRadius: BorderRadius.circular(100),
-//                         child: Row(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: [
-//                             Icon(Icons.notifications_none_rounded, size: 16),
-//                             SizedBox(width: 3),
-//                             CustomText(text: '1')
-//                           ],
-//                         ),
-//                       )
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               SizedBox(width: 12),
-//               Expanded(
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     CustomText(
-//                         text: 'Product name', fontWeight: FontWeight.bold),
-//                     CustomText(text: 'Description'),
-//                     CustomText(text: '1000 ₽', fontWeight: FontWeight.bold),
-//                     SizedBox(height: 25),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-//
-//   Widget _userListView() {
-//     return ListView.builder(
-//       physics: NeverScrollableScrollPhysics(),
-//       itemCount: 6,
-//       shrinkWrap: true,
-//       itemBuilder: (context, index) {
-//         return Padding(
-//           padding: const EdgeInsets.symmetric(vertical: 5),
-//           child: Row(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Expanded(
-//                 child: Row(
-//                   children: [
-//                     Image.asset(
-//                       appleIcon,
-//                       height: 40,
-//                       width: 40,
-//                     ),
-//                     SizedBox(
-//                       width: 10,
-//                     ),
-//                     Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         CustomText(
-//                           text: 'company_name',
-//                           fontSize: 14,
-//                           fontWeight: FontWeight.w400,
-//                           fontFamily: "Gilroy-Bold",
-//                         ),
-//                         CustomText(
-//                             color: Color(0xff8C8C8C),
-//                             fontSize: 14,
-//                             fontFamily: "Gilroy-Bold",
-//                             text: '2.4K Subscribers',
-//                             fontWeight: FontWeight.bold),
-//                       ],
-//                     ),
-//                     Spacer(),
-//                     CustomGradientButton(
-//                       text: "Subscribe",
-//                       width: 100,
-//                       height: 35,
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-//
-//   Widget _categoryListView() {
-//     return SingleChildScrollView(
-//       child: DefaultTabController(
-//         length: 3,
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             CustomText(
-//               text: "Search by category",
-//               fontSize: 18,
-//               fontWeight: FontWeight.w800,
-//             ),
-//             ButtonsTabBar(
-//               unselectedBackgroundColor: Colors.white,
-//               borderWidth: 0,
-//               unselectedBorderColor: Colors.transparent,
-//               borderColor: Colors.transparent,
-//               contentPadding:
-//               EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-//               labelStyle: TextStyle(
-//                 color: Colors.white,
-//                 fontWeight: FontWeight.bold,
-//                 fontSize: 14,
-//               ),
-//               unselectedLabelStyle: TextStyle(
-//                 color: Colors.black,
-//                 fontWeight: FontWeight.bold,
-//                 fontSize: 14,
-//               ),
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(12),
-//                 gradient: LinearGradient(
-//                   colors: [Colors.blue, Colors.pinkAccent],
-//                   begin: Alignment.topLeft,
-//                   end: Alignment.bottomRight,
-//                 ),
-//               ),
-//               tabs: [
-//                 Tab(text: "Recommended"),
-//                 Tab(text: "Popular"),
-//                 Tab(text: "A-Z"),
-//               ],
-//             ),
-//             ListView.builder(
-//               physics: NeverScrollableScrollPhysics(),
-//               shrinkWrap: true,
-//               itemCount: 6,
-//               itemBuilder: (context, index) {
-//                 return Padding(
-//                   padding: const EdgeInsets.symmetric(vertical: 5),
-//                   child: Container(
-//                     height: 95,
-//                     width: double.infinity,
-//                     decoration: BoxDecoration(
-//                         borderRadius: BorderRadius.circular(10),
-//                         gradient: primaryGradientColor),
-//                     child: Row(
-//                       children: [
-//                         Expanded(
-//                           child: Row(
-//                             children: [
-//                               Image.asset(watchVerticalImage),
-//                               SizedBox(
-//                                 width: 10,
-//                               ),
-//                               Column(
-//                                 mainAxisAlignment: MainAxisAlignment.center,
-//                                 children: [
-//                                   CustomText(
-//                                     text: "Luxury \naccessories",
-//                                     fontSize: 18,
-//                                     fontWeight: FontWeight.w400,
-//                                     color: Color(0xffFFFFFF),
-//                                   ),
-//                                   SizedBox(
-//                                     height: 10,
-//                                   ),
-//                                   Row(
-//                                     children: [
-//                                       Container(
-//                                         width: 20,
-//                                         height: 20,
-//                                         decoration: BoxDecoration(
-//                                             color: Colors.redAccent,
-//                                             shape: BoxShape.circle),
-//                                       ),
-//                                       SizedBox(
-//                                         width: 20,
-//                                       ),
-//                                       CustomText(
-//                                         text: "1.1K Views",
-//                                         fontSize: 12,
-//                                         fontWeight: FontWeight.w400,
-//                                         color: Color(0xffFFFFFF),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 ],
-//                               ),
-//                               Spacer(),
-//                               Padding(
-//                                 padding: const EdgeInsets.only(right: 10),
-//                                 child: Icon(
-//                                   Icons.arrow_forward_ios_outlined,
-//                                   color: Colors.white,
-//                                   size: 15,
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 );
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

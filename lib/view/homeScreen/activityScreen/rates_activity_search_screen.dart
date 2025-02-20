@@ -5,13 +5,18 @@ import '../../../custom_widgets/custom_gradiant_tab_button.dart';
 
 class RatesActivitySearchScreen extends StatefulWidget {
   @override
-  _RatesActivitySearchScreenState createState() => _RatesActivitySearchScreenState();
+  _RatesActivitySearchScreenState createState() =>
+      _RatesActivitySearchScreenState();
 }
 
 class _RatesActivitySearchScreenState extends State<RatesActivitySearchScreen> {
   RxInt selectedCategoryIndex = 0.obs;
 
-  final List<String> categories = ["All", "You are in the lead", "The bid has been outbid"];
+  final List<String> categories = [
+    "All".tr,
+    "You are in the lead".tr,
+    "The bid has been outbid".tr
+  ];
 
   final List<Map<String, dynamic>> auctions = [
     {
@@ -71,14 +76,19 @@ class _RatesActivitySearchScreenState extends State<RatesActivitySearchScreen> {
               child: Obx(() => SingleChildScrollView(
                     child: Column(
                       children: [
-                        ..._getFilteredAuctions().map((item) => _buildAuctionCard(item)).toList(),
+                        ..._getFilteredAuctions()
+                            .map((item) => _buildAuctionCard(item))
+                            .toList(),
                         SizedBox(height: 16),
                         Text(
-                          "Recently Completed Auctions",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          "Recently Completed Auctions".tr,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         SizedBox(height: 8),
-                        ..._getFilteredCompletedAuctions().map((item) => _buildAuctionCard(item)).toList(),
+                        ..._getFilteredCompletedAuctions()
+                            .map((item) => _buildAuctionCard(item))
+                            .toList(),
                       ],
                     ),
                   )),
@@ -99,7 +109,7 @@ class _RatesActivitySearchScreenState extends State<RatesActivitySearchScreen> {
             return Obx(() => Padding(
                   padding: EdgeInsets.only(right: 10),
                   child: CustomGradiantTabButton(
-                    text: categories[index],
+                    text: categories[index].tr,
                     isSelected: selectedCategoryIndex.value == index,
                     onPressed: () => selectedCategoryIndex.value = index,
                   ),
@@ -112,24 +122,36 @@ class _RatesActivitySearchScreenState extends State<RatesActivitySearchScreen> {
 
   Widget _buildAuctionCard(Map<String, dynamic> auction) {
     Color statusColor = Colors.transparent;
+
     String statusText = "";
 
     switch (auction["status"]) {
       case "outbid":
         statusColor = Colors.red;
-        statusText = "The bid has been outbid!";
+
+        statusText = "The bid has been outbid!".tr;
+
         break;
+
       case "lead":
         statusColor = Colors.blue;
-        statusText = "You are in the lead!";
+
+        statusText = "You are in the lead!".tr;
+
         break;
+
       case "win":
         statusColor = Colors.blue;
-        statusText = "You win!";
+
+        statusText = "You win!".tr;
+
         break;
+
       case "lost":
         statusColor = Colors.red;
-        statusText = "You lost!";
+
+        statusText = "You lost!".tr;
+
         break;
     }
 
@@ -143,9 +165,11 @@ class _RatesActivitySearchScreenState extends State<RatesActivitySearchScreen> {
           Stack(
             children: [
               ClipRRect(
-                borderRadius:
-                    BorderRadius.only(topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
-                child: Image.asset(auction["image"], width: 100, height: 100, fit: BoxFit.cover),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    bottomLeft: Radius.circular(12)),
+                child: Image.asset(auction["image"],
+                    width: 100, height: 100, fit: BoxFit.cover),
               ),
               if (statusText.isNotEmpty)
                 Positioned(
@@ -174,19 +198,23 @@ class _RatesActivitySearchScreenState extends State<RatesActivitySearchScreen> {
                 children: [
                   Row(
                     children: [
-                      Text(auction["company"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                       SizedBox(width: 4),
-                       Icon(Icons.star, color: Colors.amber, size: 14),
+                      Text(auction["company"],
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14)),
+                      SizedBox(width: 4),
+                      Icon(Icons.star, color: Colors.amber, size: 14),
                       SizedBox(width: 4),
                       Text(auction["rating"], style: TextStyle(fontSize: 12)),
                     ],
                   ),
-             
                   SizedBox(height: 4),
                   Text(auction["product"], style: TextStyle(fontSize: 14)),
-                  Text(auction["description"], style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  Text(auction["description"],
+                      style: TextStyle(fontSize: 12, color: Colors.grey)),
                   SizedBox(height: 4),
-                  Text(auction["price"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(auction["price"],
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 ],
               ),
             ),
@@ -198,19 +226,25 @@ class _RatesActivitySearchScreenState extends State<RatesActivitySearchScreen> {
 
   List<Map<String, dynamic>> _getFilteredAuctions() {
     String filter = categories[selectedCategoryIndex.value];
+
     if (filter == "All") return auctions;
+
     if (filter == "You are in the lead") {
       return auctions.where((item) => item["status"] == "lead").toList();
     }
+
     if (filter == "The bid has been outbid") {
       return auctions.where((item) => item["status"] == "outbid").toList();
     }
+
     return auctions;
   }
 
   List<Map<String, dynamic>> _getFilteredCompletedAuctions() {
     String filter = categories[selectedCategoryIndex.value];
+
     if (filter == "All") return completedAuctions;
-    return completedAuctions; 
+
+    return completedAuctions;
   }
 }

@@ -30,7 +30,7 @@ class _ForYouScreenState extends State<ForYouScreen> {
         children: [
           CustomTextField(
             prefixIcon: Icon(CupertinoIcons.search),
-            hintText: 'Search',
+            hintText: 'Search'.tr,
           ),
           SizedBox(height: 20),
           // Sort and Category Buttons
@@ -54,7 +54,7 @@ class _ForYouScreenState extends State<ForYouScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: DropdownButton<String>(
                   hint: CustomText(
-                    text: 'Sort',
+                    text: 'Sort'.tr,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -81,7 +81,7 @@ class _ForYouScreenState extends State<ForYouScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: DropdownButton<String>(
                   hint: CustomText(
-                    text: 'Category',
+                    text: 'Category'.tr,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -105,7 +105,7 @@ class _ForYouScreenState extends State<ForYouScreen> {
           SizedBox(height: 20),
           // Goods Section
           CustomText(
-            text: 'Goods',
+            text: 'Goods'.tr,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -151,7 +151,7 @@ class _ForYouScreenState extends State<ForYouScreen> {
                     children: [
                       SizedBox(width: 30),
                       CustomText(
-                        text: "Tune",
+                        text: "Tune".tr,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -162,13 +162,13 @@ class _ForYouScreenState extends State<ForYouScreen> {
                     ],
                   ),
                   SizedBox(height: 16),
-                  _buildListItem(context, "Sort", "Top Sellers"),
-                  _buildListItem(context, "Show time"),
-                  _buildListItem(context, "Free pickup"),
-                  _buildListItem(context, "Display format"),
-                  _buildListItem(context, "Label"),
-                  _buildListItem(context, "Seller Rating"),
-                  _buildListItem(context, "Sent from"),
+                  _buildListItem(context, "Sort".tr, "Top Sellers".tr),
+                  _buildListItem(context, "Show time".tr),
+                  _buildListItem(context, "Free pickup".tr),
+                  _buildListItem(context, "Display format".tr),
+                  _buildListItem(context, "Label".tr),
+                  _buildListItem(context, "Seller Rating".tr),
+                  _buildListItem(context, "Sent from".tr),
                   Spacer(),
                   Row(
                     children: [
@@ -182,7 +182,7 @@ class _ForYouScreenState extends State<ForYouScreen> {
                             borderRadius: BorderRadius.circular(10),
                             conColor: greyButtonColor,
                             alignment: Alignment.center,
-                            child: CustomText(text: 'Clear', fontSize: 16),
+                            child: CustomText(text: 'Clear'.tr, fontSize: 16),
                           ),
                         ),
                       ),
@@ -190,7 +190,7 @@ class _ForYouScreenState extends State<ForYouScreen> {
                       Expanded(
                         flex: 2,
                         child: CustomGradientButton(
-                          text: 'View results',
+                          text: 'View results'.tr,
                           onPressed: () {},
                           height: 48,
                           width: 221,
@@ -264,7 +264,7 @@ class _ForYouScreenState extends State<ForYouScreen> {
                             Get.back();
                           }, icon: Icon(Icons.arrow_back_ios_outlined)),
                       CustomText(
-                        text: "Sort",
+                        text: "Sort".tr,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Gilroy-Bold',
@@ -273,27 +273,27 @@ class _ForYouScreenState extends State<ForYouScreen> {
                     ],
                   ),
                   SizedBox(height: 16),
-                  CustomRadioTile(title: "Recommended",selectedOption: selectedOption, onChanged: (value) {
+                  CustomRadioTile(title: "Recommended".tr, selectedOption: selectedOption, onChanged: (value) {
                     setState(() {
                       selectedOption = value;
                     });
                   }),
-                  CustomRadioTile(title: "New and noteworthy",selectedOption: selectedOption, onChanged: (value) {
+                  CustomRadioTile(title: "New and noteworthy".tr, selectedOption: selectedOption, onChanged: (value) {
                     setState(() {
                       selectedOption = value;
                     });
                   }),
-                  CustomRadioTile(title: "Top Sellers",selectedOption: selectedOption, onChanged: (value) {
+                  CustomRadioTile(title: "Top Sellers".tr, selectedOption: selectedOption, onChanged: (value) {
                     setState(() {
                       selectedOption = value;
                     });
                   }),
-                  CustomRadioTile(title: "Number of views: high first",selectedOption: selectedOption, onChanged: (value) {
+                  CustomRadioTile(title: "Number of views: high first".tr, selectedOption: selectedOption, onChanged: (value) {
                     setState(() {
                       selectedOption = value;
                     });
                   }),
-                  CustomRadioTile(title: "Number of views: low first",selectedOption: selectedOption, onChanged: (value) {
+                  CustomRadioTile(title: "Number of views: low first".tr, selectedOption: selectedOption, onChanged: (value) {
                     setState(() {
                       selectedOption = value;
                     });
@@ -307,14 +307,14 @@ class _ForYouScreenState extends State<ForYouScreen> {
                           borderRadius: BorderRadius.circular(10),
                           conColor: greyButtonColor,
                           alignment: Alignment.center,
-                          child: CustomText(text: 'Clear', fontSize: 16),
+                          child: CustomText(text: 'Clear'.tr, fontSize: 16),
                         ),
                       ),
                       SizedBox(width: 10),
                       Expanded(
                         flex: 2,
                         child: CustomGradientButton(
-                          text: 'View results',
+                          text: 'View results'.tr,
                           onPressed: () {},
                           height: 48,
                           width: 221,

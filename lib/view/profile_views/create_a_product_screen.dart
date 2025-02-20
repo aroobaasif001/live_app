@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:live_app/entities/product_entity.dart';
 import 'package:live_app/utils/colors.dart';
@@ -32,9 +33,9 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   String? startingBid = "0";
   String? price = "0";
 
-  final List<String> categories = ["Electronics", "Clothing", "Accessories"];
+  final List<String> categories = ["electronics".tr, "cloth".tr, "accessories".tr];
   final List<String> streamers = ["Streamer 1", "Streamer 2", "Streamer 3"];
-  final List<String> deliveryOptions = ["Standard", "Express", "Next-Day"];
+  final List<String> deliveryOptions = ["standard".tr, "express".tr, "next_day".tr];
 
   Future<void> _pickImages() async {
     final List<XFile>? pickedFiles = await _picker.pickMultiImage();
@@ -52,7 +53,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     // Create the product object
     ProductEntity newProduct = ProductEntity(
       id: FirebaseAuth.instance.currentUser!.uid,
-      category: selectedCategory ?? "Unknown",
+      category: selectedCategory ?? "unknown".tr,
       title: title,
       description: description,
       // Convert quantity to string
@@ -73,7 +74,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     await FirebaseService.saveProduct(newProduct);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Product Created Successfully!")),
+      SnackBar(content: Text("product_created".tr)),
     );
 
     Navigator.pop(context);
@@ -84,8 +85,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          "Create a product",
+        title: Text(
+          "create_product".tr,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,
@@ -111,12 +112,12 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   child: selectedImages.isEmpty
                       ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.photo_camera_outlined,
                           size: 40, color: Colors.grey),
                       SizedBox(height: 8),
                       Text(
-                        "1 photo is required*",
+                        "photo_required".tr,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -175,20 +176,20 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
               ),
 
               Text(
-                "Uploaded ${selectedImages.length}/8",
+                "photos_uploaded".tr.replaceAll("{0}", selectedImages.length.toString()),
                 style: TextStyle(fontSize: 12, color: Colors.grey[600]),
               ),
               const SizedBox(height: 16),
 
               /// Product details
-              const Text(
-                "Product details",
+              Text(
+                "product_details".tr,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField(
                 decoration: InputDecoration(
-                  hintText: "Category*",
+                  hintText: "category".tr,
                   labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                   filled: true,
                   fillColor: Colors.grey[50],
@@ -208,7 +209,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
               const SizedBox(height: 8),
               TextField(
                 decoration: InputDecoration(
-                  hintText: "Title*",
+                  hintText: "title".tr,
                   labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                   filled: true,
                   fillColor: Colors.grey[50],
@@ -224,7 +225,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
               TextField(
                 decoration: InputDecoration(
-                  hintText: "Description*",
+                  hintText: "description".tr,
                   labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                   filled: true,
                   fillColor: Colors.grey[50],
@@ -242,8 +243,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Quantity of goods:",
+                  Text(
+                    "quantity_goods".tr,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Row(
@@ -284,7 +285,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
               /// Auction or Buy Now
               CustomText(
-                text: 'Type of Sale',
+                text: 'type_of_sale'.tr,
                 fontFamily: 'SF Pro Rounded',
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -304,10 +305,10 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       alignment: Alignment.center,
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: CustomText(
-                          text: 'Auction',
+                          text: 'auction'.tr,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
@@ -325,10 +326,10 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       alignment: Alignment.center,
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: CustomText(
-                          text: 'Buy Now',
+                          text: 'buy_now'.tr,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
@@ -343,11 +344,11 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
               /// Starting Bid or Price
               if (isAuction)
                 TextField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
-                    labelText: "Starting bid* (₽)",
+                    labelText: "starting_bid".tr,
                     hintText: '100₽',
                   ),
                   keyboardType: TextInputType.number,
@@ -360,11 +361,11 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
               if (!isAuction)
                 TextField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
-                    labelText: "Price",
+                    labelText: "price".tr,
                     hintText: '100₽',
                   ),
                   keyboardType: TextInputType.number,
@@ -379,23 +380,23 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
               /// Self-destruction & Live Only
               SwitchListTile(
-                title: const Text(
-                  "Self-destruction",
+                title: Text(
+                  "self_destruction".tr,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                subtitle: const Text(
-                  "This means that at 00:01 the last person to place a bet wins!",
+                subtitle: Text(
+                  "self_destruction_desc".tr,
                 ),
                 value: selfDestruct,
                 onChanged: (bool value) => setState(() => selfDestruct = value),
               ),
               SwitchListTile(
-                title: const Text(
-                  "Book your participation in Live",
+                title: Text(
+                  "book_live".tr,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                subtitle: const Text(
-                  "Toggle this to make this item only available for purchase during the stream.",
+                subtitle: Text(
+                  "book_live_desc".tr,
                 ),
                 value: liveOnly,
                 activeColor: Colors.green,
@@ -409,8 +410,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Select a stream*",
+                    Text(
+                      "select_stream".tr,
                       style:
                       TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
@@ -433,8 +434,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      "Delivery",
+                    Text(
+                      "delivery".tr,
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 6),
@@ -448,7 +449,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                         ),
                       ),
                       value: selectedDelivery,
-                      hint: const Text("Dimensions, weight of the parcel*"),
+                      hint: Text("delivery_details".tr),
                       items: deliveryOptions
                           .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                           .toList(),
@@ -465,7 +466,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text("Cancel"),
+                      child: Text("cancel".tr),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -479,10 +480,10 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         alignment: Alignment.center,
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 40),
                           child: CustomText(
-                            text: 'Ready',
+                            text: 'ready'.tr,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),

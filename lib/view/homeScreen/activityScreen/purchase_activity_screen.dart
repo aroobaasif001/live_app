@@ -11,7 +11,12 @@ class PurchaseActivityScreen extends StatefulWidget {
 class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
   RxInt selectedCategoryIndex = 0.obs;
 
-  final List<String> categories = ["All", "Awaiting receipt", "On the way","Awaiting shipment"];
+  final List<String> categories = [
+    "All".tr,
+    "Awaiting receipt".tr,
+    "On the way".tr,
+    "Awaiting shipment".tr
+  ];
 
   final List<Map<String, dynamic>> auctions = [
     {
@@ -74,7 +79,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
                         ..._getFilteredAuctions().map((item) => _buildAuctionCard(item)).toList(),
                         SizedBox(height: 16),
                         Text(
-                          "Recently Completed Auctions",
+                          "recently_completed_auctions".tr,
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         SizedBox(height: 8),
@@ -99,7 +104,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
             return Obx(() => Padding(
                   padding: EdgeInsets.only(right: 10),
                   child: CustomGradiantTabButton(
-                    text: categories[index],
+                    text: categories[index].tr,
                     isSelected: selectedCategoryIndex.value == index,
                     onPressed: () => selectedCategoryIndex.value = index,
                   ),
@@ -117,19 +122,19 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
     switch (auction["status"]) {
       case "outbid":
         statusColor = Colors.red;
-        statusText = "The bid has been outbid!";
+        statusText = "outbid".tr;
         break;
       case "lead":
         statusColor = Colors.blue;
-        statusText = "You are in the lead!";
+        statusText = "lead".tr;
         break;
       case "win":
         statusColor = Colors.blue;
-        statusText = "You win!";
+        statusText = "win".tr;
         break;
       case "lost":
         statusColor = Colors.red;
-        statusText = "You lost!";
+        statusText = "lost".tr;
         break;
     }
 
@@ -175,13 +180,12 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
                   Row(
                     children: [
                       Text(auction["company"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                       SizedBox(width: 4),
-                       Icon(Icons.star, color: Colors.amber, size: 14),
+                      SizedBox(width: 4),
+                      Icon(Icons.star, color: Colors.amber, size: 14),
                       SizedBox(width: 4),
                       Text(auction["rating"], style: TextStyle(fontSize: 12)),
                     ],
                   ),
-             
                   SizedBox(height: 4),
                   Text(auction["product"], style: TextStyle(fontSize: 14)),
                   Text(auction["description"], style: TextStyle(fontSize: 12, color: Colors.grey)),

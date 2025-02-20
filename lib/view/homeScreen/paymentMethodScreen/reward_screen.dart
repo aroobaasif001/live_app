@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/utils/images_path.dart';
 
 import '../../../custom_widgets/custom_text.dart';
@@ -14,16 +15,16 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
   final List<RewardLevel> levels = [
     RewardLevel(
-      level: "Bronze",
+        level: "bronze".tr,
       color: Colors.brown,
       rewards: [
-        "-3% on prices in the store",
-        "-5% on prices in the store",
+        "-3% ${'store_discount'.tr}",
+        "-5% ${'store_discount'.tr}"
       ],
       progressItems: [
-        ProgressItem(label: "Spend RUB 10,000 or more", value: 4000, max: 10000),
-        ProgressItem(label: "Buy 15 items", value: 6, max: 15),
-        ProgressItem(label: "Watch 20 streams", value: 7, max: 20),
+        ProgressItem(label: "spend_rub".trParams({"amount": "10,000"}), value: 4000, max: 10000),
+        ProgressItem(label: "buy_items".trParams({"count": "15"}), value: 6, max: 15),
+        ProgressItem(label: "watch_streams".trParams({"count": "20"}), value: 7, max: 20),
       ],
     ),
     RewardLevel(level: "Silver", color: Colors.grey, rewards: [
@@ -39,7 +40,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
       "-10% on prices in the store",
     ]),
   ];
-  
+
   final List<String> rewardImages = [
     bronzeAwardImage,
     silverAwardImage,
