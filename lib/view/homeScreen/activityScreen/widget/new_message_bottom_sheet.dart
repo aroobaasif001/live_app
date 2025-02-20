@@ -120,7 +120,7 @@ void showNewMessageBottomSheet(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "New message",
+                      "New message".tr,
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     IconButton(
@@ -134,7 +134,7 @@ void showNewMessageBottomSheet(BuildContext context) {
                 // Search Bar
                 Row(
                   children: [
-                    Text("To whom: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text("To whom: ".tr, style: TextStyle(fontWeight: FontWeight.bold)),
                     Expanded(
                       child: TextField(
                         controller: searchController,
@@ -144,7 +144,7 @@ void showNewMessageBottomSheet(BuildContext context) {
                           });
                         },
                         decoration: InputDecoration(
-                          hintText: "Nickname",
+                          hintText: "Nickname".tr,
                           border: InputBorder.none,
                         ),
                       ),
@@ -163,7 +163,7 @@ void showNewMessageBottomSheet(BuildContext context) {
                       }
 
                       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                        return Center(child: Text("No users available"));
+                        return Center(child: Text("No users available".tr));
                       }
 
                       List<RegistrationEntity> users = snapshot.data!.docs
@@ -195,7 +195,7 @@ void showNewMessageBottomSheet(BuildContext context) {
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
-                            hintText: "Type a message...",
+                            hintText: "Type a message...".tr,
                             border: InputBorder.none,
                           ),
                         ),
@@ -226,7 +226,7 @@ Widget buildUserItem(BuildContext context, RegistrationEntity user) {
       fontSize: 16,
     ),
     subtitle: CustomText(
-      text: "You are Subscribed",
+      text: "You are Subscribed".tr,
       fontWeight: FontWeight.w400,
       fontFamily: 'Gilroy-Bold',
       fontSize: 16,

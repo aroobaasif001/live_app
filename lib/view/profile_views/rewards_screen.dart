@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:live_app/utils/images_path.dart';
 
 import '../../../custom_widgets/custom_text.dart';
-import 'widget/reward_card_widget.dart';
+import '../homeScreen/paymentMethodScreen/widget/reward_card_widget.dart';
 
 class RewardsScreen extends StatefulWidget {
   @override
@@ -15,7 +15,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
   final List<RewardLevel> levels = [
     RewardLevel(
-        level: "bronze".tr,
+      level: "bronze".tr,
       color: Colors.brown,
       rewards: [
         "-3% ${'store_discount'.tr}",
@@ -27,17 +27,17 @@ class _RewardsScreenState extends State<RewardsScreen> {
         ProgressItem(label: "watch_streams".trParams({"count": "20"}), value: 7, max: 20),
       ],
     ),
-    RewardLevel(level: "Silver", color: Colors.grey, rewards: [
-      "-3% on prices in the store",
-      "-5% on prices in the store",
+    RewardLevel(level: "silver".tr, color: Colors.grey, rewards: [
+      "-3% ${'store_discount'.tr}",
+      "-5% ${'store_discount'.tr}",
     ]),
-    RewardLevel(level: "Gold", color: Colors.amber, rewards: [
-      "-5% on prices in the store",
-      "-8% on prices in the store",
+    RewardLevel(level: "gold".tr, color: Colors.amber, rewards: [
+      "-5% ${'store_discount'.tr}",
+      "-8% ${'store_discount'.tr}",
     ]),
-    RewardLevel(level: "Diamond", color: Colors.blue, rewards: [
-      "-6% on prices in the store",
-      "-10% on prices in the store",
+    RewardLevel(level: "diamond".tr, color: Colors.blue, rewards: [
+      "-6% ${'store_discount'.tr}",
+      "-10% ${'store_discount'.tr}",
     ]),
   ];
 
@@ -76,14 +76,14 @@ class _RewardsScreenState extends State<RewardsScreen> {
                   Image.asset('assets/images/appleg.png', height: 94),
                   SizedBox(height: 10),
                   CustomText(
-                    text: 'Company Name',
+                    text: 'company_name'.tr,
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
                     fontFamily: 'SF Pro Rounded',
                     color: Color(0xff2A2A2A),
                   ),
                   CustomText(
-                    text: 'Awards Club',
+                    text: 'awards_club'.tr,
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'SF Pro Rounded',
@@ -91,7 +91,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                   ),
                   SizedBox(height: 10),
                   CustomText(
-                    text: 'Subscribe, watch and shop to receive rewards from company_name',
+                    text: 'subscribe_watch_shop'.trParams({"company_name": "Company Name"}),
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
                     fontFamily: 'Gilroy-Bold',
@@ -107,7 +107,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       child: CustomText(
-                        text: 'Season 2 ends March 3rd',
+                        text: 'season_ends'.trParams({"date": "March 3rd"}),
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         fontFamily: 'Gilroy-Bold',
@@ -118,7 +118,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                   ),
                   SizedBox(height: 10),
                   CustomText(
-                    text: 'Rewards and progress are reset at the beginning of each season. See more',
+                    text: 'reset_rewards_progress'.tr,
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     fontFamily: 'Gilroy-Bold',
@@ -134,7 +134,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
               itemCount: rewardImages.length,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 10,left: 12,right: 12),
+                  padding: const EdgeInsets.only(bottom: 10, left: 12, right: 12),
                   child: Container(
                     height: 180,
                     width: double.infinity,
@@ -154,4 +154,4 @@ class _RewardsScreenState extends State<RewardsScreen> {
       ),
     );
   }
-}
+} 

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart'; // Import GetX for translations
 import 'package:live_app/custom_widgets/custom_text.dart';
 
 class NotificationSettingsScreen extends StatefulWidget {
   @override
-  _NotificationSettingsScreenState createState() =>
-      _NotificationSettingsScreenState();
+  _NotificationSettingsScreenState createState() => _NotificationSettingsScreenState();
 }
 
-class _NotificationSettingsScreenState
-    extends State<NotificationSettingsScreen> {
+class _NotificationSettingsScreenState extends State<NotificationSettingsScreen> {
   bool streamsFromSubscriptions = true;
   bool streamsISaved = false;
   bool recommendedStreams = true;
@@ -20,64 +19,66 @@ class _NotificationSettingsScreenState
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const CustomText(
-            text: 'Notifications',
+        title: CustomText(
+            text: 'notifications'.tr,
+            // Updated to use translation
             fontSize: 18,
             fontFamily: "Gilroy-Bold",
             fontWeight: FontWeight.bold,
             color: Colors.black),
-
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {},
+          onPressed: () => Navigator.pop(context), // Added pop action
         ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          sectionTitle('LIVE STREAM NOTIFICATIONS'),
-          buildCustomSwitchTile(
-              'Streams from subscriptions', streamsFromSubscriptions, (val) {
+          sectionTitle('live_stream_notifications'.tr), // Updated to use translation
+          buildCustomSwitchTile('streams_from_subscriptions'.tr, streamsFromSubscriptions, (val) {
             setState(() => streamsFromSubscriptions = val);
           }),
-          buildCustomSwitchTile('Streams I saved', streamsISaved, (val) {
+          buildCustomSwitchTile('streams_i_saved'.tr, streamsISaved, (val) {
             setState(() => streamsISaved = val);
           }),
-          buildCustomSwitchTile('Recommended Streams', recommendedStreams,
-              (val) {
+          buildCustomSwitchTile('recommended_streams'.tr, recommendedStreams, (val) {
             setState(() => recommendedStreams = val);
           }),
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
             child: CustomText(
-              text:
-                  'Choose which streams you\'ll be notified about. Grab It! sends you recommended shows based on your history.',
+              text: 'notification_description'.tr, // Updated to use translation
               color: Colors.grey,
               fontSize: 14,
               fontFamily: "Gilroy-Bold",
             ),
           ),
-          sectionTitle('SEARCH NOTIFICATIONS'),
+          sectionTitle('search_notifications'.tr), // Updated to use translation
           ListTile(
-            title: const CustomText(text: 'Adding tags to chat',  fontFamily: "Gilroy-Bold",),
-            trailing:
-                const CustomText(text: 'All', fontWeight: FontWeight.bold,  fontFamily: "Gilroy-Bold",),
+            title: CustomText(
+              text: 'adding_tags_to_chat'.tr, // Updated to use translation
+              fontFamily: "Gilroy-Bold",
+            ),
+            trailing: CustomText(
+              text: 'all'.tr, // Updated to use translation
+              fontWeight: FontWeight.bold,
+              fontFamily: "Gilroy-Bold",
+            ),
             onTap: () {},
           ),
-          buildCustomSwitchTile('New subscriber', newSubscriber, (val) {
+          buildCustomSwitchTile('new_subscriber'.tr, newSubscriber, (val) {
             setState(() => newSubscriber = val);
           }),
-          sectionTitle('SELLER BOOKMARK NOTIFICATIONS'),
-          buildCustomSwitchTile(
-              'Bookmarks from my streams', bookmarksFromStreams, (val) {
+          sectionTitle('seller_bookmark_notifications'.tr), // Updated to use translation
+          buildCustomSwitchTile('bookmarks_from_my_streams'.tr, bookmarksFromStreams, (val) {
             setState(() => bookmarksFromStreams = val);
           }),
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 8.0),
             child: CustomText(
               fontFamily: "Gilroy-Bold",
-              text: 'Get notified when people bookmark your upcoming streams.',
+              text: 'bookmark_notification_description'.tr, // Updated to use translation
               color: Colors.grey,
               fontSize: 14,
             ),
@@ -100,10 +101,9 @@ class _NotificationSettingsScreenState
     );
   }
 
-  Widget buildCustomSwitchTile(
-      String title, bool value, Function(bool) onChanged) {
+  Widget buildCustomSwitchTile(String title, bool value, Function(bool) onChanged) {
     return ListTile(
-      title: CustomText(text: title, fontSize: 15,  fontFamily: "Gilroy-Bold",),
+      title: CustomText(text: title, fontSize: 15, fontFamily: "Gilroy-Bold"),
       trailing: Switch(
         value: value,
         activeColor: Colors.green,

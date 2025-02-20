@@ -29,7 +29,7 @@ class FeatureActivityScreen extends StatelessWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionTitle("Streams"),
+                      _buildSectionTitle("Streams".tr),
                       SizedBox(height: 200, child: _buildLiveVideos(context)),
                     ],
                   );
@@ -37,7 +37,7 @@ class FeatureActivityScreen extends StatelessWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionTitle("Goods"),
+                      _buildSectionTitle("Goods".tr),
                       _buildProductList(),
                     ],
                   );
@@ -45,10 +45,10 @@ class FeatureActivityScreen extends StatelessWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionTitle("Streams"),
+                      _buildSectionTitle("Streams".tr),
                       SizedBox(height: 200, child: _buildLiveVideos(context)),
                       const SizedBox(height: 16),
-                      _buildSectionTitle("Goods"),
+                      _buildSectionTitle("Goods".tr),
                       _buildProductList(),
                     ],
                   );
@@ -73,7 +73,7 @@ class FeatureActivityScreen extends StatelessWidget {
             return Obx(() => Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: CustomGradiantTabButton(
-                    text: categories[index],
+                    text: categories[index].tr,
                     isSelected: selectedCategoryIndex.value == index,
                     onPressed: () => selectedCategoryIndex.value = index,
                   ),
@@ -160,7 +160,7 @@ class FeatureActivityScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text("No products available"));
+            return Center(child: Text("No products available".tr));
           }
 
           List<ProductEntity> products = snapshot.data!.docs
@@ -184,8 +184,9 @@ class FeatureActivityScreen extends StatelessWidget {
   Widget _buildSearchFilters() {
     return Row(
       children: [
-        _buildFilterChip("Electronics"),
-        _buildFilterChip("iPhone"),
+        _buildFilterChip("Electronics".tr),
+        _buildFilterChip("iPhone".tr),
+
       ],
     );
   }

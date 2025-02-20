@@ -46,9 +46,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       // Opens "SearchByApplication" screen
                       Get.to(() => const SearchByApplication());
                     },
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Search",
+                      hintText: 'search'.tr,
                       prefixIcon: Icon(Icons.search, color: Colors.grey),
                     ),
                   ),
@@ -82,12 +82,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  tabs: const [
-                    Tab(text: "Top"),
-                    Tab(text: "Goods"),
-                    Tab(text: "Streams"),
-                    Tab(text: "Users"),
-                    Tab(text: "Categories"),
+                  tabs: [
+                    Tab(text: 'top'.tr),
+                    Tab(text: 'goods'.tr),
+                    Tab(text: 'streams'.tr),
+                    Tab(text: 'users'.tr),
+                    Tab(text: 'categories'.tr),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -126,13 +126,13 @@ class _SearchScreenState extends State<SearchScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomText(
-                  text: "Stream",
+                  text: "stream".tr,
                   fontWeight: FontWeight.w400,
                   fontSize: 16,
                   fontFamily: "Gilroy-Bold",
                 ),
                 CustomText(
-                  text: "See All",
+                  text: "see_all".tr,
                   color: const Color(0xff815BFF),
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -144,7 +144,9 @@ class _SearchScreenState extends State<SearchScreen> {
             _buildStreamGrid(context), // 2×2
             const SizedBox(height: 12),
             // "Watch more streams" button
-            CustomGradientButton(text: "Watch more streams"),
+
+            CustomGradientButton(text: "watch_more_streams".tr),
+
             const SizedBox(height: 12),
 
             // USERS SECTION
@@ -152,13 +154,13 @@ class _SearchScreenState extends State<SearchScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomText(
-                  text: "Users",
+                  text: "users".tr,
                   fontWeight: FontWeight.w400,
                   fontSize: 16,
                   fontFamily: "Gilroy-Bold",
                 ),
                 CustomText(
-                  text: "See All",
+                  text: "see_all".tr,
                   color: const Color(0xff815BFF),
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -172,7 +174,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
             // PRODUCTS SECTION
             CustomText(
-              text: "All products",
+              text: "all_products".tr,
               fontWeight: FontWeight.w400,
               fontSize: 16,
               fontFamily: "Gilroy-Bold",
@@ -212,7 +214,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText(
-                          text: 'company_name',
+                          text: 'company_name'.tr,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           fontFamily: "Gilroy-Bold",
@@ -286,7 +288,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText(
-                          text: 'company_name',
+                          text: 'company_name'.tr,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           fontFamily: "Gilroy-Bold",
@@ -469,14 +471,13 @@ class _SearchScreenState extends State<SearchScreen> {
           return Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Container(
-              width: 120,
+              width: 150,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
                 child: Column(
                   children: [
                     // user image
@@ -493,7 +494,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     const SizedBox(height: 8),
                     CustomText(
-                      text: "company_name",
+                      text: "company_name".tr,
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
                       fontFamily: "Gilroy-Bold",
@@ -598,7 +599,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       const SizedBox(width: 6),
                       CustomText(
-                        text: 'company_name',
+                        text: 'company_name'.tr,
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                       ),
@@ -661,7 +662,7 @@ Widget _buildStreamGrid(BuildContext context) {
       }
       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
         return const Center(child: Text('No livestreams available'));
-      }
+      };
 
       final livestreamsData = snapshot.data!.docs;
 
@@ -710,6 +711,7 @@ Widget _buildStreamGrid(BuildContext context) {
       );
     },
   );
+}
 }
 
 // Widget _buildStreamGrid(BuildContext context) {
@@ -774,5 +776,4 @@ Widget _buildStreamGrid(BuildContext context) {
 //     },
 //   );
 // }
-
 

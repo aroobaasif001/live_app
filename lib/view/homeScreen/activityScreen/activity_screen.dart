@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:live_app/utils/colors.dart';
+import 'package:get/get.dart';
 import 'package:live_app/utils/icons_path.dart';
-
 import '../../../custom_widgets/custom_text.dart';
 import 'message_list_screen.dart';
-import 'widget/new_message_bottom_sheet.dart';
 import 'feature_activity_screen.dart';
 import 'purchase_activity_screen.dart';
 import 'rates_activity_search_screen.dart';
@@ -27,58 +25,55 @@ class _ActivityScreenState extends State<ActivityScreen> with SingleTickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomText(text:"Activity", color: Colors.black,fontFamily: 'SF Pro Rounded',fontSize: 24,fontWeight: FontWeight.w500,),
+        title: CustomText(
+          text: "activity".tr,
+          color: Colors.black,
+          fontFamily: 'SF Pro Rounded',
+          fontSize: 24,
+          fontWeight: FontWeight.w500,
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
-         Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(width: 1,
-             color: Color(0xffCACACA)
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(width: 1, color: Color(0xffCACACA)),
             ),
-           
-          ),
-          child: 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
-            child: Row(
-            
-              children: [
-               Image.asset(findfriendsIcon,height: 18,),
-              SizedBox(width: 10,),
-                CustomText(text:'Find Friends')
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Row(
+                children: [
+                  Image.asset(findfriendsIcon, height: 18),
+                  SizedBox(width: 10),
+                  CustomText(text: 'find_friends'.tr),
+                ],
+              ),
             ),
-          ),
-         )
+          )
         ],
-     bottom: TabBar(
-  controller: _tabController,
-  labelColor: Colors.black,
-  unselectedLabelColor: Colors.grey,
-  indicatorColor: Colors.black,
-  tabs: [
-    Tab(child: CustomText(text: "Purchases",fontSize: 12,  fontWeight: FontWeight.w400,fontFamily: 'Gilroy-Bold',)),
-    Tab(child: CustomText(text:"Rates", fontSize: 12, fontWeight: FontWeight.w400,fontFamily: 'Gilroy-Bold',)),
-    Tab(child: CustomText(text:"Messages", fontSize: 12,fontWeight: FontWeight.w400,fontFamily: 'Gilroy-Bold',)),
-    Tab(child: CustomText(text:"Featured",fontSize: 12,  fontWeight: FontWeight.w400,fontFamily: 'Gilroy-Bold',)),
-  ],
-),
-
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: Colors.black,
+          unselectedLabelColor: Colors.grey,
+          indicatorColor: Colors.black,
+          tabs: [
+            Tab(child: CustomText(text: "purchases".tr, fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'Gilroy-Bold')),
+            Tab(child: CustomText(text: "rates".tr, fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'Gilroy-Bold')),
+            Tab(child: CustomText(text: "messages".tr, fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'Gilroy-Bold')),
+            Tab(child: CustomText(text: "featured".tr, fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'Gilroy-Bold')),
+          ],
+        ),
       ),
       body: TabBarView(
         controller: _tabController,
         children: [
-      PurchaseActivityScreen(),
-         RatesActivitySearchScreen(),
+          PurchaseActivityScreen(),
+          RatesActivitySearchScreen(),
           MessagesList(),
           FeatureActivityScreen()
         ],
       ),
- 
-   
     );
   }
-  }
-
+}

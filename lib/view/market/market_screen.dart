@@ -2,6 +2,7 @@ import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/custom_widgets/custom_icon_button.dart';
 import 'package:live_app/custom_widgets/custom_review.dart';
@@ -25,8 +26,7 @@ class MarketScreen extends StatefulWidget {
 
 class _MarketScreenState extends State<MarketScreen> {
   Stream<DocumentSnapshot<RegistrationEntity>> getUserData =
-      RegistrationEntity.doc(userId: FirebaseAuth.instance.currentUser!.uid)
-          .snapshots();
+      RegistrationEntity.doc(userId: FirebaseAuth.instance.currentUser!.uid).snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +56,10 @@ class _MarketScreenState extends State<MarketScreen> {
                         CustomContainer(
                           width: double.infinity,
                           height: 220,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: userData?.coverImage != null &&
-                                    userData!.coverImage!.isNotEmpty
-                                ? NetworkImage(userData.coverImage.toString())
-                                    as ImageProvider
-                                : AssetImage(circleAppleImage),
-                          ),
+                          image: userData?.coverImage != null && userData!.coverImage!.isNotEmpty
+                              ? DecorationImage(
+                                  fit: BoxFit.cover, image: NetworkImage(userData.coverImage.toString()))
+                              : DecorationImage(fit: BoxFit.cover, image: AssetImage(marketImage)),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: Column(
@@ -78,11 +74,8 @@ class _MarketScreenState extends State<MarketScreen> {
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                         fit: BoxFit.cover,
-                                        image: userData?.image != null &&
-                                                userData!.image!.isNotEmpty
-                                            ? NetworkImage(
-                                                    userData.image.toString())
-                                                as ImageProvider
+                                        image: userData?.image != null && userData!.image!.isNotEmpty
+                                            ? NetworkImage(userData.image.toString())
                                             : AssetImage(circleAppleImage),
                                       ),
                                       child: Align(
@@ -90,55 +83,48 @@ class _MarketScreenState extends State<MarketScreen> {
                                         child: CustomContainer(
                                           height: 30,
                                           width: 30,
-                                          image: DecorationImage(
-                                              image: AssetImage(
-                                                  circleButtonImage)),
+                                          image: DecorationImage(image: AssetImage(circleButtonImage)),
                                         ),
                                       ),
                                     ),
                                     SizedBox(width: 16),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CustomText(
-                                          text: userData?.firstName ?? '',
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                        CustomText(
-                                          text: userData?.lastName ?? '',
-                                          color: Colors.white,
-                                        ),
-                                        Row(
-                                          children: [
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: '95K ',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  TextSpan(
-                                                    text: 'Subscribers',
-                                                    style: TextStyle(
-                                                        color: Colors.white54),
-                                                  ),
-                                                  TextSpan(text: ' . '),
-                                                  TextSpan(
-                                                    text: '132 Subscriptions',
-                                                    style: TextStyle(
-                                                        color: Colors.white54),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    )
+                                    Expanded(
+                                      // Wrap this column in Expanded
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          CustomText(
+                                            text: userData?.firstName ?? '',
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                          CustomText(
+                                            text: userData?.lastName ?? '',
+                                            color: Colors.white,
+                                          ),
+                                          RichText(
+                                            text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: '95K ',
+                                                  style: TextStyle(color: Colors.white),
+                                                ),
+                                                TextSpan(
+                                                  text: 'Subscribers'.tr,
+                                                  style: TextStyle(color: Colors.white54),
+                                                ),
+                                                TextSpan(text: ' . '),
+                                                TextSpan(
+                                                  text: '132 Subscriptions'.tr,
+                                                  style: TextStyle(color: Colors.white54),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 SizedBox(height: 50)
@@ -161,27 +147,19 @@ class _MarketScreenState extends State<MarketScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       CustomReview(
                                           value: userData?.rating ?? '',
-                                          label: 'Rating',
+                                          label: 'Rating'.tr,
                                           iconPath: startIcon),
                                       VerticalDivider(color: conLineColor),
-                                      CustomReview(
-                                          value: userData?.reviews ?? '',
-                                          label: 'Reviews'),
+                                      CustomReview(value: userData?.reviews ?? '', label: 'Reviews'.tr),
                                       VerticalDivider(color: conLineColor),
-                                      CustomReview(
-                                          value: userData?.sold ?? '',
-                                          label: 'Sold'),
+                                      CustomReview(value: userData?.sold ?? '', label: 'Sold'.tr),
                                       VerticalDivider(color: conLineColor),
-                                      CustomReview(
-                                          value: userData?.delivery ?? '',
-                                          label: 'Delivery'),
+                                      CustomReview(value: userData?.delivery ?? '', label: 'Delivery'.tr),
                                     ],
                                   ),
                                 ),
@@ -203,21 +181,20 @@ class _MarketScreenState extends State<MarketScreen> {
                             // **Description**
                             ReadMoreText(
                               'Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna.',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                               trimMode: TrimMode.Line,
                               trimLines: 1,
                               colorClickableText: Colors.grey,
                               lessStyle: TextStyle(color: viewColor),
-                              trimCollapsedText: 'View more',
-                              trimExpandedText: 'View less',
+                              trimCollapsedText: 'View more'.tr,
+                              trimExpandedText: 'View less'.tr,
                               moreStyle: TextStyle(color: viewColor),
                             ),
                             SizedBox(height: 10),
                             // **Buttons**
                             CustomGradientButton(
                               width: double.infinity,
-                              text: 'Subscribe',
+                              text: 'Subscribe'.tr,
                               onPressed: () {},
                             ),
                             SizedBox(height: 10),
@@ -226,16 +203,12 @@ class _MarketScreenState extends State<MarketScreen> {
                               children: [
                                 Expanded(
                                   child: CustomIconButton(
-                                      onPressed: () {},
-                                      text: 'Message',
-                                      iconPath: messageIcon),
+                                      onPressed: () {}, text: 'Message'.tr, iconPath: messageIcon),
                                 ),
                                 SizedBox(width: 10),
                                 Expanded(
-                                  child: CustomIconButton(
-                                      onPressed: () {},
-                                      text: 'Tips',
-                                      iconPath: tipsIcon),
+                                  child:
+                                      CustomIconButton(onPressed: () {}, text: 'Tips'.tr, iconPath: tipsIcon),
                                 ),
                               ],
                             ),
@@ -248,8 +221,7 @@ class _MarketScreenState extends State<MarketScreen> {
                               borderWidth: 0,
                               unselectedBorderColor: Colors.transparent,
                               borderColor: Colors.transparent,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 10),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                               labelStyle: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -270,11 +242,11 @@ class _MarketScreenState extends State<MarketScreen> {
                                 ),
                               ),
                               tabs: [
-                                Tab(text: "For you"),
-                                Tab(text: "Streams"),
-                                Tab(text: "Reviews"),
-                                Tab(text: "Clips"),
-                                Tab(text: "Past Streams"),
+                                Tab(text: "For you".tr),
+                                Tab(text: "Streams".tr),
+                                Tab(text: "Reviews".tr),
+                                Tab(text: "Clips".tr),
+                                Tab(text: "Past Streams".tr),
                               ],
                             ),
                             SizedBox(height: 20),
@@ -287,10 +259,10 @@ class _MarketScreenState extends State<MarketScreen> {
                     height: screenHeight,
                     child: TabBarView(children: [
                       ForYouScreen(),
-                      CustomText(text: "Streams"),
+                      CustomText(text: "Streams".tr),
                       ReviewsScreen(),
                       ClipsScreen(),
-                      CustomText(text: "Past"),
+                      CustomText(text: "Past Streams".tr),
                     ]),
                   )
                 ],
@@ -303,9 +275,7 @@ class _MarketScreenState extends State<MarketScreen> {
           width: 120,
           borderRadius: BorderRadius.circular(100),
           conColor: Colors.white,
-          boxShadow: [
-            BoxShadow(color: greyColor, blurRadius: 5, offset: Offset(-1, 3))
-          ],
+          boxShadow: [BoxShadow(color: greyColor, blurRadius: 5, offset: Offset(-1, 3))],
           child: Center(
             child: CustomContainer(
               height: 44,

@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../custom_widgets/custom_gradiant_tab_button.dart';
 
-
 class CategoryTabs extends StatelessWidget {
   final RxInt selectedIndex = 0.obs; 
 
   final List<String> categories = [
-    "For you".tr,
+    "for_you".tr,
     "subscriptions".tr,
-    "Electronics".tr,
-    "Cloth".tr
+    "electronics".tr,
+    "cloth_category".tr
   ];
 
   @override
@@ -34,4 +33,4 @@ class CategoryTabs extends StatelessWidget {
       ),
     );
   }
-}
+} 

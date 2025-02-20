@@ -15,8 +15,7 @@ import 'package:live_app/utils/images_path.dart';
 class SellerInformationScreen extends StatefulWidget {
   final String? sellerProfileId;
 
-  const SellerInformationScreen({Key? key, this.sellerProfileId})
-      : super(key: key);
+  const SellerInformationScreen({super.key, this.sellerProfileId});
 
   @override
   State<SellerInformationScreen> createState() =>
@@ -183,9 +182,8 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                 child: Column(
                                   children: [
                                     const SizedBox(height: 10),
-                                    const CustomText(
-                                      text:
-                                          "WELCOME TO GRAND GAMING\nINCREDIBLE DEALS, ENERGY BOOSTS, FAST AUCTIONS\nFAIRFUNFAST\nPLEASE CONTACT ME WITH ANY QUESTIONS OR PROBLEMS, I'M HERE TO HELP!",
+                                    CustomText(
+                                      text: 'welcome_message'.tr,
                                     ),
                                     const SizedBox(height: 20),
                                     GestureDetector(
@@ -205,10 +203,11 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const CustomText(
-                                            text: 'Reviews about the seller',
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
+                                        CustomText(
+                                          text: 'reviews_about_seller'.tr,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                         GestureDetector(
                                           onTap: () {},
                                           child: Row(
@@ -705,8 +704,8 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                       ),
                                     ),
                                     const SizedBox(height: 20),
-                                    const CustomText(
-                                      text: 'More from this seller',
+                                    CustomText(
+                                      text: 'more_from_seller'.tr,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -838,14 +837,14 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: const [
+                                      children: [
                                         CustomText(
-                                          text: 'Created 01/28/25',
+                                          text: 'created 01/28/25'.tr,
                                           fontSize: 14,
                                           color: Colors.grey,
                                         ),
                                         CustomText(
-                                          text: 'Report Abuse',
+                                          text: 'report_abuse'.tr,
                                           fontSize: 14,
                                           color: Colors.red,
                                         ),

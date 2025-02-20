@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../livestreaming/livestreamingview_screen.dart';
 import '../widgets/live_video_card.dart';
 import '../widgets/category_tab.dart';
+import 'liveShoppingScreens/live_shopping_screen.dart';
+
 
 class HomeMainScreen extends StatelessWidget {
   final int notificationCount = 2;
@@ -51,9 +53,9 @@ class HomeMainScreen extends StatelessWidget {
                   child: Image.asset('assets/icons/search.png',
                       width: 20, height: 20),
                 ),
-                hintText: "Search by application",
-                hintStyle:
-                    TextStyle(fontFamily: 'SFProRounded', color: Colors.grey),
+                hintText: "${'search_hint'.tr}",
+                hintStyle: TextStyle(fontFamily: 'SFProRounded', color: Colors.grey),
+
                 filled: true,
                 fillColor: Colors.grey[200],
                 border: OutlineInputBorder(
@@ -66,7 +68,7 @@ class HomeMainScreen extends StatelessWidget {
           SizedBox(width: 10),
           _buildNotificationIcon(notificationCount),
           SizedBox(width: 10),
-          Image.asset('assets/icons/gift.png')
+          Image.asset('assets/icons/gift.png', semanticLabel: "${'gift_icon'.tr}"),
         ],
       ),
     );
