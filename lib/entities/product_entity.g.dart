@@ -10,6 +10,7 @@ ProductEntity _$ProductEntityFromJson(Map<String, dynamic> json) =>
     ProductEntity(
       id: json['id'] as String?,
       category: json['category'] as String?,
+      soldPrice: json['soldPrice'] as String?,
       title: json['title'] as String?,
       description: json['description'] as String?,
       quantity: json['quantity'] as String?,
@@ -36,6 +37,7 @@ Map<String, dynamic> _$ProductEntityToJson(ProductEntity instance) =>
       'saleType': instance.saleType,
       'startingBid': instance.startingBid,
       'price': instance.price,
+      'soldPrice': instance.soldPrice,
       'selfDestruct': instance.selfDestruct,
       'liveOnly': instance.liveOnly,
       'streamer': instance.streamer,

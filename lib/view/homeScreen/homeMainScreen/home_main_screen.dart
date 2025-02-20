@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../livestreaming/livestreamingview_screen.dart';
@@ -162,10 +164,8 @@ class HomeMainScreen extends StatelessWidget {
       // Retrieve data from SharedPreferences
       final sharedPreferences = await SharedPreferences.getInstance();
       final uid = 10000 + Random().nextInt(90000);
-      ;
-      final name = 'Guest';
-      final photo =
-          'https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg';
+      final name =  'Guest';
+      final photo = 'https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg';
 
       if (uid == 0) {
         print('[ERROR] UID is not available in SharedPreferences.');

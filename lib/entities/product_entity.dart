@@ -13,6 +13,7 @@ class ProductEntity {
   final String? saleType;
   final String? startingBid;
   final String? price;
+  final String? soldPrice;
   final bool? selfDestruct;
   final bool? liveOnly;
   final String? streamer;
@@ -24,6 +25,7 @@ class ProductEntity {
   ProductEntity(
       {this.id,
       this.category,
+      this.soldPrice,
       this.title,
       this.description,
       this.quantity,
@@ -37,8 +39,6 @@ class ProductEntity {
       this.images,
       this.isActive,
       this.isSold});
-
-
 
   factory ProductEntity.fromJson(Map<String, dynamic> json) =>
       _$ProductEntityFromJson(json);
