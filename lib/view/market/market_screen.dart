@@ -169,6 +169,7 @@ class _MarketScreenState extends State<MarketScreen> {
                         ),
                       ],
                     ),
+                    
                   ),
                   // **Main Content with Scroll Fix**
                   Column(

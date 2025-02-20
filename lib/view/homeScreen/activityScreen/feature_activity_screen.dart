@@ -1,62 +1,61 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradiant_tab_button.dart';
 import 'package:live_app/entities/product_entity.dart';
-import 'package:live_app/utils/images_path.dart';
-import '../homeMainScreen/liveShoppingScreens/live_shopping_screen.dart';
+import '../../livestreaming/livestreamingview_screen.dart';
 import '../widgets/live_video_card.dart';
 import 'widget/build_action_card.dart';
 
 class FeatureActivityScreen extends StatelessWidget {
   final List<String> categories = ["All", "Streams", "Goods", "Search"];
-  RxInt selectedCategoryIndex = 0.obs;
+  final RxInt selectedCategoryIndex = 0.obs;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             _buildCategoryTabs(),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Obx(() {
-              if (categories[selectedCategoryIndex.value] == "Streams") {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSectionTitle("Streams".tr),
-                    _buildLiveVideos(context),
-                  ],
-                );
-              } else if (categories[selectedCategoryIndex.value] == "Goods") {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSectionTitle("Goods".tr),
-                    _buildProductList(),
-                  ],
-                );
-              } else {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSectionTitle("Streams".tr),
-                    _buildLiveVideos(context),
-                    SizedBox(height: 16),
-                    _buildSectionTitle("Goods".tr),
-                    _buildProductList(),
-                  ],
-                );
+              switch (categories[selectedCategoryIndex.value]) {
+                case "Streams":
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle("Streams".tr),
+                      SizedBox(height: 200, child: _buildLiveVideos(context)),
+                    ],
+                  );
+                case "Goods":
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle("Goods".tr),
+                      _buildProductList(),
+                    ],
+                  );
+                default:
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle("Streams".tr),
+                      SizedBox(height: 200, child: _buildLiveVideos(context)),
+                      const SizedBox(height: 16),
+                      _buildSectionTitle("Goods".tr),
+                      _buildProductList(),
+                    ],
+                  );
               }
             }),
-            SizedBox(height: 16),
-            _buildSectionTitle("Search".tr),
+            const SizedBox(height: 16),
+            _buildSectionTitle("Search"),
             _buildSearchFilters(),
           ],
         ),
@@ -66,13 +65,13 @@ class FeatureActivityScreen extends StatelessWidget {
 
   Widget _buildCategoryTabs() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: List.generate(categories.length, (index) {
             return Obx(() => Padding(
-                  padding: EdgeInsets.only(right: 10),
+                  padding: const EdgeInsets.only(right: 10),
                   child: CustomGradiantTabButton(
                     text: categories[index].tr,
                     isSelected: selectedCategoryIndex.value == index,
@@ -87,35 +86,66 @@ class FeatureActivityScreen extends StatelessWidget {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Text(
         title,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
       ),
     );
   }
 
   Widget _buildLiveVideos(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: GestureDetector(
-        onTap: () {
-          Get.to(() => LiveShoppingScreen());
+    return SizedBox(
+      height: 200,
+      child: StreamBuilder<QuerySnapshot>(
+        stream:
+            FirebaseFirestore.instance.collection('livestreams').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text('No livestreams available'));
+          }
+
+          final livestreamsData = snapshot.data!.docs;
+
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemCount: livestreamsData.length,
+            itemBuilder: (context, index) {
+              final data =
+                  livestreamsData[index].data() as Map<String, dynamic>;
+              final adminName = data['adminName'] ?? 'Unknown';
+              final adminImage = data['adminPhoto'] ?? '';
+              final viewsCount = data['viewsCount'] ?? 0;
+              final title = data['title'] ?? '';
+              final channelName = data['channelId'] ?? '';
+
+              return SizedBox(
+                width: 150,
+                child: GestureDetector(
+                  onTap: () {
+                    joinLiveStreamingWithPrefs(channelName);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: LiveVideoCard(
+                      adminName: adminName,
+                      adminImage: adminImage,
+                      viewsCount: viewsCount,
+                      title: title,
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
         },
-        child: GridView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 0.42,
-          ),
-          itemCount: 2,
-          itemBuilder: (context, index) {
-            return LiveVideoCard();
-          },
-        ),
       ),
     );
   }
@@ -127,15 +157,20 @@ class FeatureActivityScreen extends StatelessWidget {
         stream: FirebaseFirestore.instance.collection('products').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return Center(child: Text("No products available".tr));
           }
+
           List<ProductEntity> products = snapshot.data!.docs
-              .map((doc) => ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+              .map((doc) =>
+                  ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
               .toList();
+
           return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: products.length,
             itemBuilder: (context, index) {
               return buildAuctionCard(products[index]);
@@ -149,13 +184,14 @@ class FeatureActivityScreen extends StatelessWidget {
   Widget _buildSearchFilters() {
     return Row(
       children: [
-        _buildFilterChip("Electronics".tr, isSelected: false),
+        _buildFilterChip("Electronics".tr),
         _buildFilterChip("iPhone".tr),
+
       ],
     );
   }
 
-  Widget _buildFilterChip(String label, {bool isSelected = false}) {
+  Widget _buildFilterChip(String label) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -166,10 +202,11 @@ class FeatureActivityScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
-            children: [Text(label), Icon(Icons.close)],
+            children: [Text(label), const Icon(Icons.close)],
           ),
         ),
       ),
     );
   }
 }
+
