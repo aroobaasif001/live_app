@@ -262,6 +262,7 @@ import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradiant_tab_button.dart';
 import 'package:live_app/entities/product_entity.dart';
 import 'package:live_app/utils/images_path.dart';
+import 'package:live_app/view/livestreaming/livestreamingview_screen.dart';
 import '../homeMainScreen/liveShoppingScreens/live_shopping_screen.dart';
 import '../widgets/live_video_card.dart';
 import 'widget/build_action_card.dart';
@@ -352,30 +353,92 @@ class FeatureActivityScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLiveVideos(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: GestureDetector(
-        onTap: () {
-          Get.to(() => LiveShoppingScreen());
-        },
-        child: GridView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 0.42,
-          ),
-          itemCount: 2,
-          itemBuilder: (context, index) {
-            return LiveVideoCard();
+  // Widget _buildLiveVideos(BuildContext context) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 10),
+  //     child: GestureDetector(
+  //       onTap: () {
+  //         Get.to(() => LiveShoppingScreen());
+  //       },
+  //       child: GridView.builder(
+  //         shrinkWrap: true,
+  //         physics: NeverScrollableScrollPhysics(),
+  //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //           crossAxisCount: 2,
+  //           crossAxisSpacing: 10,
+  //           mainAxisSpacing: 10,
+  //           childAspectRatio: 0.42,
+  //         ),
+  //         itemCount: 2,
+  //         itemBuilder: (context, index) {
+  //           return LiveVideoCard();
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
+
+ Widget _buildLiveVideos(BuildContext context) {
+  return FutureBuilder<QuerySnapshot>(
+    future: FirebaseFirestore.instance.collection('livestreams').get(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      }
+      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return const Center(child: Text('No livestreams available'));
+      }
+
+      final livestreamsData = snapshot.data!.docs;
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            double screenWidth = constraints.maxWidth;
+            return SizedBox(
+              height: 300, // Ensure GridView has a defined height
+              child: GridView.builder(
+                shrinkWrap: true, // ✅ Fixes "no size" issue
+                physics: const BouncingScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: screenWidth > 600 ? 3 : 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 0.7, // ✅ Adjust ratio if needed
+                ),
+                itemCount: livestreamsData.length,
+                itemBuilder: (context, index) {
+                  final data = livestreamsData[index].data() as Map<String, dynamic>;
+                  final adminName = data['adminName'] as String? ?? 'Unknown';
+                  final adminImage = data['adminPhoto'] as String? ?? '';
+                  final viewsCount = data['viewsCount'] as int? ?? 0;
+                  final title = data['title'] as String? ?? '';
+                  final channelName = data['channelId'] as String? ?? '';
+
+                  return GestureDetector(
+                    onTap: () {
+                      joinLiveStreamingWithPrefs(channelName);
+                    },
+                    child: LiveVideoCard(
+                      adminName: adminName,
+                      adminImage: adminImage,
+                      viewsCount: viewsCount,
+                      title: title,
+                    ),
+                  );
+                },
+              ),
+            );
           },
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
+}
 
   Widget _buildProductList() {
     return SizedBox(
