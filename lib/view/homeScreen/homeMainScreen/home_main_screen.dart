@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -182,7 +185,7 @@ class HomeMainScreen extends StatelessWidget {
     try {
       // Retrieve data from SharedPreferences
       final sharedPreferences = await SharedPreferences.getInstance();
-      final uid = 10000 + Random().nextInt(90000); ;
+      final uid = 10000 + Random().nextInt(90000);
       final name =  'Guest';
       final photo = 'https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg';
 
