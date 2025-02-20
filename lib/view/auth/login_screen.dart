@@ -7,6 +7,8 @@ import 'package:live_app/custom_widgets/custom_textfield.dart';
 import 'package:live_app/view/auth/verification_screen.dart';
 import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 
+import '../../utils/store_services.dart';
+
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
 
@@ -38,7 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       Get.snackbar("Success", "login_successful".tr);
-      Get.to(() => VerificationScreen());
+      await StorageService.setLoggedIn(true);
+      Get.to(() => BottomNavigationBarWidget());
 
     } on FirebaseAuthException catch (e) {
       String errorMessage = "login_failed".tr;
@@ -110,8 +113,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
               SizedBox(height: 20),
+              // CustomGradientButton(
+              //   text: isLoading ? 'logging_in'.tr : 'get_code'.tr,
+              //   onPressed: isLoading ? null : _loginUser,
+              // ),
               CustomGradientButton(
-                text: isLoading ? 'logging_in'.tr : 'get_code'.tr,
+                text: 'login'.tr,
                 onPressed: isLoading ? null : _loginUser,
               ),
             ],

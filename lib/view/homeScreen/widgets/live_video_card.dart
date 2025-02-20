@@ -27,7 +27,6 @@ class LiveVideoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top row with icon and admin name
           Row(
             children: [
               Image.asset('assets/icons/apple1.png'),
@@ -108,18 +107,6 @@ class LiveVideoCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    CustomText(text: 'Lorem ipsum ', color: const Color(0xff3438B7)),
-                    Flexible(
-                      child: CustomText(
-                        text: 'Lorem ipsum ',
-                        color: Colors.grey,
-                        maxLines: 1,
-                      ),
-                    )
-                  ],
-                )
               ],
             ),
           ),

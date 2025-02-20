@@ -9,6 +9,7 @@ import 'package:live_app/utils/images_path.dart';
 import 'package:live_app/view/auth/interests_detail_screen.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 import '../../utils/colors.dart';
+import '../../utils/store_services.dart';
 
 class InterestsScreen extends StatefulWidget {
   final String? country;
@@ -102,7 +103,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
   void _registerUser() async {
     if (selectedInterests.isEmpty) {
       Get.snackbar(
-        "error".tr, 
+        "error".tr,
         "select_interest".tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -116,8 +117,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
     });
 
     try {
-
-      if(widget.isSignUpWithGoogle == true){
+      if (widget.isSignUpWithGoogle == true) {
         String docId = FirebaseAuth.instance.currentUser!.uid;
         RegistrationEntity registrationEntity = RegistrationEntity(
           regId: docId,
@@ -145,31 +145,31 @@ class _InterestsScreenState extends State<InterestsScreen> {
         await RegistrationEntity.doc(userId: docId).set(registrationEntity);
 
         Get.snackbar(
-          "success".tr, 
+          "success".tr,
           "registration_success".tr,
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
         Get.to(() => InterestsDetailScreen(
-          country: widget.country,
-          gender: widget.gender,
-          firstName: widget.firstName,
-          lastName: widget.lastName,
-          email: widget.email,
-          password: widget.password,
-          city: widget.city,
-          street: widget.street,
-          house: widget.house,
-          apartment: widget.apartment,
-          entrance: widget.entrance,
-          index: widget.index,
-          interests: selectedInterests,
-        ));
-      }
-      else{
+              country: widget.country,
+              gender: widget.gender,
+              firstName: widget.firstName,
+              lastName: widget.lastName,
+              email: widget.email,
+              password: widget.password,
+              city: widget.city,
+              street: widget.street,
+              house: widget.house,
+              apartment: widget.apartment,
+              entrance: widget.entrance,
+              index: widget.index,
+              interests: selectedInterests,
+            ));
+        await StorageService.setLoggedIn(true);
+      } else {
         UserCredential userCredential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: widget.email!.trim(),
           password: widget.password!.trim(),
         );
@@ -195,34 +195,32 @@ class _InterestsScreenState extends State<InterestsScreen> {
         await RegistrationEntity.doc(userId: docId).set(registrationEntity);
 
         Get.snackbar(
-          "success".tr, 
+          "success".tr,
           "registration_success".tr,
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
         Get.to(() => InterestsDetailScreen(
-          country: widget.country,
-          gender: widget.gender,
-          firstName: widget.firstName,
-          lastName: widget.lastName,
-          email: widget.email,
-          password: widget.password,
-          city: widget.city,
-          street: widget.street,
-          house: widget.house,
-          apartment: widget.apartment,
-          entrance: widget.entrance,
-          index: widget.index,
-          interests: selectedInterests,
-        ));
+              country: widget.country,
+              gender: widget.gender,
+              firstName: widget.firstName,
+              lastName: widget.lastName,
+              email: widget.email,
+              password: widget.password,
+              city: widget.city,
+              street: widget.street,
+              house: widget.house,
+              apartment: widget.apartment,
+              entrance: widget.entrance,
+              index: widget.index,
+              interests: selectedInterests,
+            ));
+        await StorageService.setLoggedIn(true);
       }
-
-
-
     } catch (e) {
       Get.snackbar(
-        "error".tr, 
+        "error".tr,
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -303,14 +301,20 @@ class _InterestsScreenState extends State<InterestsScreen> {
                               : Border.all(color: Colors.white, width: 2),
                           gradient: isSelected
                               ? LinearGradient(
-                                  colors: [blueLiteColor, purpleLiteColor, deepPurpleColor],
+                                  colors: [
+                                    blueLiteColor,
+                                    purpleLiteColor,
+                                    deepPurpleColor
+                                  ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 )
                               : null,
                         ),
                         child: Padding(
-                          padding: isSelected ? const EdgeInsets.all(1.5) : EdgeInsets.zero,
+                          padding: isSelected
+                              ? const EdgeInsets.all(1.5)
+                              : EdgeInsets.zero,
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -332,7 +336,8 @@ class _InterestsScreenState extends State<InterestsScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       image: DecorationImage(
-                                        image: AssetImage(interestImages[index]),
+                                        image:
+                                            AssetImage(interestImages[index]),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
