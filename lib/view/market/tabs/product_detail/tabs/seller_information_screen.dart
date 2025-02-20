@@ -11,7 +11,6 @@ import 'package:live_app/entities/registration_entity.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
-import 'package:live_app/translate/translations_app.dart';
 
 class SellerInformationScreen extends StatefulWidget {
   final String? sellerProfileId;
@@ -838,7 +837,7 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: const [
+                                      children: [
                                         CustomText(
                                           text: 'created 01/28/25'.tr,
                                           fontSize: 14,
