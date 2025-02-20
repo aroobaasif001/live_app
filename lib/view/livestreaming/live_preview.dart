@@ -8,13 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'live_streaming.dart';
 
-
 class LivePreviewScreen extends StatefulWidget {
   final String name; // Parameter to receive the name
   final String photo; // Parameter to receive the photo
 
-
-  LivePreviewScreen({required this.name, required this.photo,}); // Constructor to accept the parameters
+  LivePreviewScreen({
+    required this.name,
+    required this.photo,
+  });
 
   @override
   _LivePreviewScreenState createState() => _LivePreviewScreenState();
@@ -27,7 +28,7 @@ class _LivePreviewScreenState extends State<LivePreviewScreen> {
   final TextEditingController _titleController = TextEditingController();
   bool isAdmin = true; // isAdmin variable set to
   int? uid;
-String? ChannelId;
+  String? ChannelId;
 
   @override
   void initState() {
@@ -35,18 +36,17 @@ String? ChannelId;
     _initializeCamera();
     uid = 10000 + Random().nextInt(90000); // Generates a 5-digit number
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    ChannelId = List.generate(5, (index) => chars[Random().nextInt(chars.length)]).join();
-  // ChannelId = 'testchannel';
+    ChannelId =
+        List.generate(5, (index) => chars[Random().nextInt(chars.length)]).join();
+    // ChannelId = 'testchannel';
   }
-
 
   Future<void> _initializeCamera() async {
     final cameras = await availableCameras();
     final selectedCamera = cameras.firstWhere(
-      (camera) =>
-          _isFrontCamera
-              ? camera.lensDirection == CameraLensDirection.front
-              : camera.lensDirection == CameraLensDirection.back,
+          (camera) => _isFrontCamera
+          ? camera.lensDirection == CameraLensDirection.front
+          : camera.lensDirection == CameraLensDirection.back,
     );
 
     _cameraController = CameraController(
@@ -68,65 +68,51 @@ String? ChannelId;
     });
   }
 
-
-
   Future<void> _startLiveStream() async {
-  String title = _titleController.text.trim();
+    String title = _titleController.text.trim();
 
-  if (title.isEmpty) {
-    // Show error if the title is empty
-    // Get.snackbar(
-    //   "error".tr,
-    //   "title_required".tr,
-    //   snackPosition: SnackPosition.BOTTOM,
-    //   backgroundColor: Colors.red,
-    //   colorText: Colors.white,
-    // );
-    // return;
-    title = 'Live Streaming'.toString();
+    if (title.isEmpty) {
+      // If title is empty, set a default title.
+      title = 'Live Streaming';
+    }
+
+    // Store live stream details in Firebase Firestore
+    try {
+      final liveStreamData = {
+        "title": title,
+        "adminName": widget.name,
+        "adminPhoto": widget.photo,
+        "adminUid": uid,
+        "isAdmin": isAdmin,
+        "channelId": ChannelId,
+        'viewsCount': 0,
+        'currentmusic': null,
+        'currentFilter': null,
+        'currentmusic_id': null,
+        'heartbeat': null,
+        "timestamp": FieldValue.serverTimestamp(),
+      };
+
+      await FirebaseFirestore.instance
+          .collection('livestreams')
+          .doc(ChannelId)
+          .set(liveStreamData);
+
+      // Navigate to LiveStreamingScreen
+      Get.to(() => LiveStreamingScreen(
+        channelId: ChannelId ?? '',
+        isAdmin: true,
+      ));
+    } catch (e) {
+      Get.snackbar(
+        "error".tr,
+        "live_stream_error".tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
-
-  // Generate a random 5-digit channel ID
-  final random = Random();
-
-  // Store live stream details in Firebase Firestore
-  try {
-    final liveStreamData = {
-      "title": title,
-      "adminName": widget.name,
-      "adminPhoto": widget.photo,
-      "adminUid" : uid,
-      "isAdmin": isAdmin,
-      "channelId": ChannelId,
-      'viewsCount' : 0,
-      'currentmusic' : null,
-      'currentFilter' : null,
-      'currentmusic_id' : null,
-      'heartbeat': null,
-      "timestamp": FieldValue.serverTimestamp(), // Add a timestamp
-    };
-
-    await FirebaseFirestore.instance
-        .collection('livestreams')
-        .doc(ChannelId) // Document name as the generated channel ID
-        .set(liveStreamData);
-
-    // Navigate to LiveStreamingScreen
-    Get.to(() => LiveStreamingScreen(
-
-channelId: ChannelId ?? '', isAdmin: true,
-        ));
-  } catch (e) {
-    // Handle errors
-    Get.snackbar(
-      "error".tr,
-      "live_stream_error".tr,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
-    );
-  }
-}
 
   @override
   void dispose() {
@@ -135,15 +121,20 @@ channelId: ChannelId ?? '', isAdmin: true,
     super.dispose();
   }
 
+  /// Wraps the camera preview with a RotatedBox to fix orientation.
   Widget _buildCameraPreview() {
     if (_cameraController?.value.isInitialized ?? false) {
-      return CameraPreview(_cameraController!);
+      return RotatedBox(
+        quarterTurns: 3, // Rotates the preview 270° clockwise to fix upside down
+        child: CameraPreview(_cameraController!),
+      );
     } else {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +167,7 @@ channelId: ChannelId ?? '', isAdmin: true,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: TextField(
-                        controller: _titleController, // Use the controller
+                        controller: _titleController,
                         style: const TextStyle(color: Colors.white),
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
@@ -195,7 +186,6 @@ channelId: ChannelId ?? '', isAdmin: true,
                 ],
               ),
             ),
-
             // Circular Camera Switch Button
             Positioned(
               bottom: 150,
@@ -206,14 +196,13 @@ channelId: ChannelId ?? '', isAdmin: true,
                 child: const Icon(Icons.cameraswitch, color: Colors.white),
               ),
             ),
-
             // Prominent Go Live Button
             Positioned(
               bottom: 40,
               left: 20,
               right: 20,
               child: ElevatedButton(
-                onPressed: _startLiveStream, // Call the _startLiveStream method
+                onPressed: _startLiveStream,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   padding: const EdgeInsets.symmetric(vertical: 15),
@@ -221,9 +210,9 @@ channelId: ChannelId ?? '', isAdmin: true,
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child:  Text(
+                child: Text(
                   'go_live'.tr,
-                  style: TextStyle(fontSize: 20, color: Colors.white),
+                  style: const TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ),
             ),

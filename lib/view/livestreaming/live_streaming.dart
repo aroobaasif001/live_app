@@ -456,38 +456,38 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                                 // Viewer Count and Action Buttons
                                 Row(
                                   children: [
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.4),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Image.asset(
-                                            'assets/icons/live.png',
-                                            width: 25,
-                                          ),
-                                          SizedBox(
-                                            width: 2,
-                                          ),
-                                          Text(
-                                            'Live'.tr,
-                                            style: TextStyle(
-                                              color: Colors.red,
-                                              fontSize: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.025,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
+                                    // Container(
+                                    //   padding: EdgeInsets.symmetric(
+                                    //       horizontal: 10, vertical: 2),
+                                    //   decoration: BoxDecoration(
+                                    //     color: Colors.black.withOpacity(0.4),
+                                    //     borderRadius: BorderRadius.circular(15),
+                                    //   ),
+                                    //   child: Row(
+                                    //     children: [
+                                    //       Image.asset(
+                                    //         'assets/icons/live.png',
+                                    //         width: 25,
+                                    //       ),
+                                    //       SizedBox(
+                                    //         width: 2,
+                                    //       ),
+                                    //       Text(
+                                    //         'Live'.tr,
+                                    //         style: TextStyle(
+                                    //           color: Colors.red,
+                                    //           fontSize: MediaQuery.of(context)
+                                    //                   .size
+                                    //                   .width *
+                                    //               0.025,
+                                    //         ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                    // SizedBox(
+                                    //   width: 5,
+                                    // ),
                                     Container(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 2),
@@ -504,70 +504,63 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                                         },
                                         child: Row(
                                           children: [
-                                            Icon(
-                                              Icons.remove_red_eye,
-                                              color: Colors.white,
-                                              size: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.06,
+                                           Image.asset('assets/icons/live_count.png'),
+                                            const SizedBox(width: 5),
+                                            StreamBuilder<DocumentSnapshot>(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection('livestreams')
+                                                  .doc(widget.channelId)
+                                                  .snapshots(),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return Text(
+                                                    "0",
+                                                    // Placeholder until data loads
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.035,
+                                                    ),
+                                                  );
+                                                }
+
+                                                if (snapshot.hasError) {
+                                                  return Text(
+                                                    "",
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.035,
+                                                    ),
+                                                  );
+                                                }
+
+                                                final data = snapshot.data?.data()
+                                                    as Map<String, dynamic>?;
+                                                final viewsCount =
+                                                    data?['viewsCount'] ?? 0;
+
+                                                return Text(
+                                                  viewsCount.toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.04,
+                                                      fontWeight: FontWeight.bold,
+                                                      fontFamily: 'Poppins'),
+                                                );
+                                              },
                                             ),
-                                            // const SizedBox(width: 5),
-                                            // StreamBuilder<DocumentSnapshot>(
-                                            //   stream: FirebaseFirestore.instance
-                                            //       .collection('livestreams')
-                                            //       .doc(widget.channelId)
-                                            //       .snapshots(),
-                                            //   builder: (context, snapshot) {
-                                            //     if (snapshot.connectionState ==
-                                            //         ConnectionState.waiting) {
-                                            //       return Text(
-                                            //         "0",
-                                            //         // Placeholder until data loads
-                                            //         style: TextStyle(
-                                            //           color: Colors.white,
-                                            //           fontSize:
-                                            //               MediaQuery.of(context)
-                                            //                       .size
-                                            //                       .width *
-                                            //                   0.035,
-                                            //         ),
-                                            //       );
-                                            //     }
-                                            //
-                                            //     if (snapshot.hasError) {
-                                            //       return Text(
-                                            //         "",
-                                            //         style: TextStyle(
-                                            //           color: Colors.red,
-                                            //           fontSize:
-                                            //               MediaQuery.of(context)
-                                            //                       .size
-                                            //                       .width *
-                                            //                   0.035,
-                                            //         ),
-                                            //       );
-                                            //     }
-                                            //
-                                            //     final data = snapshot.data?.data()
-                                            //         as Map<String, dynamic>?;
-                                            //     final viewsCount =
-                                            //         data?['viewsCount'] ?? 0;
-                                            //
-                                            //     return Text(
-                                            //       viewsCount.toString(),
-                                            //       style: TextStyle(
-                                            //           color: Colors.white,
-                                            //           fontSize:
-                                            //               MediaQuery.of(context)
-                                            //                       .size
-                                            //                       .width *
-                                            //                   0.04,
-                                            //           fontWeight: FontWeight.bold,
-                                            //           fontFamily: 'Poppins'),
-                                            //     );
-                                            //   },
-                                            // ),
                                           ],
                                         ),
                                       ),
@@ -718,14 +711,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                           child: Column(
                             children: [
                               Image.asset('assets/icons/live_heart.png',
-                                  height: 40.r),
-                              Text(
-                                'Like',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                    fontSize: 13.r),
-                              )
+                                  height: 50.r),
+
                             ],
                           ),
                         ),
