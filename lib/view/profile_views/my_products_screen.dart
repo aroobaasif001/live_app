@@ -19,6 +19,9 @@ class MyProductsScreen extends StatefulWidget {
 }
 
 class _MyProductsScreenState extends State<MyProductsScreen> {
+  final TextEditingController _searchController = TextEditingController();
+String _searchQuery = "";
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -84,21 +87,53 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
               const SizedBox(height: 12),
 
               // Search Bar
-              Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "search".tr,
-                    prefixIcon: Icon(Icons.search, color: Colors.grey),
-                  ),
-                ),
-              ),
+              // Container(
+              //   height: 40,
+              //   decoration: BoxDecoration(
+              //     color: Colors.grey[200],
+              //     borderRadius: BorderRadius.circular(12),
+              //   ),
+              //   padding: const EdgeInsets.symmetric(horizontal: 12),
+              //   child: TextField(
+              //     decoration: InputDecoration(
+              //       border: InputBorder.none,
+              //       hintText: "search".tr,
+              //       prefixIcon: Icon(Icons.search, color: Colors.grey),
+              //     ),
+              //   ),
+              // ),
+Container(
+  height: 40,
+  decoration: BoxDecoration(
+    color: Colors.grey[200],
+    borderRadius: BorderRadius.circular(12),
+  ),
+  padding: const EdgeInsets.symmetric(horizontal: 12),
+  child: TextField(
+    controller: _searchController,
+    onChanged: (value) {
+      setState(() {
+        _searchQuery = value.toLowerCase();
+      });
+    },
+    decoration: InputDecoration(
+      border: InputBorder.none,
+      hintText: "search".tr,
+      prefixIcon: const Icon(Icons.search, color: Colors.grey),
+      suffixIcon: _searchQuery.isNotEmpty
+          ? IconButton(
+              icon: const Icon(Icons.clear, color: Colors.grey),
+              onPressed: () {
+                setState(() {
+                  _searchController.clear();
+                  _searchQuery = "";
+                });
+              },
+            )
+          : null,
+    ),
+  ),
+),
 
               const SizedBox(height: 12),
 
@@ -129,7 +164,48 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     );
   }
 
-  Widget buildProductList(String filter) {
+  // Widget buildProductList(String filter) {
+  //   return StreamBuilder<QuerySnapshot>(
+  //     stream: FirebaseFirestore.instance.collection('products').snapshots(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return const Center(child: CircularProgressIndicator());
+  //       }
+
+  //       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+  //         return Center(child: Text("no_products".tr));
+  //       }
+
+  //       // Convert each doc into a ProductEntity
+  //       List<ProductEntity> products = snapshot.data!.docs
+  //           .map((doc) =>
+  //               ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+  //           .toList();
+
+  //       // Filter logic
+  //       if (filter == "Fix") {
+  //         products = products.where((p) => p.saleType == "Buy Now").toList();
+  //       } else if (filter == "Auction") {
+  //         products = products.where((p) => p.saleType == "Auction").toList();
+  //       } else if (filter == "Active") {
+  //         products = products
+  //             .where((p) => (p.isActive ?? false) && !(p.isSold ?? false))
+  //             .toList();
+  //       } else if (filter == "Sold") {
+  //         products = products.where((p) => p.isSold ?? false).toList();
+  //       }
+
+  //       return ListView.builder(
+  //         itemCount: products.length,
+  //         itemBuilder: (context, index) {
+  //           return buildProductItem(products[index]);
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
+
+ Widget buildProductList(String filter) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('products').snapshots(),
       builder: (context, snapshot) {
@@ -158,6 +234,20 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
               .toList();
         } else if (filter == "Sold") {
           products = products.where((p) => p.isSold ?? false).toList();
+        }
+
+        // Search logic
+        if (_searchQuery.isNotEmpty) {
+          products = products
+              .where((p) =>
+                  (p.title?.toLowerCase().contains(_searchQuery) ?? false) ||
+                  (p.description?.toLowerCase().contains(_searchQuery) ??
+                      false))
+              .toList();
+        }
+
+        if (products.isEmpty) {
+          return Center(child: Text("no_products_found".tr));
         }
 
         return ListView.builder(

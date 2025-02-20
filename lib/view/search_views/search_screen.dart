@@ -712,7 +712,7 @@ Widget _buildStreamGrid(BuildContext context) {
     },
   );
 }
-}
+
 
 // Widget _buildStreamGrid(BuildContext context) {
 //   return FutureBuilder<QuerySnapshot>(
