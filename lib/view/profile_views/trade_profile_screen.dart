@@ -5,8 +5,10 @@ import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
+import 'package:live_app/view/profile_views/create_streem_screen.dart';
 import 'package:live_app/view/profile_views/edit_trade_profile.dart';
 import 'package:live_app/view/profile_views/item_for_auction.dart';
+import 'package:live_app/view/profile_views/wallet_screen.dart';
 import '../../custom_widgets/custom_review.dart';
 import '../../custom_widgets/custom_text.dart';
 import '../../entities/registration_entity.dart';
@@ -248,14 +250,18 @@ Future<void> _fetchUserProfile() async {
                               Get.to(() => MyProductsScreen());
                             }),
                             const SizedBox(width: 10),
-                            actionBox(Icons.stream, 'streams'.tr, () {}),
+                            actionBox(Icons.stream, 'streams'.tr, () {
+                              Get.to(() => CreateStreamScreen());
+                            }),
                           ],
                         ),
                         const SizedBox(height: 10),
                         Row(
                           children: [
                             actionBox(
-                                Icons.account_balance_wallet, 'wallet'.tr, () {}),
+                                Icons.account_balance_wallet, 'wallet'.tr, () {
+                              Get.to(() => WalletScreen());
+                            }),
                             const SizedBox(width: 10),
                             actionBox(Icons.list_alt, 'orders'.tr, () {
                               Get.to(()=>ItemAuctionScreen());

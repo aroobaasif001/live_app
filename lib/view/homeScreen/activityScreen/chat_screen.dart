@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:live_app/utils/colors.dart';
 import '../../../custom_widgets/custom_text.dart';
 import '../../../entities/message_model.dart';
 import '../../../entities/registration_entity.dart';
@@ -31,7 +32,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _pickImageFromGallery() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
@@ -41,7 +43,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _pickImageFromCamera() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
@@ -73,8 +76,10 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> _sendImageMessage() async {
     if (_selectedImage == null) return;
 
-    String fileName = "${currentUser!.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
-    Reference storageRef = FirebaseStorage.instance.ref().child("chat_images/$fileName");
+    String fileName =
+        "${currentUser!.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
+    Reference storageRef =
+        FirebaseStorage.instance.ref().child("chat_images/$fileName");
 
     UploadTask uploadTask = storageRef.putFile(_selectedImage!);
     TaskSnapshot taskSnapshot = await uploadTask;
@@ -110,17 +115,20 @@ class _ChatScreenState extends State<ChatScreen> {
               backgroundImage: AssetImage(applegImage),
             ),
             SizedBox(width: 10),
-            CustomText(text: widget.receiver.firstName ?? "", color: Colors.black),
+            CustomText(
+                text: widget.receiver.firstName ?? "", color: Colors.black),
           ],
         ),
         actions: [
-          IconButton(icon: Icon(Icons.more_horiz, color: Colors.black), onPressed: () {}),
+          IconButton(
+              icon: Icon(Icons.more_horiz, color: Colors.black),
+              onPressed: () {}),
         ],
       ),
       body: Column(
         children: [
-          Expanded(child: _buildMessagesList()), 
-          _buildMessageInput(), 
+          Expanded(child: _buildMessagesList()),
+          _buildMessageInput(),
         ],
       ),
     );
@@ -130,7 +138,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('messages')
-          .where('participants', arrayContains: currentUser!.uid) 
+          .where('participants', arrayContains: currentUser!.uid)
           //.orderBy('timestamp', descending: false)
           .snapshots(),
       builder: (context, snapshot) {
@@ -143,9 +151,13 @@ class _ChatScreenState extends State<ChatScreen> {
         }
 
         List<MessageModel> messages = snapshot.data!.docs
-            .map((doc) => MessageModel.fromJson(doc.data() as Map<String, dynamic>))
-            .where((msg) => (msg.senderId == currentUser!.uid && msg.receiverId == widget.receiver.regId) ||
-                            (msg.senderId == widget.receiver.regId && msg.receiverId == currentUser!.uid))
+            .map((doc) =>
+                MessageModel.fromJson(doc.data() as Map<String, dynamic>))
+            .where((msg) =>
+                (msg.senderId == currentUser!.uid &&
+                    msg.receiverId == widget.receiver.regId) ||
+                (msg.senderId == widget.receiver.regId &&
+                    msg.receiverId == currentUser!.uid))
             .toList();
 
         return ListView.builder(
@@ -159,57 +171,66 @@ class _ChatScreenState extends State<ChatScreen> {
       },
     );
   }
-Widget buildMessageItem(MessageModel message) {
-  bool isMe = message.senderId == currentUser!.uid;
 
-  return Padding(
-    padding: EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-      children: [
-        if (!isMe) 
-          CircleAvatar( 
-            backgroundImage: widget.receiver.image != null && widget.receiver.image!.isNotEmpty
-                ? NetworkImage(widget.receiver.image!)
-                : AssetImage(applegImage) as ImageProvider,
-            radius: 18,
-          ),
-        SizedBox(width: 8), 
+  Widget buildMessageItem(MessageModel message) {
+    bool isMe = message.senderId == currentUser!.uid;
 
-        Flexible(
-          child: Column(
-            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: isMe ? Colors.purple : Colors.grey[200],
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                    bottomLeft: isMe ? Radius.circular(12) : Radius.zero,
-                    bottomRight: isMe ? Radius.zero : Radius.circular(12),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment:
+            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          if (!isMe)
+            CircleAvatar(
+              backgroundImage: widget.receiver.image != null &&
+                      widget.receiver.image!.isNotEmpty
+                  ? NetworkImage(widget.receiver.image!)
+                  : AssetImage(applegImage) as ImageProvider,
+              radius: 18,
+            ),
+          SizedBox(width: 8),
+          Flexible(
+            child: Column(
+              crossAxisAlignment:
+                  isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: isMe ? Colors.purple : Colors.grey[200],
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                      bottomLeft: isMe ? Radius.circular(12) : Radius.zero,
+                      bottomRight: isMe ? Radius.zero : Radius.circular(12),
+                    ),
                   ),
+                  child: message.imageUrl != null
+                      ? Image.network(message.imageUrl!,
+                          width: 200, height: 200, fit: BoxFit.cover)
+                      : Text(
+                          message.text,
+                          style: TextStyle(
+                              color: isMe ? Colors.white : Colors.black),
+                        ),
                 ),
-                child: message.imageUrl != null
-                    ? Image.network(message.imageUrl!, width: 200, height: 200, fit: BoxFit.cover)
-                    : Text(
-                        message.text,
-                        style: TextStyle(color: isMe ? Colors.white : Colors.black),
-                      ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                message.timestamp.toDate().toLocal().toString().substring(0, 16), // Format timestamp
-                style: TextStyle(color: Colors.grey, fontSize: 10),
-              ),
-            ],
+                SizedBox(height: 4),
+                Text(
+                  message.timestamp
+                      .toDate()
+                      .toLocal()
+                      .toString()
+                      .substring(0, 16), // Format timestamp
+                  style: TextStyle(color: Colors.grey, fontSize: 10),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
   // Widget buildMessageItem(MessageModel message) {
   //   bool isMe = message.senderId == currentUser!.uid;
@@ -233,7 +254,7 @@ Widget buildMessageItem(MessageModel message) {
   //             borderRadius: BorderRadius.circular(12),
   //           ),
   //           child: message.imageUrl != null
-  //               ? Image.network(message.imageUrl!, width: 200) 
+  //               ? Image.network(message.imageUrl!, width: 200)
   //               : Text(
   //                   message.text,
   //                   style: TextStyle(color: isMe ? Colors.white : Colors.black),
@@ -249,7 +270,8 @@ Widget buildMessageItem(MessageModel message) {
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16), topRight: Radius.circular(16)),
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
       child: Row(
@@ -261,7 +283,8 @@ Widget buildMessageItem(MessageModel message) {
           SizedBox(width: 8),
           GestureDetector(
             onTap: _pickImageFromCamera,
-            child: Icon(Icons.camera_alt_outlined, size: 30, color: Colors.black),
+            child:
+                Icon(Icons.camera_alt_outlined, size: 30, color: Colors.black),
           ),
           SizedBox(width: 8),
           Expanded(
@@ -275,9 +298,15 @@ Widget buildMessageItem(MessageModel message) {
           ),
           GestureDetector(
             onTap: _sendMessage,
-            child: CircleAvatar(
-              backgroundColor: Colors.purple,
-              child: Icon(Icons.arrow_upward, color: Colors.white),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: primaryGradientColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.arrow_upward, color: Colors.white),
+              ),
             ),
           ),
         ],
@@ -285,5 +314,3 @@ Widget buildMessageItem(MessageModel message) {
     );
   }
 }
-
-

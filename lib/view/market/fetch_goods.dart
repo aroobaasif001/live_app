@@ -120,7 +120,7 @@ class _GetAllGoodsState extends State<GetAllGoods> {
 
                           SizedBox(height: 25),
                           CustomGradientButton(
-                            text: 'Add to Card',
+                            text: 'Add to Cart',
                             onPressed: () {
                               Get.to(() => ProductDetailScreen(
                                 productDescription:productResponse.description,
