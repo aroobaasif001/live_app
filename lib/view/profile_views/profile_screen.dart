@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       {
         "icon": Icons.notifications,
         "title": "notifications".tr,
-        "screen": NotificationScreen()
+        "screen": NotificationSettingsScreen()
       },
       {
         "icon": Icons.email,
@@ -302,18 +302,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             width: 20,
                           ),
                           Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Color(0xffFFFFFF),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 12),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => MyRewardsScreen());
-                                  },
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.to(() => RewardsScreen());
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xffFFFFFF),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 12),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -327,16 +327,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         height: 10,
                                       ),
                                       FittedBox(
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            Get.to(() => RewardsScreen());
-                                          },
-                                          child: CustomText(
-                                            text: "my_award".tr,
-                                            fontFamily: "SF Pro Rounded",
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                        child: CustomText(
+                                          text: "my_award".tr,
+                                          fontFamily: "SF Pro Rounded",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                       CustomText(
