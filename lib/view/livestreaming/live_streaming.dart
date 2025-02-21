@@ -156,12 +156,16 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
 
   void checkUserDetails() async {
     // Assuming you're fetching from a 'users' collection, with a document that has the user's info
-    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('UserEntity').doc(FirebaseAuth.instance.currentUser!.uid).get();
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('UserEntity')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
 
     if (userSnapshot.exists) {
       var userData = userSnapshot.data() as Map<String, dynamic>;
-       name = userData['firstName'] ?? 'No name found';
-      photo = userData['image'] ??   'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D';
+      name = userData['firstName'] ?? 'No name found';
+      photo = userData['image'] ??
+          'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D';
 
       print("Name: $name, Photo: $photo");
     } else {
@@ -178,8 +182,13 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkUserDetails();
+      monitorDocument();
+      _controller.initializeAgora(widget.channelId, uid, widget.isAdmin, adminUid ?? 0);
+      initializeFirestore(widget.channelId);
+    });
     super.initState();
-    checkUserDetails();
     WakelockPlus.enable();
     ever(_controller.comments, (_) {
       // Scroll to the bottom when a new comment is added
@@ -192,13 +201,10 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
     if (widget.isAdmin) {
       //startHeartbeat();
     }
-    monitorDocument();
 
     // TODO: implement initState
     // checkUserDetails();
-    _controller.initializeAgora(
-        widget.channelId, uid, widget.isAdmin, adminUid ?? 0);
-    initializeFirestore(widget.channelId);
+
     FirebaseFirestore.instance
         .collection('livestreams')
         .doc(widget.channelId)
@@ -273,12 +279,12 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
     return WillPopScope(
       onWillPop: () async {
         bool exitConfirmed =
-            await _showExitConfirmationDialog(context, widget.isAdmin);
+        await _showExitConfirmationDialog(context, widget.isAdmin);
         if (exitConfirmed) {
           await _controller.leaveStream();
           _controller.deleteLiveStream(widget.channelId);
           Get.offAll(
-              () => BottomNavigationBarWidget()); // Redirect to Home Page
+                  () => BottomNavigationBarWidget()); // Redirect to Home Page
         }
         return false;
       },
@@ -290,315 +296,427 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
               Positioned.fill(
                 child: _controller.isJoined.value
                     ? Stack(
-                        children: [
-                          // Center(child: Text(adminUid.toString())),
+                  children: [
+                    // Center(child: Text(adminUid.toString())),
 
-                          (widget.isAdmin)
-                              ? AgoraVideoView(
-            controller: VideoViewController(
-              rtcEngine: _controller.agoraEngine!,
-              canvas: const VideoCanvas(uid: 0),
-            ),
-          )
-                              :AgoraVideoView(
-                            controller: VideoViewController.remote(
-                              rtcEngine: _controller.agoraEngine!,
-                              canvas: VideoCanvas(
-                                  uid:
-                                  adminUid), // Replace with remote user UID
-                              connection: RtcConnection(
-                                  channelId: widget.channelId),
-                            ),
-                          )
-                        ],
-                      )
+                    (widget.isAdmin)
+                        ? AgoraVideoView(
+                      controller: VideoViewController(
+                        rtcEngine: _controller.agoraEngine!,
+                        canvas: const VideoCanvas(uid: 0),
+                      ),
+                    )
+                        : AgoraVideoView(
+                      controller: VideoViewController.remote(
+                        rtcEngine: _controller.agoraEngine!,
+                        canvas: VideoCanvas(
+                            uid:
+                            adminUid), // Replace with remote user UID
+                        connection: RtcConnection(
+                            channelId: widget.channelId),
+                      ),
+                    )
+                  ],
+                )
                     : const Center(),
               ),
 
               // Top Streamer Info
               if (widget.isAdmin || cohostUid == uid)
-                Positioned(
-                    bottom: MediaQuery.of(context).size.height * 0.55,
+              // Positioned(
+              //     bottom: MediaQuery.of(context).size.height * 0.55,
+              //
+              //     // Adjust top position based on screen height
+              //     // Adjust left margin
+              //     right: MediaQuery.of(context).size.width * 0.015,
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         GestureDetector(
+              //             onTap: () {
+              //               _controller.toggleMute();
+              //             },
+              //             child: Image.asset(
+              //               _controller.isMuted.value
+              //                   ? 'assets/icons/live_micoff.png'
+              //                   : 'assets/icons/live_micon.png',
+              //               height: 35.r,
+              //             )),
+              //         SizedBox(
+              //           height: _controller.isCameraOn.value ? 20 : 10,
+              //         ),
+              //         GestureDetector(
+              //             onTap: () {
+              //               _controller.toggleCamera();
+              //             },
+              //             child: Image.asset(
+              //               _controller.isCameraOn.value
+              //                   ? 'assets/icons/live_cameraon.png'
+              //                   : 'assets/icons/live_cameraoff.png',
+              //               height:
+              //                   _controller.isCameraOn.value ? 22.r : 35.r,
+              //             )),
+              //         SizedBox(
+              //           height: 15,
+              //         ),
+              //         GestureDetector(
+              //             onTap: () {
+              //               showUserProductsBottomSheet(
+              //                   context, widget.channelId);
+              //             },
+              //             child: Icon(
+              //               Icons.shop,
+              //               color: Colors.white,
+              //             )),
+              //         SizedBox(
+              //           height: 2,
+              //         ),
+              //         GestureDetector(
+              //             onTap: () {
+              //               _controller.switchCamera();
+              //             },
+              //             child: Image.asset(
+              //               'assets/icons/live_rotate.png',
+              //               height: 50.r,
+              //             )),
+              //         SizedBox(
+              //           height: 5,
+              //         ),
+              //       ],
+              //     )),
 
-                    // Adjust top position based on screen height
-                    // Adjust left margin
-                    right: MediaQuery.of(context).size.width * 0.015,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              _controller.toggleMute();
-                            },
-                            child: Image.asset(
-                              _controller.isMuted.value
-                                  ? 'assets/icons/live_micoff.png'
-                                  : 'assets/icons/live_micon.png',
-                              height: 35.r,
-                            )),
-                        SizedBox(
-                          height: _controller.isCameraOn.value ? 20 : 10,
+                Positioned(
+                  right: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.015,
+                  bottom: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.25,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // More
+                      GestureDetector(
+                        onTap: () {
+                          // Handle 'More' tap
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/icons/ic_more.png', // Dummy icon
+                              width: 40,
+                              height: 40,
+                            ),
+                            const SizedBox(height: 5),
+                            const Text(
+                              'More',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          ],
                         ),
-                        GestureDetector(
-                            onTap: () {
-                              _controller.toggleCamera();
-                            },
-                            child: Image.asset(
-                              _controller.isCameraOn.value
-                                  ? 'assets/icons/live_cameraon.png'
-                                  : 'assets/icons/live_cameraoff.png',
-                              height:
-                                  _controller.isCameraOn.value ? 22.r : 35.r,
-                            )),
-                        SizedBox(
-                          height: 15,
+                      ),
+                      const SizedBox(height: 20),
+
+                      GestureDetector(
+                        onTap: () {
+                          // WidgetsBinding.instance.addPostFrameCallback((_) {
+                          showUserProductsBottomSheet(context, widget.channelId);
+
+
+                          // });
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/icons/ic_shop.png',
+                              width: 40,
+                              height: 40,
+                            ),
+                            const SizedBox(height: 5),
+                            const Text(
+                              'Shop',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 12),
+                            ),
+                          ],
                         ),
-                        GestureDetector(
-                            onTap: () {
-                              showUserProductsBottomSheet(
-                                  context, widget.channelId);
-                            },
-                            child: Icon(
-                              Icons.shop,
-                              color: Colors.white,
-                            )),
-                        SizedBox(
-                          height: 2,
+                      ),
+                      const SizedBox(height: 20),
+                      // Boost
+                      GestureDetector(
+                        onTap: () {
+                          // Handle 'Boost' tap
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/icons/ic_boost.png', // Dummy icon
+                              width: 40,
+                              height: 40,
+                            ),
+                            const SizedBox(height: 5),
+                            const Text(
+                              'Boost',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          ],
                         ),
-                        GestureDetector(
-                            onTap: () {
-                              _controller.switchCamera();
-                            },
-                            child: Image.asset(
-                              'assets/icons/live_rotate.png',
-                              height: 50.r,
-                            )),
-                        SizedBox(
-                          height: 5,
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Clip
+                      GestureDetector(
+                        onTap: () {
+                          // Handle 'Clip' tap
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/icons/ic_clip.png', // Dummy icon
+                              width: 40,
+                              height: 40,
+                            ),
+                            const SizedBox(height: 5),
+                            const Text(
+                              'Clip',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          ],
                         ),
-                      ],
-                    )),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Share
+                      GestureDetector(
+                        onTap: () {
+                          // Handle 'Share' tap
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/icons/ic_share.png', // Dummy icon
+                              width: 40,
+                              height: 40,
+                            ),
+                            const SizedBox(height: 5),
+                            const Text(
+                              'Share',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
+
+
+
+                      const SizedBox(height: 20),
+
+                      // Shop
+
+
+
+                      // Wallet
+                      GestureDetector(
+                        onTap: () {
+                          // Handle 'Wallet' tap
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/icons/ic_wallet.png', // Dummy icon
+                              width: 40,
+                              height: 40,
+                            ),
+                            const SizedBox(height: 5),
+                            const Text(
+                              'Wallet',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ),
+
               Positioned(
-                top: MediaQuery.of(context).size.height *
-                    0.02, // Adjust top position based on screen height
-                left: MediaQuery.of(context).size.width *
-                    0.02, // Adjust left margin
-                right: MediaQuery.of(context).size.width *
-                    0.02, // Adjust right margin
-                child: Column(
+                top: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.02,
+                left: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.02,
+                right: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.02,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     FutureBuilder<Map<String, String>>(
                       future: fetchAdminDetails(widget.channelId),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center();
-                        } else if (snapshot.hasError) {
-                          return const Text(
-                            'Error loading admin details',
-                            style: TextStyle(color: Colors.red),
-                          );
-                        } else if (snapshot.hasData) {
-                          final adminName = snapshot.data!['adminName']!;
-                          final adminPhoto = snapshot.data!['adminPhoto']!;
-                    
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 4, vertical: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // Admin Info
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.4),
-                                    borderRadius: BorderRadius.circular(25),
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const SizedBox.shrink();
+                        } else if (snapshot.hasError || !snapshot.hasData) {
+                          return const Text('Error loading admin details',
+                              style: TextStyle(color: Colors.red));
+                        }
+
+                        final adminName = snapshot.data!['adminName']!;
+                        final adminPhoto = snapshot.data!['adminPhoto']!;
+
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            // color: Colors.black.withOpacity(0.6),
+                            //   borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(adminPhoto),
+                                radius: 22,
+                              ),
+                              const SizedBox(width: 6),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    adminName,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 4, vertical: 4),
-                                  child: Row(
+                                  Row(
                                     children: [
-                                      CircleAvatar(
-                                        backgroundImage: NetworkImage(adminPhoto),
-                                        radius: MediaQuery.of(context).size.width *
-                                            0.04, // Adjust size
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              SizedBox(
-                                                width: Get.width * 0.25,
-                                                child: Text(
-                                                  adminName,
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.03,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                              ),
+                                      const Icon(Icons.star,
+                                          color: Colors.white, size: 18),
+                                      const SizedBox(width: 4),
+                                      const Text("4.7",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18)),
+                                      const SizedBox(width: 6),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          // Replace 'color' with a gradient
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              Color(
+                                                  0xFF3A8EF2),
+                                              // Starting color (blueish)
+                                              Color(
+                                                  0xFFD53F8C),
+                                              // Ending color (pink/purpleish)
                                             ],
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight,
                                           ),
-                                        ],
-                                      ),
+                                          borderRadius:
+                                          BorderRadius.circular(15),
+                                        ),
+                                        child: const Text(
+                                          "Subscribe",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
-                                ),
-                    
-                                // Viewer Count and Action Buttons
-                                Row(
-                                  children: [
-                                    // Container(
-                                    //   padding: EdgeInsets.symmetric(
-                                    //       horizontal: 10, vertical: 2),
-                                    //   decoration: BoxDecoration(
-                                    //     color: Colors.black.withOpacity(0.4),
-                                    //     borderRadius: BorderRadius.circular(15),
-                                    //   ),
-                                    //   child: Row(
-                                    //     children: [
-                                    //       Image.asset(
-                                    //         'assets/icons/live.png',
-                                    //         width: 25,
-                                    //       ),
-                                    //       SizedBox(
-                                    //         width: 2,
-                                    //       ),
-                                    //       Text(
-                                    //         'Live'.tr,
-                                    //         style: TextStyle(
-                                    //           color: Colors.red,
-                                    //           fontSize: MediaQuery.of(context)
-                                    //                   .size
-                                    //                   .width *
-                                    //               0.025,
-                                    //         ),
-                                    //       ),
-                                    //     ],
-                                    //   ),
-                                    // ),
-                                    // SizedBox(
-                                    //   width: 5,
-                                    // ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.4),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          // widget.isAdmin
-                                          //     ? showCohostsAndViewersBottomSheet(
-                                          //         context, widget.channelId)
-                                          //     : SizedBox();
-                                        },
-                                        child: Row(
-                                          children: [
-                                           Image.asset('assets/icons/live_count.png'),
-                                            const SizedBox(width: 5),
-                                            StreamBuilder<DocumentSnapshot>(
-                                              stream: FirebaseFirestore.instance
-                                                  .collection('livestreams')
-                                                  .doc(widget.channelId)
-                                                  .snapshots(),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return Text(
-                                                    "0",
-                                                    // Placeholder until data loads
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.035,
-                                                    ),
-                                                  );
-                                                }
-
-                                                if (snapshot.hasError) {
-                                                  return Text(
-                                                    "",
-                                                    style: TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.035,
-                                                    ),
-                                                  );
-                                                }
-
-                                                final data = snapshot.data?.data()
-                                                    as Map<String, dynamic>?;
-                                                final viewsCount =
-                                                    data?['viewsCount'] ?? 0;
-
-                                                return Text(
-                                                  viewsCount.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.04,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontFamily: 'Poppins'),
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                    
-                                    const SizedBox(width: 5),
-                                    // Close Button
-                                    Column(
-                                      children: [
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.close,
-                                            color: Colors.white,
-                                            size:
-                                                MediaQuery.of(context).size.width *
-                                                    0.08,
-                                          ),
-                                          onPressed: () async {
-                                            await _showExitConfirmationDialog(
-                                                context, widget.isAdmin);
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          return Text(
-                            'no_data_available'.tr,
-                            style: TextStyle(color: Colors.white),
-                          );
-                        }
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
                       },
                     ),
-                    HighestBidDisplay(channelId: widget.channelId)
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 3, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'assets/icons/live_count.png',
+                                width: 30,
+                              ),
+                              const SizedBox(width: 2),
+                              StreamBuilder<DocumentSnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('livestreams')
+                                    .doc(widget.channelId)
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Text("0",
+                                        style: TextStyle(color: Colors.white));
+                                  }
+
+                                  final data = snapshot.data?.data()
+                                  as Map<String, dynamic>?;
+                                  final viewsCount = data?['viewsCount'] ?? 0;
+
+                                  return Text(
+                                    viewsCount.toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: () async {
+                            await _showExitConfirmationDialog(
+                                context, widget.isAdmin);
+                          },
+                          child: CircleAvatar(
+                              backgroundColor: Colors.black.withOpacity(0.7),
+                              radius: 18,
+                              child: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.white,
+                                weight: 5,
+                                size: 35,
+                              )),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -606,70 +724,76 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
               //commentmessage
 
               Positioned(
-                bottom: 120,
+                bottom: Get.height * .30,
                 left: 10,
                 right: 10,
                 child: Obx(() {
                   return Container(
                     height: 220,
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.only(right: 100),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: _controller.comments.isNotEmpty
                         ? ListView.builder(
-                            controller:
-                                _scrollController, // Attach the scroll controller
-                            itemCount: _controller.comments.length,
-                            itemBuilder: (context, index) {
-                              final comment = _controller.comments[index];
-                              return Container(
-                                decoration: BoxDecoration(
-                                  color: (comment['message'].contains('Set Bid') ? Colors.purple : Colors.transparent)
+                      controller:
+                      _scrollController, // Attach the scroll controller
+                      itemCount: _controller.comments.length,
+                      itemBuilder: (context, index) {
+                        final comment = _controller.comments[index];
+                        return Container(
+                          decoration: BoxDecoration(
+                              color:
+                              (comment['message'].contains('Set Bid')
+                                  ? Colors.purple
+                                  : Colors.transparent)),
+                          child: Padding(
+                            padding:
+                            const EdgeInsets.symmetric(vertical: 8),
+                            child: Row(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.center,
+                              children: [
+                                // Profile Picture
+                                CircleAvatar(
+                                  backgroundImage:
+                                  NetworkImage(comment['photo']),
+                                  radius: 22,
                                 ),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      // Profile Picture
-                                      CircleAvatar(
-                                        backgroundImage:
-                                            NetworkImage(comment['photo']),
-                                        radius: 22,
+                                const SizedBox(width: 10),
+                                // Comment Bubble
+                                Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      comment['user'],
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
                                       ),
-                                      const SizedBox(width: 10),
-                                      // Comment Bubble
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            comment['user'],
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            comment['message'],
-                                            style: TextStyle(
-                                              fontSize: 18.r,
-                                              fontWeight: (comment['message'].contains('Set Bid') ? FontWeight.bold : FontWeight.normal),
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      comment['message'],
+                                      style: TextStyle(
+                                        fontSize: 18.r,
+                                        fontWeight: (comment['message']
+                                            .contains('Set Bid')
+                                            ? FontWeight.bold
+                                            : FontWeight.normal),
+                                        color: Colors.white,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              );
-                            },
-                          )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    )
                         : const Center(),
                   );
                 }),
@@ -693,57 +817,32 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
 
               // Bottom Controls
               Positioned(
-                bottom: 20,
-                left: 20,
-                right: 20,
+                bottom: Get.height * .22,
+                left: 5,
                 child: Column(
                   children: [
                     // Chat Input Row
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Chat Input Field
-                        InkWell(
-                          onTap: () {
-                            _controller.addFloatingHeart(widget.channelId);
-                          },
-                          borderRadius: BorderRadius.circular(50),
-                          child: Column(
-                            children: [
-                              Image.asset('assets/icons/live_heart.png',
-                                  height: 50.r),
-
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: ChatInputField(
-                            chatController: _controller.chatController,
-                            focusNode: _focusNode,
-                            onSend: (message) {
-                              _controller.sendMessage(
-                                  name, photo, widget.channelId);
-                            },
-                          ),
-                        ),
-
-
-
-                        const SizedBox(width: 8),
-                      ],
+                    ChatInputField(
+                      chatController: _controller.chatController,
+                      focusNode: _focusNode,
+                      onSend: (message) {
+                        _controller.sendMessage(name, photo, widget.channelId);
+                      },
                     ),
+
+
                   ],
                 ),
               ),
               Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: EdgeInsets.only(left: Get.width * .5 , bottom: Get.height * .1),
-                  child: CurrentProductContainer(channelId: widget.channelId, name: name, photo: photo,),
+                alignment: Alignment.bottomLeft,
+                child: CurrentProductContainer(
+                  channelId: widget.channelId,
+                  name: name,
+                  photo: photo,
                 ),
               )
+
             ],
           );
         }),
@@ -751,101 +850,91 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
     );
   }
 
-  Future<bool> _showExitConfirmationDialog(
-      BuildContext context, bool isAdmin) async {
+  Future<bool> _showExitConfirmationDialog(BuildContext context,
+      bool isAdmin) async {
     return await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(10), // Adjusted border radius
-              ),
-              backgroundColor:
-                  HexColor('#2C2D2A'), // Set background to match the image
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 40,
-                    left: 20,
-                    right: 20,
-                    bottom: 40), // Add padding around content
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Do you want to end Live video?', // Static text as shown in image
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white, // White text color
-                        fontSize: 18, // Adjusted font size
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Colors.blue, // Button color to match the image
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(15), // Match button style
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 60, vertical: 10), // Adjust padding
-                      ),
-                      onPressed: () async {
-                        heartbeatTimer
-                            ?.cancel(); // Cancel the timer when the widget is disposed
-                        await _controller.leaveStream();
-                        if (isAdmin) {
-                          _controller.deleteLiveStream(widget.channelId);
-                        } else {
-                          _controller.leaveStreamUser(
-                              widget.channelId, uid.toString());
-                        }
-                      },
-                      child: Text(
-                        'Yes', // Button text
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18, // Adjust font size
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                      child: Text(
-                        'No', // Button text
-                        style: TextStyle(
-                          color: Colors.white, // Match text color
-                          fontSize: 18, // Adjust font size
-                        ),
-                      ),
-                    ),
-                  ],
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius:
+            BorderRadius.circular(10), // Adjusted border radius
+          ),
+          backgroundColor:
+          HexColor('#2C2D2A'), // Set background to match the image
+          child: Padding(
+            padding: const EdgeInsets.only(
+                top: 40,
+                left: 20,
+                right: 20,
+                bottom: 40), // Add padding around content
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Do you want to end Live video?',
+                  // Static text as shown in image
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white, // White text color
+                    fontSize: 18, // Adjusted font size
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            );
-          },
-        ) ??
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                    Colors.blue, // Button color to match the image
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.circular(15), // Match button style
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 60, vertical: 10), // Adjust padding
+                  ),
+                  onPressed: () async {
+                    heartbeatTimer
+                        ?.cancel(); // Cancel the timer when the widget is disposed
+                    await _controller.leaveStream();
+                    if (isAdmin) {
+                      _controller.deleteLiveStream(widget.channelId);
+                    } else {
+                      _controller.leaveStreamUser(
+                          widget.channelId, uid.toString());
+                    }
+                  },
+                  child: Text(
+                    'Yes', // Button text
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18, // Adjust font size
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(
+                    'No', // Button text
+                    style: TextStyle(
+                      color: Colors.white, // Match text color
+                      fontSize: 18, // Adjust font size
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ) ??
         false;
   }
 
-  // void showCohostsAndViewersBottomSheet(
-  //     BuildContext context, String channelId) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-  //     ),
-  //     builder: (context) => FullScreenBottomSheetContent(channelId: channelId),
-  //   );
-  // }
 
   void shareLiveStream(String channelId) {
     // Use a web-based URL instead of a custom scheme
@@ -858,28 +947,6 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
     );
   }
 
-  String _formatTime(int seconds) {
-    int minutes = seconds ~/ 60;
-    int remainingSeconds = seconds % 60;
-    return "${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}";
-  }
-
-  static Color parseColorFromString(String colorName) {
-    switch (colorName.trim().toLowerCase()) {
-      case 'black':
-        return Colors.black.withOpacity(0.9);
-      case 'yellow':
-        return Colors.yellow.withOpacity(0.2);
-      case 'red':
-        return Colors.red.withOpacity(0.2);
-      case 'green':
-        return Colors.green.withOpacity(0.2);
-      case 'blue':
-        return Colors.blue.withOpacity(0.2);
-      default:
-        return Colors.transparent; // Default or no filter
-    }
-  }
 
   void startHeartbeat() {
     heartbeatTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
@@ -900,15 +967,6 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
       }
     });
   }
-
-  void _applyVoiceEffect(AudioEffectPreset? effect) async {
-    if (_controller.agoraEngine == null) return;
-
-    if (effect == null || effect == AudioEffectPreset.audioEffectOff) {
-      await _controller.agoraEngine
-          ?.setAudioEffectPreset(AudioEffectPreset.audioEffectOff);
-    } else {
-      await _controller.agoraEngine?.setAudioEffectPreset(effect);
-    }
-  }
 }
+
+

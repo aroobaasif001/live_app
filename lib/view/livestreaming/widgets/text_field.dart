@@ -1,5 +1,7 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class ChatInputField extends StatefulWidget {
   final Function(String) onSend;
@@ -20,78 +22,37 @@ class ChatInputField extends StatefulWidget {
 class _ChatInputFieldState extends State<ChatInputField> {
   bool showEmojiPicker = false;
 
-  void toggleEmojiPicker() {
-    setState(() {
-      showEmojiPicker = !showEmojiPicker;
-    });
-
-    if (showEmojiPicker) {
-      widget.focusNode.unfocus(); // Close keyboard when emoji picker opens
-      showEmojiBottomSheet();
-    }
-  }
-
-  void showEmojiBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SizedBox(
-          height: 300,
-          child: EmojiPicker(
-            onEmojiSelected: (category, emoji) {
-              widget.chatController.text += emoji.emoji;
-              setState(() {});
-            },
-          ),
-        );
-      },
-    ).then((_) {
-      setState(() {
-        showEmojiPicker = false;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      width: Get.width * .6,
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.2),
+        // Transparent or slightly translucent background
+      //  color: Colors.black.withOpacity(0.2),
+        // Rounded border
         borderRadius: BorderRadius.circular(30),
+        // White border with some opacity
+        border: Border.all(color: Colors.white54, width: 1),
       ),
       child: Row(
         children: [
-          // Emoji Button
-          IconButton(
-            onPressed: toggleEmojiPicker,
-            icon: Icon(Icons.emoji_emotions, color: Colors.yellow),
-          ),
-
-          // TextField (expands properly)
           Expanded(
             child: GestureDetector(
               onTap: () {
-                if (showEmojiPicker) {
-                  setState(() {
-                    showEmojiPicker = false;
-                  });
-                }
                 widget.focusNode.requestFocus(); // Ensure focus on tap
               },
               child: TextField(
                 controller: widget.chatController,
                 focusNode: widget.focusNode,
-                maxLines: 1, // Fixed height
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: 'Type a message...',
-                  hintStyle: TextStyle(color: Colors.grey),
+                maxLines: 1,
+                // Keep the field at a single line
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: 'Message...',
+                  hintStyle: TextStyle(color: Colors.white54),
                   border: InputBorder.none,
                   isDense: true,
                   contentPadding: EdgeInsets.symmetric(vertical: 12),
@@ -103,13 +64,15 @@ class _ChatInputFieldState extends State<ChatInputField> {
           // Send Button
           IconButton(
             onPressed: () {
-              if (widget.chatController.text.trim().isNotEmpty) {
+              if (widget.chatController.text
+                  .trim()
+                  .isNotEmpty) {
                 widget.onSend(widget.chatController.text);
                 widget.chatController.clear();
                 widget.focusNode.unfocus();
               }
             },
-            icon: Icon(Icons.send, color: Colors.blue),
+            icon: const Icon(Icons.send, color: Colors.white),
           ),
         ],
       ),
