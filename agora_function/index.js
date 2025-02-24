@@ -1,19 +1,47 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { logger } = require("firebase-functions");
+const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
+// Hard-coded Agora credentials (consider using environment config in production)
+const appId = "8f1bc40d90374b78be10a2e851ba9140";
+const appCertificate = "a70411bd58d44c118544a86b469f3323";
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+exports.generateAgoraToken = onCall((request) => {
+  const data = request.data;
+  const channelName = data.channelName;
+  const uid = data.uid;
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+  logger.info("Received channelName:", channelName);
+  logger.info("Received uid:", uid);
+
+  // Validate that channelName is a non-empty string
+  if (typeof channelName !== "string" || channelName.trim() === "") {
+    throw new HttpsError("invalid-argument", "Missing or invalid channelName.");
+  }
+
+  // Validate that uid is provided (0 is allowed, so check for undefined or null)
+  if (uid === undefined || uid === null) {
+    throw new HttpsError("invalid-argument", "Missing or invalid uid.");
+  }
+
+  // Set the role for the token
+  const role = RtcRole.PUBLISHER;
+
+  // Define token validity: 1 hour (3600 seconds)
+  const expirationTimeInSeconds = 3600;
+  const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+  const privilegeExpiredTs = currentTimeInSeconds + expirationTimeInSeconds;
+
+  // Build the Agora token
+  const token = RtcTokenBuilder.buildTokenWithUid(
+    appId,
+    appCertificate,
+    channelName,
+    uid,
+    role,
+    privilegeExpiredTs
+  );
+
+  // Return the token to the caller
+  return { token };
+});

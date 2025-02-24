@@ -111,152 +111,154 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 28),
           child: Form(
             key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                CustomTextField(
-                  hintText: 'first_name'.tr,
-                  controller: _firstNameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'enter_first_name'.tr;
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                CustomTextField(
-                  hintText: 'last_name'.tr,
-                  controller: _lastNameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'enter_last_name'.tr;
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                CustomTextField(
-                  hintText: 'email'.tr,
-                  controller: _emailController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'enter_email'.tr;
-                    }
-                    if (!RegExp(
-                        r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
-                        .hasMatch(value)) {
-                      return 'invalid_email'.tr;
-                    }
-                    return null;
-                  },
-                ),
-                // Only show password field if NOT signing up with Google.
-                widget.isSignUpWithGoogle == false
-                    ? SizedBox(height: 20)
-                    : SizedBox(),
-                widget.isSignUpWithGoogle == false
-                    ? CustomTextField(
-                  hintText: 'password'.tr,
-                  controller: _passwordController,
-                  isPassword: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'enter_password'.tr;
-                    }
-                    if (value.length < 6) {
-                      return 'password_length'.tr;
-                    }
-                    return null;
-                  },
-                )
-                    : SizedBox(),
-                SizedBox(height: 20),
-                DropdownButtonFormField<String>(
-                  value: gender,
-                  decoration: InputDecoration(
-                    hintText: 'select_gender'.tr,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20),
+                  CustomTextField(
+                    hintText: 'first_name'.tr,
+                    controller: _firstNameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'enter_first_name'.tr;
+                      }
+                      return null;
+                    },
                   ),
-                  items: [
-                    'male'.tr,
-                    'female'.tr,
-                    'other'.tr,
-                  ]
-                      .map((gender) => DropdownMenuItem(
+                  SizedBox(height: 20),
+                  CustomTextField(
+                    hintText: 'last_name'.tr,
+                    controller: _lastNameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'enter_last_name'.tr;
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  CustomTextField(
+                    hintText: 'email'.tr,
+                    controller: _emailController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'enter_email'.tr;
+                      }
+                      if (!RegExp(
+                          r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+                          .hasMatch(value)) {
+                        return 'invalid_email'.tr;
+                      }
+                      return null;
+                    },
+                  ),
+                  // Only show password field if NOT signing up with Google.
+                  widget.isSignUpWithGoogle == false
+                      ? SizedBox(height: 20)
+                      : SizedBox(),
+                  widget.isSignUpWithGoogle == false
+                      ? CustomTextField(
+                    hintText: 'password'.tr,
+                    controller: _passwordController,
+                    isPassword: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'enter_password'.tr;
+                      }
+                      if (value.length < 6) {
+                        return 'password_length'.tr;
+                      }
+                      return null;
+                    },
+                  )
+                      : SizedBox(),
+                  SizedBox(height: 20),
+                  DropdownButtonFormField<String>(
                     value: gender,
-                    child: Text(gender),
-                  ))
-                      .toList(),
-                  onChanged: (value) => setState(() => gender = value),
-                ),
-                SizedBox(height: 20),
-                DropdownButtonFormField<String>(
-                  value: country,
-                  decoration: InputDecoration(
-                    hintText: 'select_country'.tr,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
+                    decoration: InputDecoration(
+                      hintText: 'select_gender'.tr,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                      fillColor: Colors.white,
+                      filled: true,
                     ),
-                    fillColor: Colors.white,
-                    filled: true,
+                    items: [
+                      'male'.tr,
+                      'female'.tr,
+                      'other'.tr,
+                    ]
+                        .map((gender) => DropdownMenuItem(
+                      value: gender,
+                      child: Text(gender),
+                    ))
+                        .toList(),
+                    onChanged: (value) => setState(() => gender = value),
                   ),
-                  items: [
-                    'russia'.tr,
-                    'usa'.tr,
-                    'india'.tr,
-                  ]
-                      .map((country) => DropdownMenuItem(
+                  SizedBox(height: 20),
+                  DropdownButtonFormField<String>(
                     value: country,
-                    child: Text(country),
-                  ))
-                      .toList(),
-                  onChanged: (value) => setState(() => country = value),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: isAgreedToTerms,
-                      onChanged: (value) =>
-                          setState(() => isAgreedToTerms = value!),
-                    ),
-                    Expanded(
-                      child: CustomText(
-                        text: 'agree_terms'.tr,
-                        fontSize: 12,
+                    decoration: InputDecoration(
+                      hintText: 'select_country'.tr,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
                       ),
+                      fillColor: Colors.white,
+                      filled: true,
                     ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: isAbove18,
-                      onChanged: (value) =>
-                          setState(() => isAbove18 = value!),
-                    ),
-                    Expanded(
-                      child: CustomText(
-                        text: 'confirm_age'.tr,
-                        fontSize: 12,
+                    items: [
+                      'russia'.tr,
+                      'usa'.tr,
+                      'india'.tr,
+                    ]
+                        .map((country) => DropdownMenuItem(
+                      value: country,
+                      child: Text(country),
+                    ))
+                        .toList(),
+                    onChanged: (value) => setState(() => country = value),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: isAgreedToTerms,
+                        onChanged: (value) =>
+                            setState(() => isAgreedToTerms = value!),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                CustomGradientButton(
-                  text: 'continue'.tr,
-                  onPressed: _storeUser,
-                ),
-              ],
+                      Expanded(
+                        child: CustomText(
+                          text: 'agree_terms'.tr,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: isAbove18,
+                        onChanged: (value) =>
+                            setState(() => isAbove18 = value!),
+                      ),
+                      Expanded(
+                        child: CustomText(
+                          text: 'confirm_age'.tr,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  CustomGradientButton(
+                    text: 'continue'.tr,
+                    onPressed: _storeUser,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
