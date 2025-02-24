@@ -9,6 +9,7 @@ import 'package:live_app/custom_widgets/custom_review.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/utils/images_path.dart';
+import 'package:live_app/view/homeScreen/activityScreen/activity_screen.dart';
 import 'package:live_app/view/market/tabs/clips_screen.dart';
 import 'package:live_app/view/market/tabs/for_you_screen.dart';
 import 'package:live_app/view/market/tabs/reviews_screen.dart';
@@ -26,7 +27,8 @@ class MarketScreen extends StatefulWidget {
 
 class _MarketScreenState extends State<MarketScreen> {
   Stream<DocumentSnapshot<RegistrationEntity>> getUserData =
-      RegistrationEntity.doc(userId: FirebaseAuth.instance.currentUser!.uid).snapshots();
+      RegistrationEntity.doc(userId: FirebaseAuth.instance.currentUser!.uid)
+          .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +58,15 @@ class _MarketScreenState extends State<MarketScreen> {
                         CustomContainer(
                           width: double.infinity,
                           height: 220,
-                          image: userData?.coverImage != null && userData!.coverImage!.isNotEmpty
+                          image: userData?.coverImage != null &&
+                                  userData!.coverImage!.isNotEmpty
                               ? DecorationImage(
-                                  fit: BoxFit.cover, image: NetworkImage(userData.coverImage.toString()))
-                              : DecorationImage(fit: BoxFit.cover, image: AssetImage(marketImage)),
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                      userData.coverImage.toString()))
+                              : DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: AssetImage(marketImage)),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: Column(
@@ -74,8 +81,10 @@ class _MarketScreenState extends State<MarketScreen> {
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                         fit: BoxFit.cover,
-                                        image: userData?.image != null && userData!.image!.isNotEmpty
-                                            ? NetworkImage(userData.image.toString())
+                                        image: userData?.image != null &&
+                                                userData!.image!.isNotEmpty
+                                            ? NetworkImage(
+                                                userData.image.toString())
                                             : AssetImage(circleAppleImage),
                                       ),
                                       child: Align(
@@ -83,7 +92,9 @@ class _MarketScreenState extends State<MarketScreen> {
                                         child: CustomContainer(
                                           height: 30,
                                           width: 30,
-                                          image: DecorationImage(image: AssetImage(circleButtonImage)),
+                                          image: DecorationImage(
+                                              image: AssetImage(
+                                                  circleButtonImage)),
                                         ),
                                       ),
                                     ),
@@ -91,7 +102,8 @@ class _MarketScreenState extends State<MarketScreen> {
                                     Expanded(
                                       // Wrap this column in Expanded
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           CustomText(
                                             text: userData?.firstName ?? '',
@@ -108,16 +120,19 @@ class _MarketScreenState extends State<MarketScreen> {
                                               children: [
                                                 TextSpan(
                                                   text: '95K ',
-                                                  style: TextStyle(color: Colors.white),
+                                                  style: TextStyle(
+                                                      color: Colors.white),
                                                 ),
                                                 TextSpan(
                                                   text: 'Subscribers'.tr,
-                                                  style: TextStyle(color: Colors.white54),
+                                                  style: TextStyle(
+                                                      color: Colors.white54),
                                                 ),
                                                 TextSpan(text: ' . '),
                                                 TextSpan(
                                                   text: '132 Subscriptions'.tr,
-                                                  style: TextStyle(color: Colors.white54),
+                                                  style: TextStyle(
+                                                      color: Colors.white54),
                                                 ),
                                               ],
                                             ),
@@ -147,19 +162,27 @@ class _MarketScreenState extends State<MarketScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       CustomReview(
                                           value: userData?.rating ?? '',
                                           label: 'Rating'.tr,
                                           iconPath: startIcon),
                                       VerticalDivider(color: conLineColor),
-                                      CustomReview(value: userData?.reviews ?? '', label: 'Reviews'.tr),
+                                      CustomReview(
+                                          value: userData?.reviews ?? '',
+                                          label: 'Reviews'.tr),
                                       VerticalDivider(color: conLineColor),
-                                      CustomReview(value: userData?.sold ?? '', label: 'Sold'.tr),
+                                      CustomReview(
+                                          value: userData?.sold ?? '',
+                                          label: 'Sold'.tr),
                                       VerticalDivider(color: conLineColor),
-                                      CustomReview(value: userData?.delivery ?? '', label: 'Delivery'.tr),
+                                      CustomReview(
+                                          value: userData?.delivery ?? '',
+                                          label: 'Delivery'.tr),
                                     ],
                                   ),
                                 ),
@@ -169,7 +192,6 @@ class _MarketScreenState extends State<MarketScreen> {
                         ),
                       ],
                     ),
-                    
                   ),
                   // **Main Content with Scroll Fix**
                   Column(
@@ -181,7 +203,8 @@ class _MarketScreenState extends State<MarketScreen> {
                             // **Description**
                             ReadMoreText(
                               'Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna.',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.bold),
                               trimMode: TrimMode.Line,
                               trimLines: 1,
                               colorClickableText: Colors.grey,
@@ -203,12 +226,19 @@ class _MarketScreenState extends State<MarketScreen> {
                               children: [
                                 Expanded(
                                   child: CustomIconButton(
-                                      onPressed: () {}, text: 'Message'.tr, iconPath: messageIcon),
+                                      onPressed: () {
+                                        Get.to(() =>
+                                            ActivityScreen(initialTab: 2));
+                                      },
+                                      text: 'Message'.tr,
+                                      iconPath: messageIcon),
                                 ),
                                 SizedBox(width: 10),
                                 Expanded(
-                                  child:
-                                      CustomIconButton(onPressed: () {}, text: 'Tips'.tr, iconPath: tipsIcon),
+                                  child: CustomIconButton(
+                                      onPressed: () {},
+                                      text: 'Tips'.tr,
+                                      iconPath: tipsIcon),
                                 ),
                               ],
                             ),
@@ -221,7 +251,8 @@ class _MarketScreenState extends State<MarketScreen> {
                               borderWidth: 0,
                               unselectedBorderColor: Colors.transparent,
                               borderColor: Colors.transparent,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 10),
                               labelStyle: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -275,7 +306,9 @@ class _MarketScreenState extends State<MarketScreen> {
           width: 120,
           borderRadius: BorderRadius.circular(100),
           conColor: Colors.white,
-          boxShadow: [BoxShadow(color: greyColor, blurRadius: 5, offset: Offset(-1, 3))],
+          boxShadow: [
+            BoxShadow(color: greyColor, blurRadius: 5, offset: Offset(-1, 3))
+          ],
           child: Center(
             child: CustomContainer(
               height: 44,

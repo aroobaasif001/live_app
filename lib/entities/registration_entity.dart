@@ -18,6 +18,7 @@ class RegistrationEntity {
   final String? entrance;
   final String? index;
   final List<String>? interests;
+  final List<String>? subscribersList;
   final List<String>? detailedInterests;
   final String? image;
   final String? coverImage;
@@ -33,6 +34,7 @@ class RegistrationEntity {
       this.rating,
       this.regId,
       this.firstName,
+      this.subscribersList,
       this.lastName,
       this.email,
       this.gender,

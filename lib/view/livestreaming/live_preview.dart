@@ -171,7 +171,7 @@ class _LivePreviewScreenState extends State<LivePreviewScreen> {
                         style: const TextStyle(color: Colors.white),
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
-                          hintText: 'enter_live_title'.tr,
+                          hintText: widget.name,
                           hintStyle: const TextStyle(color: Colors.grey),
                           filled: true,
                           fillColor: Colors.black.withOpacity(0.5),

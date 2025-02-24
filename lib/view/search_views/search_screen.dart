@@ -1,5 +1,6 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/search_views/search_by_application.dart';
 import '../../custom_widgets/custom_gradient_button.dart';
 import '../../custom_widgets/custom_text.dart';
+import '../../entities/registration_entity.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
 import '../homeScreen/widgets/live_video_card.dart';
@@ -20,6 +22,9 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  Stream<QuerySnapshot<RegistrationEntity>> getAllUsers =
+      RegistrationEntity.collection().snapshots();
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -94,7 +99,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: TabBarView(
                     children: [
                       _buildTopTab(),
-                      _buildGoodsTab(),
+                      // _buildGoodsTab(),
+                      _buildUsersTab(),
                       _buildStreamsTab(),
                       _buildUsersTab(),
                       _buildCategoriesTab(),
@@ -253,9 +259,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildStreamGrid(
-              context
-            ),
+            _buildStreamGrid(context),
           ],
         ),
       ),
@@ -266,51 +270,84 @@ class _SearchScreenState extends State<SearchScreen> {
   // ============================  USERS TAB  ===================================
   // ===========================================================================
   Widget _buildUsersTab() {
-    return ListView.builder(
-      itemCount: 6,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      appleIcon,
-                      height: 40,
-                      width: 40,
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+    return StreamBuilder<QuerySnapshot<RegistrationEntity>>(
+      stream: getAllUsers,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text('No users available'));
+        }
+
+        return ListView.builder(
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context, index) {
+            RegistrationEntity userResponse = snapshot.data!.docs[index].data();
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Row(
                       children: [
-                        CustomText(
-                          text: 'company_name'.tr,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: "Gilroy-Bold",
-                        ),
-                        CustomText(
-                          color: const Color(0xff8C8C8C),
-                          fontSize: 14,
-                          fontFamily: "Gilroy-Bold",
-                          text: '2.4K Subscribers',
-                          fontWeight: FontWeight.bold,
+                        // Check if image is not null and not empty; otherwise, show a placeholder asset.
+                        userResponse.image != null &&
+                                userResponse.image!.isNotEmpty
+                            ? Image.network(
+                                userResponse.image!,
+                                height: 40,
+                                width: 40,
+                              )
+                            : Image.asset(
+                                appleIcon, // Ensure you have this asset
+                                height: 40,
+                                width: 40,
+                              ),
+                        const SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText(
+                              text: userResponse.firstName ?? 'Unknown',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: "Gilroy-Bold",
+                            ),
+                            CustomText(
+                              color: const Color(0xff8C8C8C),
+                              fontSize: 14,
+                              fontFamily: "Gilroy-Bold",
+                              text:
+                                  "Subscribers ${userResponse.subscribersList?.length.toString() ?? '0'}",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  CustomGradientButton(
+                    text: "Subscribe",
+                    width: 100,
+                    height: 35,
+                    onPressed: () async {
+                      await RegistrationEntity.doc(userId:FirebaseAuth.instance.currentUser!.uid)
+                          .update({
+                        "subscribersList":
+                            FieldValue.arrayUnion([userResponse.regId!]),
+                      });
+                    },
+                  ),
+                ],
               ),
-              CustomGradientButton(
-                text: "Subscribe",
-                width: 100,
-                height: 35,
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -460,6 +497,7 @@ class _SearchScreenState extends State<SearchScreen> {
       },
     );
   }
+
   Widget _buildHorizontalUsers({required int itemCount}) {
     return SizedBox(
       height: 165,
@@ -476,7 +514,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
                 child: Column(
                   children: [
                     // user image
@@ -520,6 +559,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
+
   Widget _buildProductList({required int itemCount}) {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
@@ -602,7 +642,6 @@ class _SearchScreenState extends State<SearchScreen> {
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                       ),
-
                       const SizedBox(width: 6),
                       const Icon(
                         Icons.star,
@@ -661,11 +700,13 @@ Widget _buildStreamGrid(BuildContext context) {
       }
       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
         return const Center(child: Text('No livestreams available'));
-      };
+      }
+      ;
 
       final livestreamsData = snapshot.data!.docs;
 
-      return SizedBox( // Ensure bounded height
+      return SizedBox(
+        // Ensure bounded height
         height: 500, // Set an appropriate height
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -683,7 +724,8 @@ Widget _buildStreamGrid(BuildContext context) {
                 itemCount: livestreamsData.length,
                 itemBuilder: (context, index) {
                   // Cast the document data to a Map
-                  final data = livestreamsData[index].data() as Map<String, dynamic>;
+                  final data =
+                      livestreamsData[index].data() as Map<String, dynamic>;
 
                   // Extract fields with a fallback if necessary.
                   final adminName = data['adminName'] as String? ?? 'Unknown';
@@ -711,6 +753,3 @@ Widget _buildStreamGrid(BuildContext context) {
     },
   );
 }
-
-
-

@@ -14,6 +14,9 @@ RegistrationEntity _$RegistrationEntityFromJson(Map<String, dynamic> json) =>
       rating: json['rating'] as String?,
       regId: json['regId'] as String?,
       firstName: json['firstName'] as String?,
+      subscribersList: (json['subscribersList'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       lastName: json['lastName'] as String?,
       email: json['email'] as String?,
       gender: json['gender'] as String?,
@@ -49,6 +52,7 @@ Map<String, dynamic> _$RegistrationEntityToJson(RegistrationEntity instance) =>
       'entrance': instance.entrance,
       'index': instance.index,
       'interests': instance.interests,
+      'subscribersList': instance.subscribersList,
       'detailedInterests': instance.detailedInterests,
       'image': instance.image,
       'coverImage': instance.coverImage,
