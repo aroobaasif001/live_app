@@ -315,7 +315,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                             uid:
                             adminUid), // Replace with remote user UID
                         connection: RtcConnection(
-                            channelId: 'test1234'),
+                            channelId: widget.channelId),
                       ),
                     )
                   ],
