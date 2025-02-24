@@ -220,7 +220,7 @@ class LiveStreamCard extends StatelessWidget {
       print('[INFO] User $name joined the stream.');
       Get.to(() => LiveStreamingScreen(
         channelId: channelId,
-        isAdmin: false,
+        isAdmin: false, uid: 10000 + Random().nextInt(90000),
       ));
     } catch (e) {
       print('[ERROR] Failed to join the stream: $e');

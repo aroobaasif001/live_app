@@ -22,6 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
+import '../profile_views/wallet_screen.dart';
 import 'controller/livestreaming_controller.dart';
 
 // Redirect to Home Page
@@ -29,10 +30,11 @@ import 'controller/livestreaming_controller.dart';
 class LiveStreamingScreen extends StatefulWidget {
   final String channelId;
   final bool isAdmin;
+  final int uid;
 
   LiveStreamingScreen({
     required this.channelId,
-    required this.isAdmin,
+    required this.isAdmin, required this.uid,
   });
 
   @override
@@ -47,7 +49,6 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
   late Stream<DocumentSnapshot<Map<String, dynamic>>> documentStream;
   final ScrollController _scrollController = ScrollController();
 
-  int uid = 0;
   String name = '';
   String email = '';
 
@@ -185,10 +186,11 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkUserDetails();
       monitorDocument();
-      _controller.initializeAgora(widget.channelId, uid, widget.isAdmin, adminUid ?? 0);
+      _controller.initializeAgora(widget.channelId, widget.uid, widget.isAdmin, adminUid ?? 0);
       initializeFirestore(widget.channelId);
     });
     super.initState();
+
     WakelockPlus.enable();
     ever(_controller.comments, (_) {
       // Scroll to the bottom when a new comment is added
@@ -313,7 +315,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                             uid:
                             adminUid), // Replace with remote user UID
                         connection: RtcConnection(
-                            channelId: widget.channelId),
+                            channelId: 'test1234'),
                       ),
                     )
                   ],
@@ -322,7 +324,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
               ),
 
               // Top Streamer Info
-              if (widget.isAdmin || cohostUid == uid)
+              if (widget.isAdmin || cohostUid == widget.uid)
               // Positioned(
               //     bottom: MediaQuery.of(context).size.height * 0.55,
               //
@@ -527,6 +529,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                       GestureDetector(
                         onTap: () {
                           // Handle 'Wallet' tap
+                          Get.to(()=>WalletScreen());
                         },
                         child: Column(
                           children: [
@@ -902,7 +905,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                       _controller.deleteLiveStream(widget.channelId);
                     } else {
                       _controller.leaveStreamUser(
-                          widget.channelId, uid.toString());
+                          widget.channelId, widget.uid.toString());
                     }
                   },
                   child: Text(

@@ -99,9 +99,12 @@ class _LivePreviewScreenState extends State<LivePreviewScreen> {
           .set(liveStreamData);
 
       // Navigate to LiveStreamingScreen
+      _cameraController?.dispose();
+      _titleController.dispose();
       Get.to(() => LiveStreamingScreen(
         channelId: ChannelId ?? '',
         isAdmin: true,
+        uid: uid ?? 0,
       ));
     } catch (e) {
       Get.snackbar(
@@ -222,3 +225,4 @@ class _LivePreviewScreenState extends State<LivePreviewScreen> {
     );
   }
 }
+

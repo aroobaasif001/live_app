@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:typed_data';
@@ -84,48 +85,58 @@ class LiveStreamController extends GetxController {
     }
   }
 
-  Future<String> generateAgoraToken(String channelName, int uid) async {
-    try {
-      // Get the cloud function reference
-      final HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('generateAgoraToken');
-
-      // Call the cloud function and pass the parameters
+  Future<String> generateToken(String channelName, int uid) async {
+    if (FirebaseAuth.instance.currentUser != null) {
+      HttpsCallable callable =
+      FirebaseFunctions.instance.httpsCallable('generateAgoraToken');
       final response = await callable.call({
         'channelName': channelName,
         'uid': uid,
       });
-
-      // Return the token
       return response.data['token'];
-    } catch (e) {
-      print('Error generating Agora token: $e');
-      return '';
+    } else {
+
+      throw Exception('User is not authenticated');
     }
   }
+
 
   Future<void> initializeAgora(
       String channelId, int uid, bool isAdmin, int adminId) async {
     try {
-      print('uidid $uid chnn $channelId ');
-      String? token = await generateAgoraToken(channelId, uid);
-      print('tokenn $token');
+      // Debug: Log the initial parameters
+      print('[DEBUG] initializeAgora called with:');
+      print('  channelId: $channelId');
+      print('  uid: $uid');
+      print('  isAdmin: $isAdmin');
+      print('  adminId: $adminId');
+
+      // Generate token and log its value
+      print('[DEBUG] Calling generateAgoraToken with channelId: $channelId and uid: $uid');
+      String token = ('007eJxTYFi84KnXmxU9dgVFc8tOhti6SC/YYbBEIFBZMbRiq+/7oosKDBZphknJJgYplgbG5iZJ5hZJqYYGiUapFqaGSYmWhiYGsyz3pDcEMjK0vpVmYWSAQBCfg6EktbjE0MjYhIEBALnbH9U=');
+      print('[DEBUG] Received token: $token');
+
+      // Create and initialize the RTC engine
       _rtcEngine = createAgoraRtcEngine();
+      print('[DEBUG] RTC engine created');
 
       await _rtcEngine?.initialize(
         const RtcEngineContext(
-          appId: 'd9d74073996a4f8d8d1a12c0e9f35703',
+          appId: '8f1bc40d90374b78be10a2e851ba9140',
           channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
         ),
       );
+      print('[DEBUG] RTC engine initialized');
 
-      // Register event handlers with logs
+      // Register event handlers with additional logging
       _rtcEngine?.registerEventHandler(
         RtcEngineEventHandler(
           onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
             isJoined.value = true;
-            print('[INFO] Joined channel: ${connection.channelId}');
+            print('[INFO] Joined channel: ${connection.channelId}, uid: $uid, elapsed: $elapsed');
             updateUserCount(connection.channelId!);
           },
+
           onLeaveChannel: (RtcConnection connection, RtcStats stats) {
             isJoined.value = false;
             print('[INFO] Left channel: ${connection.channelId}');
@@ -133,78 +144,72 @@ class LiveStreamController extends GetxController {
           },
           onUserJoined: (RtcConnection connection, int rUid, int elapsed) {
             remoteUids.add(rUid);
-            print(
-                '[INFO] Remote user $rUid joined channel: ${connection.channelId}');
+            print('[INFO] Remote user $rUid joined channel: ${connection.channelId}, elapsed: $elapsed');
             updateUserCount(connection.channelId!);
           },
-          onUserOffline: (RtcConnection connection, int rUid,
-              UserOfflineReasonType reason) {
-            print('offlineee');
+          onUserOffline: (RtcConnection connection, int rUid, UserOfflineReasonType reason) {
+            print('[INFO] Remote user $rUid offline, Reason: $reason');
             remoteUids.removeWhere((element) => element == rUid);
             _allUserLeft.value = true;
-
-            print(
-                '[INFO] Remote user $rUid left channel: ${connection.channelId}, Reason: $reason');
             if (adminId == rUid) {
+              print('[DEBUG] Admin ($adminId) went offline, deleting live stream for channel: ${connection.channelId}');
               deleteLiveStream(channelId);
             }
             updateUserCount(connection.channelId!);
           },
         ),
       );
+      print('[DEBUG] Event handlers registered');
 
+      // Create data stream and log result
       streamId = await _rtcEngine?.createDataStream(
         const DataStreamConfig(syncWithAudio: false),
       );
-
       if (streamId == null) {
         print('[ERROR] Failed to create data stream');
       } else {
         print('[INFO] Data stream created with streamId: $streamId');
       }
 
+      // Set client role based on isAdmin flag and log role
       await _rtcEngine?.setClientRole(
         role: isAdmin
             ? ClientRoleType.clientRoleBroadcaster // Admin can speak
             : ClientRoleType.clientRoleAudience, // Others can only listen
       );
+      print('[DEBUG] Client role set: ${isAdmin ? "Broadcaster" : "Audience"}');
+
+
 
       await _rtcEngine?.enableVideo();
       await _rtcEngine?.enableAudio();
-
-      if (isAdmin) {
-        await _rtcEngine
-            ?.enableLocalAudio(true); // Admin can capture and send audio
-      } else {
-        await _rtcEngine?.enableLocalAudio(false); // Audience cannot send audio
-      }
-
       await _rtcEngine?.enableLocalVideo(true);
-
       await _rtcEngine?.startPreview();
-
       await _rtcEngine?.setAudioProfile(
         profile: AudioProfileType.audioProfileMusicHighQuality,
         scenario: AudioScenarioType.audioScenarioGameStreaming,
       );
+      // Finally, join the channel
+      print('[DEBUG] Joining channel with token: $token, channelId: $channelId, uid: $uid');
       await _rtcEngine?.joinChannel(
-        token: token ?? '',
-        channelId: channelId,
+        token: token,
+        channelId: 'test1234',
         uid: uid,
         options: ChannelMediaOptions(
-            channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
-            clientRoleType: ClientRoleType.clientRoleBroadcaster),
+          channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
+          clientRoleType: isAdmin
+              ? ClientRoleType.clientRoleBroadcaster
+              : ClientRoleType.clientRoleAudience,
+        ),
       );
 
-
-      await Future.delayed(const Duration(seconds: 2));
-      print('yey0');
-      await _rtcEngine?.enableLocalVideo(false);
-      await _rtcEngine?.enableLocalVideo(true);
+      print('[INFO] Successfully joined channel: $channelId');
     } catch (e) {
       print('[ERROR] Agora initialization error: $e');
+      // Optionally, you can rethrow the error or handle it further here.
     }
   }
+
 
   void updateUserCount(String channelId) async {
     // Total users include local user (1) + remote users

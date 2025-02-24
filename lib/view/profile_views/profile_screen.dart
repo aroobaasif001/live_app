@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +23,7 @@ import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
 import '../../utils/store_services.dart';
 import '../livestreaming/live_preview.dart';
+import '../livestreaming/live_streaming.dart';
 import '../livestreaming/livestreamingview_screen.dart';
 import 'notifications_settings_screen.dart';
 
@@ -33,11 +36,22 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String? userId;
+  int? uid;
+  String? ChannelId;
+  final TextEditingController _titleController = TextEditingController();
 
   Stream<DocumentSnapshot<RegistrationEntity>> getCurrentUserData =
       RegistrationEntity.doc(userId: FirebaseAuth.instance.currentUser!.uid)
           .snapshots();
-
+@override
+  void initState() {
+  uid = 10000 + Random().nextInt(90000); // Generates a 5-digit number
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  ChannelId =
+      List.generate(5, (index) => chars[Random().nextInt(chars.length)]).join();
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> settingsOptions = [
@@ -209,11 +223,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 25,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          Get.to(() => LivePreviewScreen(
-                              name: snapshot.data!.data()!.firstName.toString(),
-                              photo:
-                                  'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
+                        onTap: () async {
+
+                            String title = _titleController.text.trim();
+
+                            if (title.isEmpty) {
+                              // If title is empty, set a default title.
+                              title = 'Live Streaming';
+                            }
+
+                            // Store live stream details in Firebase Firestore
+                            try {
+                              final liveStreamData = {
+                                "title": title,
+                                "adminName": snapshot.data!.data()!.firstName.toString(),
+                                "adminPhoto":'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D',
+                                "adminUid": uid,
+                                "isAdmin": true,
+                                "channelId": ChannelId,
+                                'viewsCount': 0,
+                                'currentmusic': null,
+                                'currentFilter': null,
+                                'currentmusic_id': null,
+                                'heartbeat': null,
+                                "timestamp": FieldValue.serverTimestamp(),
+                              };
+
+                              await FirebaseFirestore.instance
+                                  .collection('livestreams')
+                                  .doc(ChannelId)
+                                  .set(liveStreamData);
+
+                              // Navigate to LiveStreamingScreen
+                              // _cameraController?.dispose();
+                              // _titleController.dispose();
+                              Get.to(() => LiveStreamingScreen(
+                                channelId: ChannelId ?? '',
+                                isAdmin: true,
+                                uid: uid ?? 0,
+                              ));
+                            } catch (e) {
+                              Get.snackbar(
+                                "error".tr,
+                                "live_stream_error".tr,
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: Colors.red,
+                                colorText: Colors.white,
+                              );
+                            }
+
+
                         },
                         child: Container(
                           height: 155,
