@@ -1,12 +1,10 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/search_views/search_by_application.dart';
+
 import '../../custom_widgets/custom_gradient_button.dart';
 import '../../custom_widgets/custom_text.dart';
 import '../../utils/icons_path.dart';
@@ -254,9 +252,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildStreamGrid(
-              context
-            ),
+            _buildStreamGrid(context),
           ],
         ),
       ),
@@ -461,6 +457,7 @@ class _SearchScreenState extends State<SearchScreen> {
       },
     );
   }
+
   Widget _buildHorizontalUsers({required int itemCount}) {
     return SizedBox(
       height: 165,
@@ -521,6 +518,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
+
   Widget _buildProductList({required int itemCount}) {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
@@ -603,7 +601,6 @@ class _SearchScreenState extends State<SearchScreen> {
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                       ),
-
                       const SizedBox(width: 6),
                       const Icon(
                         Icons.star,
@@ -662,11 +659,13 @@ Widget _buildStreamGrid(BuildContext context) {
       }
       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
         return const Center(child: Text('No livestreams available'));
-      };
+      }
+      ;
 
       final livestreamsData = snapshot.data!.docs;
 
-      return SizedBox( // Ensure bounded height
+      return SizedBox(
+        // Ensure bounded height
         height: 500, // Set an appropriate height
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -712,8 +711,6 @@ Widget _buildStreamGrid(BuildContext context) {
     },
   );
 }
-}
-
 // Widget _buildStreamGrid(BuildContext context) {
 //   return FutureBuilder<QuerySnapshot>(
 //     future: FirebaseFirestore.instance.collection('livestreams').get(),
@@ -776,4 +773,3 @@ Widget _buildStreamGrid(BuildContext context) {
 //     },
 //   );
 // }
-
