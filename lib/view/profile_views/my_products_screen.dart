@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/entities/product_entity.dart';
+import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/profile_views/create_a_product_screen.dart';
 
 import '../../custom_widgets/custom_container.dart';
@@ -19,6 +20,9 @@ class MyProductsScreen extends StatefulWidget {
 }
 
 class _MyProductsScreenState extends State<MyProductsScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = "";
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -84,6 +88,21 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
               const SizedBox(height: 12),
 
               // Search Bar
+              // Container(
+              //   height: 40,
+              //   decoration: BoxDecoration(
+              //     color: Colors.grey[200],
+              //     borderRadius: BorderRadius.circular(12),
+              //   ),
+              //   padding: const EdgeInsets.symmetric(horizontal: 12),
+              //   child: TextField(
+              //     decoration: InputDecoration(
+              //       border: InputBorder.none,
+              //       hintText: "search".tr,
+              //       prefixIcon: Icon(Icons.search, color: Colors.grey),
+              //     ),
+              //   ),
+              // ),
               Container(
                 height: 40,
                 decoration: BoxDecoration(
@@ -92,10 +111,27 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: TextField(
+                  controller: _searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value.toLowerCase();
+                    });
+                  },
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: "search".tr,
-                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                    prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                    suffixIcon: _searchQuery.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear, color: Colors.grey),
+                            onPressed: () {
+                              setState(() {
+                                _searchController.clear();
+                                _searchQuery = "";
+                              });
+                            },
+                          )
+                        : null,
                   ),
                 ),
               ),
@@ -117,17 +153,65 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
             ],
           ),
         ),
-
-        // Floating Action Button
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.purpleAccent,
+          backgroundColor: Colors.transparent,
           onPressed: () => Get.to(() => const CreateProductScreen()),
-          child: const Icon(Icons.add, size: 28, color: Colors.white),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: primaryGradientColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: const Icon(Icons.add, size: 28, color: Colors.white),
+            ),
+          ),
           tooltip: "create_product".tr,
         ),
       ),
     );
   }
+
+  // Widget buildProductList(String filter) {
+  //   return StreamBuilder<QuerySnapshot>(
+  //     stream: FirebaseFirestore.instance.collection('products').snapshots(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return const Center(child: CircularProgressIndicator());
+  //       }
+
+  //       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+  //         return Center(child: Text("no_products".tr));
+  //       }
+
+  //       // Convert each doc into a ProductEntity
+  //       List<ProductEntity> products = snapshot.data!.docs
+  //           .map((doc) =>
+  //               ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+  //           .toList();
+
+  //       // Filter logic
+  //       if (filter == "Fix") {
+  //         products = products.where((p) => p.saleType == "Buy Now").toList();
+  //       } else if (filter == "Auction") {
+  //         products = products.where((p) => p.saleType == "Auction").toList();
+  //       } else if (filter == "Active") {
+  //         products = products
+  //             .where((p) => (p.isActive ?? false) && !(p.isSold ?? false))
+  //             .toList();
+  //       } else if (filter == "Sold") {
+  //         products = products.where((p) => p.isSold ?? false).toList();
+  //       }
+
+  //       return ListView.builder(
+  //         itemCount: products.length,
+  //         itemBuilder: (context, index) {
+  //           return buildProductItem(products[index]);
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget buildProductList(String filter) {
     return StreamBuilder<QuerySnapshot>(
@@ -158,6 +242,20 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
               .toList();
         } else if (filter == "Sold") {
           products = products.where((p) => p.isSold ?? false).toList();
+        }
+
+        // Search logic
+        if (_searchQuery.isNotEmpty) {
+          products = products
+              .where((p) =>
+                  (p.title?.toLowerCase().contains(_searchQuery) ?? false) ||
+                  (p.description?.toLowerCase().contains(_searchQuery) ??
+                      false))
+              .toList();
+        }
+
+        if (products.isEmpty) {
+          return Center(child: Text("no_products_found".tr));
         }
 
         return ListView.builder(
@@ -207,7 +305,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                     end: Alignment.bottomRight,
                   ),
                   child: CustomText(
-                    text: product.saleType == "Auction" ? "auction".tr : "buy_now".tr,
+                    text: product.saleType == "Auction"
+                        ? "auction".tr
+                        : "buy_now".tr,
                     fontSize: 10,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -257,17 +357,29 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                 CustomText(
                   text: product.saleType == "Auction"
                       ? "${product.startingBid ?? '0'} ₽"
-                      : "${product.price ?? '0'} ₽", 
+                      : "${product.price ?? '0'} ₽",
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
-                const SizedBox(height: 8),
                 CustomText(
                   text: (product.isActive ?? false) ? "Active" : "Inactive",
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color:
                       (product.isActive ?? false) ? Colors.green : Colors.red,
+                ),
+                Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: CustomText(
+                      text: "Change",
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ],
             ),

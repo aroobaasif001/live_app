@@ -1,15 +1,14 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../livestreaming/livestreamingview_screen.dart';
+import '../../search_views/search_by_application.dart';
 import '../widgets/live_video_card.dart';
 import '../widgets/category_tab.dart';
-import 'liveShoppingScreens/live_shopping_screen.dart';
+
 
 
 class HomeMainScreen extends StatelessWidget {
@@ -47,21 +46,22 @@ class HomeMainScreen extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                prefixIcon: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Image.asset('assets/icons/search.png',
-                      width: 20, height: 20),
-                ),
-                hintText: "${'search_hint'.tr}",
-                hintStyle: TextStyle(fontFamily: 'SFProRounded', color: Colors.grey),
-
-                filled: true,
-                fillColor: Colors.grey[200],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: BorderSide.none,
+            child:  Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: TextField(
+                onTap: () {
+                  // Opens "SearchByApplication" screen
+                  Get.to(() => const SearchByApplication());
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'search'.tr,
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
                 ),
               ),
             ),

@@ -1,10 +1,10 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/search_views/search_by_application.dart';
-
 import '../../custom_widgets/custom_gradient_button.dart';
 import '../../custom_widgets/custom_text.dart';
 import '../../utils/icons_path.dart';
@@ -252,7 +252,9 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildStreamGrid(context),
+            _buildStreamGrid(
+              context
+            ),
           ],
         ),
       ),
@@ -457,7 +459,6 @@ class _SearchScreenState extends State<SearchScreen> {
       },
     );
   }
-
   Widget _buildHorizontalUsers({required int itemCount}) {
     return SizedBox(
       height: 165,
@@ -518,7 +519,6 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
-
   Widget _buildProductList({required int itemCount}) {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
@@ -601,6 +601,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                       ),
+
                       const SizedBox(width: 6),
                       const Icon(
                         Icons.star,
@@ -660,12 +661,10 @@ Widget _buildStreamGrid(BuildContext context) {
       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
         return const Center(child: Text('No livestreams available'));
       }
-      ;
 
       final livestreamsData = snapshot.data!.docs;
 
-      return SizedBox(
-        // Ensure bounded height
+      return SizedBox( // Ensure bounded height
         height: 500, // Set an appropriate height
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -711,65 +710,6 @@ Widget _buildStreamGrid(BuildContext context) {
     },
   );
 }
-// Widget _buildStreamGrid(BuildContext context) {
-//   return FutureBuilder<QuerySnapshot>(
-//     future: FirebaseFirestore.instance.collection('livestreams').get(),
-//     builder: (context, snapshot) {
-//       if (snapshot.connectionState == ConnectionState.waiting) {
-//         return const Center(child: CircularProgressIndicator());
-//       }
-//       if (snapshot.hasError) {
-//         return Center(child: Text('Error: ${snapshot.error}'));
-//       }
-//       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-//         return const Center(child: Text('No livestreams available'));
-//       }
-//
-//       final livestreamsData = snapshot.data!.docs;
-//
-//       return SizedBox( // Ensure bounded height
-//         height: 500, // Set an appropriate height
-//         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 10),
-//           child: LayoutBuilder(
-//             builder: (context, constraints) {
-//               double screenWidth = constraints.maxWidth;
-//               return GridView.builder(
-//                 physics: const BouncingScrollPhysics(),
-//                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//                   crossAxisCount: screenWidth > 600 ? 3 : 2,
-//                   crossAxisSpacing: 10,
-//                   mainAxisSpacing: 10,
-//                   childAspectRatio: 0.80,
-//                 ),
-//                 itemCount: livestreamsData.length,
-//                 itemBuilder: (context, index) {
-//                   // Cast the document data to a Map
-//                   final data = livestreamsData[index].data() as Map<String, dynamic>;
-//
-//                   // Extract fields with a fallback if necessary.
-//                   final adminName = data['adminName'] as String? ?? 'Unknown';
-//                   final adminImage = data['adminPhoto'] as String? ?? '';
-//                   final viewsCount = data['viewsCount'] as int? ?? 0;
-//                   final title = data['title'] as String? ?? '';
-//
-//                   return GestureDetector(
-//                     onTap: () {
-//                       // Navigate to live stream or any action
-//                     },
-//                     child: LiveVideoCard(
-//                       adminName: adminName,
-//                       adminImage: adminImage,
-//                       viewsCount: viewsCount,
-//                       title: title,
-//                     ),
-//                   );
-//                 },
-//               );
-//             },
-//           ),
-//         ),
-//       );
-//     },
-//   );
-// }
+
+
+
