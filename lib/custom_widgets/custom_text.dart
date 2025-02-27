@@ -83,6 +83,7 @@ class CustomText extends StatelessWidget {
       textAlign: textAlign,
       overflow: overflow,
       maxLines: maxLines,
+      softWrap: true,
       style: textStyle,
     );
   }

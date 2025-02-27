@@ -3,11 +3,12 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/utils/colors.dart';
-import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
+import 'package:live_app/view/auth/delivery_address_screen.dart';
 import 'package:live_app/view/profile_views/create_streem_screen.dart';
 import 'package:live_app/view/profile_views/edit_trade_profile.dart';
 import 'package:live_app/view/profile_views/item_for_auction.dart';
+import 'package:live_app/view/profile_views/statistic_screen.dart';
 import 'package:live_app/view/profile_views/wallet_screen.dart';
 import '../../custom_widgets/custom_review.dart';
 import '../../custom_widgets/custom_text.dart';
@@ -285,9 +286,15 @@ Future<void> _fetchUserProfile() async {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
-                        optionTile(Icons.attach_money, "tips".tr),
-                        optionTile(Icons.local_shipping, "delivery".tr),
-                        optionTile(Icons.analytics, "analytics".tr),
+                        optionTile(Icons.attach_money, "tips".tr,onTap: () {
+
+                        },),
+                        optionTile(Icons.local_shipping, "delivery".tr,onTap: () {
+                          Get.to(()=> DeliveryAddressScreen());
+                        },),
+                        optionTile(Icons.analytics, "analytics".tr,onTap: () {
+                          Get.to(()=> StatisticsScreen());
+                        },),
                       ],
                     ),
                   ),
@@ -427,10 +434,11 @@ Future<void> _fetchUserProfile() async {
     );
   }
 
-  Widget optionTile(IconData icon, String title) {
+  Widget optionTile(IconData icon, String title,{void Function()? onTap}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: ListTile(
+        onTap: onTap,
         leading: Icon(icon, color: Colors.black),
         title: CustomText(
           text: title,

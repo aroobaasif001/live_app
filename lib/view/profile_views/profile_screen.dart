@@ -56,59 +56,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> settingsOptions = [
       {
-        "icon": Icons.payment,
+        "icon": 'assets/icons/Card.png',
         "title": "payment_delivery".tr,
         "screen": SettingsScreen()
       },
       {
-        "icon": Icons.location_on,
+        "icon": 'assets/icons/Map Point.png',
         "title": "addresses".tr,
         "screen": SettingsScreen()
       },
       {
-        "icon": Icons.notifications,
+        "icon": 'assets/icons/Bell.png',
         "title": "notifications".tr,
         "screen": NotificationSettingsScreen()
       },
       {
-        "icon": Icons.email,
+        "icon": 'assets/icons/Letter.png',
         "title": "change_email".tr,
         "screen": SettingsScreen()
       },
       {
-        "icon": Icons.lock,
+        "icon": 'assets/icons/Password Minimalistic Input.png',
         "title": "change_password".tr,
         "screen": SettingsScreen()
       },
       {
-        "icon": Icons.settings,
+        "icon": 'assets/icons/Settings.png',
         "title": "settings".tr,
         "screen": NotificationSettingsScreen()
       },
     ];
     final List<Map<String, dynamic>> helpAndContact = [
       {
-        "icon": Icons.perm_contact_cal_sharp,
+        "icon": 'assets/icons/Letter Opened.png',
         "title": "contact_us".tr,
         "screen": SettingsScreen()
       },
       {
-        "icon": Icons.report_gmailerrorred,
+        "icon": 'assets/icons/Danger Triangle.png',
         "title": "report_abuse".tr,
         "screen": SettingsScreen()
       },
       {
-        "icon": Icons.notifications,
+        "icon": 'assets/icons/Archive Check.png',
         "title": "sales_tax".tr,
         "screen": NotificationScreen()
       },
       {
-        "icon": Icons.email,
+        "icon": 'assets/icons/Info Circle.png',
         "title": "privacy_policy".tr,
         "screen": SettingsScreen()
       },
       {
-        "icon": Icons.lock,
+        "icon": 'assets/icons/File.png',
         "title": "terms_conditions".tr,
         "screen": SettingsScreen()
       },
@@ -363,7 +363,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
-                                Get.to(() => RewardsScreen());
+                                Get.to(() => MyRewardsScreen());
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -419,16 +419,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return ListTile(
                             leading: Container(
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
+                                color: Color(0xff000000).withOpacity(0.05),
                                 shape: BoxShape.circle,
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Icon(
-                                  settingsOptions[index]['icon'],
-                                  size: 28,
-                                  color: Colors.black87,
-                                ),
+                                child: CustomContainer(
+                                  height: 24,
+                                  width: 24,
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(image: AssetImage(settingsOptions[index]['icon'])),
+                                )
                               ),
                             ),
                             title: Text(
@@ -477,16 +478,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return ListTile(
                             leading: Container(
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
+                                color: Color(0xff000000).withOpacity(0.05),
                                 shape: BoxShape.circle,
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(
-                                  helpAndContact[index]['icon'],
-                                  size: 28,
-                                  color: Colors.black87,
-                                ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CustomContainer(
+                                    height: 24,
+                                    width: 24,
+                                    image: DecorationImage(image: AssetImage(helpAndContact[index]['icon']),),
+                                  )
                               ),
                             ),
                             title: Text(
@@ -518,15 +519,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: CustomContainer(
                           height: 40,
                           width: double.infinity,
+                          borderRadius: BorderRadius.circular(10),
                           conColor: Color(0xffE2E2E2),
                           child: Center(
                               child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.logout_rounded),
+                              CustomContainer(
+                                height: 18,
+                                width: 18,
+                                image: DecorationImage(image: AssetImage('assets/icons/Arrows ALogout 2.png')),
+                              ),
+                              SizedBox(width: 6),
                               CustomText(
                                 text: "logout".tr,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w700,
                                 fontSize: 16,
                                 fontFamily: "Gilroy-Bold",
                               ),
@@ -535,8 +542,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 16,
                       ),
+                      Center(
+                        child: CustomText(
+                            text: 'v25.3.5 (11)\n© 2023 Whatnot, Inc.',
+                          color: Color(0xff2A2A2A).withOpacity(0.60),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
                     ],
                   ),
                 ),

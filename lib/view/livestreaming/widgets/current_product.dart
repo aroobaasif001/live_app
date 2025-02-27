@@ -160,9 +160,7 @@ class CurrentProductContainer extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   const Spacer(),
-
                   // Bottom row: Gradient "Bid" button on the right
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
