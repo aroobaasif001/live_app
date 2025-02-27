@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
-import '../../../custom_widgets/custom_text.dart';
-import '../../../utils/icons_path.dart';
+import 'package:get/get.dart';
 
 class LiveVideoCard extends StatelessWidget {
-  final String? adminName;
-  final String? adminImage;
-  final int? viewsCount;
-  final String? title;
+  final String adminName;
+  final String adminImage;
+  final int viewsCount;
+  final String title;
 
   const LiveVideoCard({
     Key? key,
-     this.adminName,
-     this.adminImage,
-     this.viewsCount,
-    this.title,
+    required this.adminName,
+    required this.adminImage,
+    required this.viewsCount,
+    required this.title,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 150,
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -27,32 +28,39 @@ class LiveVideoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Image.asset('assets/icons/apple1.png'),
-              const SizedBox(width: 10),
-              CustomText(
-                text: adminName!,
-                fontFamily: 'Gilroy-Bold',
-                fontWeight: FontWeight.w400,
-              )
-            ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 15,
+                  backgroundImage: AssetImage('assets/icons/apple1.png'),
+                ),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: Text(
+                    adminName,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 10),
-          // Video thumbnail with overlay details
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                // Display the admin image (assumed to be a URL)
+                borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  adminImage!,
+                  adminImage,
                   width: double.infinity,
-                  fit: BoxFit.contain,
+                  height: Get.height* .23,
+                  fit: BoxFit.cover,
                 ),
               ),
-              // Live badge with views count
               Positioned(
                 top: 8,
                 left: 8,
@@ -65,54 +73,38 @@ class LiveVideoCard extends StatelessWidget {
                   child: Text(
                     "Live • $viewsCount",
                     style: const TextStyle(
-                        color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              // Top right bookmark and views count
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Column(
-                  children: [
-                    const Icon(Icons.bookmark, color: Colors.white),
-                    const SizedBox(width: 4),
-                    Text(
-                      "$viewsCount",
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
+                  ),
                 ),
               ),
             ],
           ),
-          // Bottom details with title and extra info
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+            child: Row(
                   children: [
-                    Image.asset(flagIcon, height: 16, width: 16),
-                    Flexible(
-                      child: CustomText(
-                        text: title!,
-                        fontSize: 12,
-                        color: const Color(0xff2a2a2a),
-                        fontFamily: 'Gilroy-Bold',
+                    Image.asset('assets/icons/flag.png', height: 16, width: 16),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff2a2a2a),
+                        ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
           ),
         ],
       ),
     );
   }
 }
-

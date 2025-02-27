@@ -113,7 +113,7 @@ class LiveStreamController extends GetxController {
 
       // Generate token and log its value
       print('[DEBUG] Calling generateAgoraToken with channelId: $channelId and uid: $uid');
-      String token = ('007eJxTYFi84KnXmxU9dgVFc8tOhti6SC/YYbBEIFBZMbRiq+/7oosKDBZphknJJgYplgbG5iZJ5hZJqYYGiUapFqaGSYmWhiYGsyz3pDcEMjK0vpVmYWSAQBCfg6EktbjE0MjYhIEBALnbH9U=');
+      String token = await generateToken(channelId, uid);
       print('[DEBUG] Received token: $token');
 
       // Create and initialize the RTC engine
@@ -184,6 +184,8 @@ class LiveStreamController extends GetxController {
       await _rtcEngine?.enableVideo();
       await _rtcEngine?.enableAudio();
       await _rtcEngine?.enableLocalVideo(true);
+            await _rtcEngine?.enableLocalVideo(true);
+
       await _rtcEngine?.startPreview();
       await _rtcEngine?.setAudioProfile(
         profile: AudioProfileType.audioProfileMusicHighQuality,
@@ -193,7 +195,7 @@ class LiveStreamController extends GetxController {
       print('[DEBUG] Joining channel with token: $token, channelId: $channelId, uid: $uid');
       await _rtcEngine?.joinChannel(
         token: token,
-        channelId: 'test1234',
+        channelId: channelId,
         uid: uid,
         options: ChannelMediaOptions(
           channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
@@ -202,6 +204,12 @@ class LiveStreamController extends GetxController {
               : ClientRoleType.clientRoleAudience,
         ),
       );
+           await _rtcEngine?.enableVideo();
+      await _rtcEngine?.enableAudio();
+      await _rtcEngine?.enableLocalVideo(true);
+            await _rtcEngine?.enableLocalVideo(true);
+
+      await _rtcEngine?.startPreview();
 
       print('[INFO] Successfully joined channel: $channelId');
     } catch (e) {
