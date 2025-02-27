@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
 
 import '../../../custom_widgets/custom_text.dart';
