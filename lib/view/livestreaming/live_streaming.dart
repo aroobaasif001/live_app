@@ -17,6 +17,7 @@ import 'package:live_app/view/livestreaming/widgets/products_pick.dart';
 import 'package:live_app/view/livestreaming/widgets/text_field.dart';
 import 'package:live_app/view/livestreaming/widgets/viewers_bottomsheet.dart';
 import 'package:lottie/lottie.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -190,6 +191,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
       initializeFirestore(widget.channelId);
     });
     super.initState();
+    requestCameraAndMicrophonePermissions();
 
     WakelockPlus.enable();
     ever(_controller.comments, (_) {
@@ -969,6 +971,19 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
         print("Error updating heartbeat: $e");
       }
     });
+  }
+  Future<bool> requestCameraAndMicrophonePermissions() async {
+    // Request camera permission
+    var cameraStatus = await Permission.camera.request();
+    // Request microphone permission
+    var microphoneStatus = await Permission.microphone.request();
+
+    // Check if both permissions are granted
+    if (cameraStatus.isGranted && microphoneStatus.isGranted) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
