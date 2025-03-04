@@ -117,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Get.find<TranslationsController>();
     return CustomProfileBackgroundScaffold(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         body: StreamBuilder(
           stream: getCurrentUserData,
           builder: (context, snapshot) {
@@ -276,6 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                         child: Container(
                           height: 155,
+                          margin: EdgeInsets.symmetric(horizontal: 10) ,
                           width: double.infinity,
                           decoration: BoxDecoration(
                               image: DecorationImage(
@@ -283,45 +284,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   fit: BoxFit.cover)),
                         ),
                       ),
-                      TextButton(
-                          onPressed: () {
-                            Get.to(() => LiveStreamViewScreen());
-                          },
-                          child: Text('current_lives'.tr)),
+
                       CustomText(
                         text: "account".tr,
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
-                      TextButton(
-                          onPressed: () {
-                            // Get.to(()=>LivePreviewScreen(name: snapshot.data!.data()!.firstName.toString(), photo: 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'));
-                          },
-                          child: Text('start_live'.tr)),
-                      TextButton(
-                          onPressed: () {
-                            Get.to(() => LiveStreamViewScreen());
-                          },
-                          child: Text('current_lives'.tr)),
+
                       SizedBox(
                         height: 12,
                       ),
-                      CustomGradientButton(
-                        text: "Sold Products",
-                        onPressed: () {
-                          Get.to(()=>SoldProductsScreen());
-                        },
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
+                      // CustomGradientButton(
+                      //   text: "Sold Products",
+                      //   onPressed: () {
+                      //     Get.to(()=>SoldProductsScreen());
+                      //   },
+
                       Row(
                         children: [
+                          SizedBox(width: 5,),
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Color(0xffFFFFFF),
-                                borderRadius: BorderRadius.circular(12),
+                                color:Colors.grey.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(color: Colors.grey.withOpacity(0.2))
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -341,7 +328,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: CustomText(
                                         text: "referrals_points".tr,
                                         fontFamily: "SF Pro Rounded",
-                                        fontSize: 14,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -349,7 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       text: "balance".tr,
                                       fontFamily: "Gilroy-Bold",
                                       color: Colors.grey,
-                                      fontSize: 12,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ],
@@ -367,8 +354,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Color(0xffFFFFFF),
-                                  borderRadius: BorderRadius.circular(12),
+                                    color:Colors.grey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(15),
+                                    border: Border.all(color: Colors.grey.withOpacity(0.2))
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -389,7 +377,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         child: CustomText(
                                           text: "my_award".tr,
                                           fontFamily: "SF Pro Rounded",
-                                          fontSize: 14,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -397,7 +385,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         text: "view_coupons".tr,
                                         fontFamily: "Gilroy-Bold",
                                         color: Colors.grey,
-                                        fontSize: 12,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ],
@@ -406,6 +394,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                           ),
+                          SizedBox(width: 5,),
+
                         ],
                       ),
                       SizedBox(
@@ -418,16 +408,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         itemBuilder: (context, index) {
                           return ListTile(
                             leading: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                shape: BoxShape.circle,
-                              ),
+
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Icon(
-                                  settingsOptions[index]['icon'],
-                                  size: 28,
-                                  color: Colors.black87,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.grey.withOpacity(0.3),
+                                  child: Icon(
+                                    settingsOptions[index]['icon'],
+                                    size: 25,
+                                    color: Colors.black.withOpacity(0.6),
+                                  ),
                                 ),
                               ),
                             ),
@@ -437,7 +427,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   fontFamily: "Gilroy-Bold",
-                                  color: Color(0xff2A2A2A)),
+                                color: Colors.black.withOpacity(0.8),
+                              ),
                             ),
                             trailing: Icon(
                               Icons.chevron_right,
