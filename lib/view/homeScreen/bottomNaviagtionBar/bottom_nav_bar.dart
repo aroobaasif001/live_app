@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:live_app/view/homeScreen/homeMainScreen/home_main_screen.dart';
 import '../../livestreaming/live_streaming.dart';
 import '../../profile_views/create_a_product_screen.dart';
