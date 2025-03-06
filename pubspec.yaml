@@ -61,6 +61,13 @@ dependencies:
   lottie: ^3.3.1
   responsive_grid_list: ^1.4.0
   cloud_functions: ^5.3.3
+  flutter_launcher_icons: any
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/flutter_launcher_icon/Logo.png"
+  adaptive_icon_foreground: "assets/flutter_launcher_icon/Logo.png"
+  adaptive_icon_background: "assets/flutter_launcher_icon/Logo.png"
 
 dev_dependencies:
   flutter_test:
@@ -90,6 +97,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/flutter_launcher_icon/
     - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see

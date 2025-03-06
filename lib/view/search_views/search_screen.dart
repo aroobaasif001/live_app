@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/search_views/search_by_application.dart';
 import '../../custom_widgets/custom_gradient_button.dart';
@@ -661,7 +660,7 @@ Widget _buildStreamGrid(BuildContext context) {
       }
       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
         return const Center(child: Text('No livestreams available'));
-      };
+      }
 
       final livestreamsData = snapshot.data!.docs;
 
@@ -678,7 +677,7 @@ Widget _buildStreamGrid(BuildContext context) {
                   crossAxisCount: screenWidth > 600 ? 3 : 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  childAspectRatio: 0.80,
+                  mainAxisExtent: 360,
                 ),
                 itemCount: livestreamsData.length,
                 itemBuilder: (context, index) {

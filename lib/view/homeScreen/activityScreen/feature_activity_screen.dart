@@ -30,7 +30,7 @@ class FeatureActivityScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildSectionTitle("Streams".tr),
-                      SizedBox(height: 200, child: _buildLiveVideos(context)),
+                      SizedBox(height: 350, child: _buildLiveVideos(context)),
                     ],
                   );
                 case "Goods":
@@ -46,7 +46,7 @@ class FeatureActivityScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildSectionTitle("Streams".tr),
-                      SizedBox(height: 200, child: _buildLiveVideos(context)),
+                      SizedBox(height: 360, child: _buildLiveVideos(context)),
                       const SizedBox(height: 16),
                       _buildSectionTitle("Goods".tr),
                       _buildProductList(),
@@ -96,7 +96,7 @@ class FeatureActivityScreen extends StatelessWidget {
 
   Widget _buildLiveVideos(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: 350,
       child: StreamBuilder<QuerySnapshot>(
         stream:
             FirebaseFirestore.instance.collection('livestreams').snapshots(),
