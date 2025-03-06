@@ -21,54 +21,42 @@ class LiveVideoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 3)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 15,
-                  backgroundImage: AssetImage('assets/icons/apple1.png'),
-                ),
-                const SizedBox(width: 5),
-                Expanded(
-                  child: Text(
-                    adminName,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  adminImage,
-                  width: double.infinity,
-                  height: Get.height* .23,
-                  fit: BoxFit.cover,
+              CircleAvatar(
+                radius: 15,
+                backgroundImage: AssetImage('assets/icons/apple1.png'),
+              ),
+              const SizedBox(width: 5),
+              Expanded(
+                child: Text(
+                  adminName,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Positioned(
-                top: 8,
-                left: 8,
-                child: Container(
+            ],
+          ),
+        ),
+        CustomContainer(
+          height: 252,
+          width: double.maxFinite,
+          borderRadius: BorderRadius.circular(10),
+          image: DecorationImage(image: NetworkImage(adminImage),fit: BoxFit.fill),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: Colors.red,
@@ -82,33 +70,32 @@ class LiveVideoCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-              ),
-            ],
+                )
+              ],
+            ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-                  children: [
-                    Image.asset('assets/icons/flag.png', height: 16, width: 16),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xff2a2a2a),
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset('assets/icons/flag.png', height: 20, width: 16),
+                  const SizedBox(width: 5),
+                  Flexible(
+                    child: CustomText(
+                      text: title,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xff2a2a2a),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ],
-                ),
-          ),
-        ],
-      ),
+                  ),
+                ],
+              ),
+        ),
+      ],
     );
   }
 }

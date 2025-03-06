@@ -46,7 +46,7 @@ class FeatureActivityScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildSectionTitle("Streams".tr),
-                      SizedBox(height: 350, child: _buildLiveVideos(context)),
+                      SizedBox(height: 360, child: _buildLiveVideos(context)),
                       const SizedBox(height: 16),
                       _buildSectionTitle("Goods".tr),
                       _buildProductList(),

@@ -127,8 +127,7 @@ class HomeMainScreen extends StatelessWidget {
                   crossAxisCount: screenWidth > 600 ? 3 : 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  // childAspectRatio: 0.80,
-                  mainAxisExtent: 350
+                  mainAxisExtent: 360
                 ),
                 itemCount: livestreamsData.length,
                 itemBuilder: (context, index) {
