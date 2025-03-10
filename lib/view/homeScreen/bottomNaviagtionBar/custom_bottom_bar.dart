@@ -15,14 +15,14 @@ class CustomBottomNavBar extends StatelessWidget {
     'assets/icons/profile.png',
   ];
 
-  final List<String> labels = ["Home", "Search", "Menu", "Activity", "Profile"];
+  final List<String> labels = ["Home", "Categories", "Menu", "Activity", "Profile"];
 
   @override
   Widget build(BuildContext context) {
     return Obx(
           () => Container(
         margin: EdgeInsets.all(10),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.circular(30),

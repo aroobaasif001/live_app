@@ -9,8 +9,6 @@ import '../../search_views/search_by_application.dart';
 import '../widgets/live_video_card.dart';
 import '../widgets/category_tab.dart';
 
-
-
 class HomeMainScreen extends StatelessWidget {
   final int notificationCount = 2;
   final List<String> liveVideos = List.generate(6, (index) => "Live $index");
@@ -30,9 +28,7 @@ class HomeMainScreen extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Expanded(
-                child: _buildLiveVideos(
-              context,
-            )),
+                child: _buildLiveVideos(context)),
           ],
         ),
       ),
@@ -160,7 +156,6 @@ class HomeMainScreen extends StatelessWidget {
       },
     );
   }
-
 
   Future<void> joinLiveStreamingWithPrefs(String channelId) async {
     try {

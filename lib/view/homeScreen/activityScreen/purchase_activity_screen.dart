@@ -215,7 +215,7 @@
 //   List<Map<String, dynamic>> _getFilteredCompletedAuctions() {
 //     String filter = categories[selectedCategoryIndex.value];
 //     if (filter == "All") return completedAuctions;
-//     return completedAuctions; 
+//     return completedAuctions;
 //   }
 // }
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -265,35 +265,40 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 12),
-            _buildCategoryTabs(),
-            const SizedBox(height: 12),
-            Expanded(
-              child: Obx(() => SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ..._getFilteredAuctions()
-                            .map((item) => _buildAuctionCard(item))
-                            .toList(),
-                        const SizedBox(height: 16),
-                        Text(
-                          "recently_completed_auctions".tr,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        const SizedBox(height: 8),
-                        _buildCompletedAuctions(), // Fetch from Firestore
-                      ],
-                    ),
-                  )),
-            ),
-          ],
-        ),
+      body: StreamBuilder(
+          stream: ProductEntity.collection().snapshots(),
+          builder: (context, snapshot) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 12),
+                  _buildCategoryTabs(),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: Obx(() => SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          ..._getFilteredAuctions()
+                              .map((item) => _buildAuctionCard(item))
+                              .toList(),
+                          const SizedBox(height: 16),
+                          Text(
+                            "recently_completed_auctions".tr,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildCompletedAuctions(), // Fetch from Firestore
+                        ],
+                      ),
+                    )),
+                  ),
+                ],
+              ),
+            );
+          }
       ),
     );
   }
@@ -306,13 +311,13 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
         child: Row(
           children: List.generate(categories.length, (index) {
             return Obx(() => Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: CustomGradiantTabButton(
-                    text: categories[index].tr,
-                    isSelected: selectedCategoryIndex.value == index,
-                    onPressed: () => selectedCategoryIndex.value = index,
-                  ),
-                ));
+              padding: const EdgeInsets.only(right: 10),
+              child: CustomGradiantTabButton(
+                text: categories[index].tr,
+                isSelected: selectedCategoryIndex.value == index,
+                onPressed: () => selectedCategoryIndex.value = index,
+              ),
+            ));
           }),
         ),
       ),
@@ -372,7 +377,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
                     child: Text(
                       statusText,
                       style:
-                          const TextStyle(color: Colors.white, fontSize: 12),
+                      const TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ),
                 ),
@@ -402,7 +407,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
                       style: const TextStyle(fontSize: 14)),
                   Text(auction["description"],
                       style:
-                          const TextStyle(fontSize: 12, color: Colors.grey)),
+                      const TextStyle(fontSize: 12, color: Colors.grey)),
                   const SizedBox(height: 4),
                   Text(auction["price"],
                       style: const TextStyle(
@@ -433,7 +438,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
 
         List<ProductEntity> soldProducts = snapshot.data!.docs
             .map((doc) =>
-                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+            ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
 
         return Column(
