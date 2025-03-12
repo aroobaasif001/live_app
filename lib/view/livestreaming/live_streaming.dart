@@ -1,25 +1,21 @@
 import 'dart:async';
-import 'dart:math'; // Import for mathematical functions like sin
-
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:live_app/view/homeScreen/homeMainScreen/home_main_screen.dart';
 import 'package:live_app/view/livestreaming/widgets/current_product.dart';
-import 'package:live_app/view/livestreaming/widgets/highest_bid.dart';
-import 'package:live_app/view/livestreaming/widgets/joinrequest_bottomsheet.dart';
+
 import 'package:live_app/view/livestreaming/widgets/products_pick.dart';
 import 'package:live_app/view/livestreaming/widgets/text_field.dart';
-import 'package:live_app/view/livestreaming/widgets/viewers_bottomsheet.dart';
 import 'package:lottie/lottie.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
@@ -71,6 +67,54 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
       }
     });
   }
+  Future<void> captureAndStoreSnapshot() async {
+    try {
+      // Get a temporary directory to store the snapshot locally.
+      final directory = await getTemporaryDirectory();
+      final filePath = '${directory.path}/snapshot_${DateTime.now().millisecondsSinceEpoch}.png';
+
+      // Capture the snapshot from Agora's engine (assumes uid 0 for admin's stream).
+      await _controller.agoraEngine?.takeSnapshot(uid: 0  , filePath: filePath);
+
+      print("Snapshot requested at $filePath");
+
+      File snapshotFile = File(filePath);
+
+      // Retry loop: Check if the file exists, wait a bit if it doesn't.
+      int retries = 5;
+      while (!(await snapshotFile.exists()) && retries > 0) {
+        await Future.delayed(Duration(milliseconds: 500));
+        retries--;
+      }
+
+      // If file still doesn't exist, log and exit.
+      if (!(await snapshotFile.exists())) {
+        print("Snapshot file not found after waiting.");
+        return;
+      }
+      print("Snapshot file exists. Proceeding with upload.");
+
+      // Upload the file to Firebase Storage.
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('live_screenshots')
+          .child('${widget.channelId}_${DateTime.now().millisecondsSinceEpoch}.png');
+
+      await storageRef.putFile(snapshotFile);
+      final downloadUrl = await storageRef.getDownloadURL();
+      print("Snapshot uploaded. Download URL: $downloadUrl");
+
+      // Update the Firestore livestreams document with the new image URL.
+      await FirebaseFirestore.instance
+          .collection('livestreams')
+          .doc(widget.channelId)
+          .update({'liveImage': downloadUrl});
+      print("Firestore updated with new live image.");
+    } catch (e) {
+      print("Error capturing or uploading snapshot: $e");
+    }
+  }
+
 
   void redirectToHomePage() {
     // Navigate to the homepage
@@ -181,6 +225,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
         .dispose(); // Dispose of the controller to prevent memory leaks
     super.dispose();
   }
+  Timer? snapshotTimer;
+
 
   @override
   void initState() {
@@ -192,6 +238,12 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
     });
     super.initState();
     requestCameraAndMicrophonePermissions();
+    if (widget.isAdmin) {
+      snapshotTimer = Timer.periodic(Duration(minutes: 1), (_) async {
+        await captureAndStoreSnapshot();
+      });
+    }
+    captureAndStoreSnapshot();
 
     WakelockPlus.enable();
     ever(_controller.comments, (_) {
@@ -282,14 +334,13 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        bool exitConfirmed =
-        await _showExitConfirmationDialog(context, widget.isAdmin);
-        if (exitConfirmed) {
+        if (widget.isAdmin) {
           await _controller.leaveStream();
           _controller.deleteLiveStream(widget.channelId);
-          Get.offAll(
-                  () => BottomNavigationBarWidget()); // Redirect to Home Page
+        } else {
+          await _controller.leaveStreamUser(widget.channelId, widget.uid.toString());
         }
+        Get.offAll(() => BottomNavigationBarWidget());
         return false;
       },
       child: Scaffold(
@@ -451,10 +502,22 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // Boost
                       GestureDetector(
                         onTap: () {
-                          // Handle 'Boost' tap
+                          Get.defaultDialog(
+                            title: "Boost Video",
+                            middleText: "Do you want to boost your video?",
+                            textCancel: "No",
+                            textConfirm: "Yes",
+                            confirmTextColor: Colors.white,
+                            onConfirm: () {
+                              print("Boost video confirmed.");
+                              Get.back();
+                            },
+                            onCancel: () {
+                              print("Boost video canceled.");
+                            },
+                          );
                         },
                         child: Column(
                           children: [
@@ -473,11 +536,9 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-
-                      // Clip
                       GestureDetector(
                         onTap: () {
-                          // Handle 'Clip' tap
+                          showUserProductsBottomSheet(context, widget.channelId);
                         },
                         child: Column(
                           children: [
@@ -496,38 +557,6 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-
-                      // Share
-                      GestureDetector(
-                        onTap: () {
-                          // Handle 'Share' tap
-                        },
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/icons/ic_share.png', // Dummy icon
-                              width: 40,
-                              height: 40,
-                            ),
-                            const SizedBox(height: 5),
-                            const Text(
-                              'Share',
-                              style:
-                              TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-
-
-
-                      const SizedBox(height: 20),
-
-                      // Shop
-
-
-
-                      // Wallet
                       GestureDetector(
                         onTap: () {
                           // Handle 'Wallet' tap
@@ -855,8 +884,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
     );
   }
 
-  Future<bool> _showExitConfirmationDialog(BuildContext context,
-      bool isAdmin) async {
+
+  Future<bool> _showExitConfirmationDialog(BuildContext context, bool isAdmin) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -866,24 +895,24 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
             BorderRadius.circular(10), // Adjusted border radius
           ),
           backgroundColor:
-          HexColor('#2C2D2A'), // Set background to match the image
+          HexColor('#2C2D2A'),
           child: Padding(
             padding: const EdgeInsets.only(
                 top: 40,
                 left: 20,
                 right: 20,
-                bottom: 40), // Add padding around content
+                bottom: 40),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   'Do you want to end Live video?',
-                  // Static text as shown in image
+
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white, // White text color
-                    fontSize: 18, // Adjusted font size
+                    color: Colors.white,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

@@ -79,6 +79,8 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                         'currentmusic_id': null,
                         'heartbeat': null,
                         "timestamp": FieldValue.serverTimestamp(),
+                        "description": "description is added here",
+                        'liveImage' : null,
                       };
 
                       await FirebaseFirestore.instance

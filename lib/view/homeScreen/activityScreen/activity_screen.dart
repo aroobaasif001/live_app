@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/utils/icons_path.dart';
@@ -68,7 +69,7 @@ class _ActivityScreenState extends State<ActivityScreen> with SingleTickerProvid
       body: TabBarView(
         controller: _tabController,
         children: [
-          PurchaseActivityScreen(),
+          PurchaseActivityScreen(currentUserId: FirebaseAuth.instance.currentUser!.uid,),
           RatesActivitySearchScreen(),
           MessagesList(),
           FeatureActivityScreen()
