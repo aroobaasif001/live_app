@@ -22,7 +22,7 @@ class AboutTheProductScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomText(
-            text:productDescription!,
+            text:productDescription ?? '',
             fontSize: 13,
           ),
           SizedBox(height: 20),

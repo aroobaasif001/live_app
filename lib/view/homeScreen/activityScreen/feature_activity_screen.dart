@@ -128,6 +128,8 @@ class FeatureActivityScreen extends StatelessWidget {
               final title = data['title'] ?? '';
               final description = data['description'] as String? ?? '';
               final channelName = data['channelId'] ?? '';
+              final category = data['category'] ?? '';
+
 
               return SizedBox(
                 width: 150,
@@ -142,7 +144,7 @@ class FeatureActivityScreen extends StatelessWidget {
                       adminName: adminName,
                       adminImage: adminImage,
                       viewsCount: viewsCount,
-                      title: title, liveImage: liveImage,
+                      title: title, liveImage: liveImage, category: category,
                     ),
                   ),
                 ),

@@ -150,6 +150,7 @@ class HomeMainScreen extends StatelessWidget {
                       data['channelId'] as String? ?? '';
                   final liveImage =
                       data['liveImage'] as String? ?? '';
+                  final category = data['category'] ?? '';
 
                   return GestureDetector(
                     onTap: () {
@@ -160,7 +161,7 @@ class HomeMainScreen extends StatelessWidget {
                       adminImage: adminImage,
                       viewsCount: viewsCount,
                       title: title,
-                      description: description, liveImage: liveImage,
+                      description: description, liveImage: liveImage, category: category,
                     ),
                   );
                 },

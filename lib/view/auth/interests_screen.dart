@@ -141,7 +141,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
           index: widget.index,
           interests: selectedInterests,
           detailedInterests: [],
-          image: "",
+          image: null,
           coverImage: "",
           delivery: "",
           rating: "",

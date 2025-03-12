@@ -1,9 +1,11 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/entities/product_entity.dart';
 import 'package:live_app/utils/colors.dart';
+import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
 import 'package:live_app/view/profile_views/create_a_product_screen.dart';
 
 import '../../custom_widgets/custom_container.dart';
@@ -228,10 +230,13 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         // Convert each doc into a ProductEntity
         List<ProductEntity> products = snapshot.data!.docs
             .map((doc) =>
-                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+            ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
 
-        // Filter logic
+        // **Filter by current user ID**
+        products = products.where((p) => p.id == FirebaseAuth.instance.currentUser!.uid).toList();
+
+        // **Filter logic**
         if (filter == "Fix") {
           products = products.where((p) => p.saleType == "Buy Now").toList();
         } else if (filter == "Auction") {
@@ -244,13 +249,12 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
           products = products.where((p) => p.isSold ?? false).toList();
         }
 
-        // Search logic
+        // **Search logic**
         if (_searchQuery.isNotEmpty) {
           products = products
               .where((p) =>
-                  (p.title?.toLowerCase().contains(_searchQuery) ?? false) ||
-                  (p.description?.toLowerCase().contains(_searchQuery) ??
-                      false))
+          (p.title?.toLowerCase().contains(_searchQuery) ?? false) ||
+              (p.description?.toLowerCase().contains(_searchQuery) ?? false))
               .toList();
         }
 
@@ -261,12 +265,20 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         return ListView.builder(
           itemCount: products.length,
           itemBuilder: (context, index) {
-            return buildProductItem(products[index]);
+            return GestureDetector(
+                onTap: (){
+
+                  Get.to(() => ProductDetailScreen(product: products[index]));
+
+                },
+
+                child: buildProductItem(products[index]));
           },
         );
       },
     );
   }
+
 
   Widget buildProductItem(ProductEntity product) {
     return Padding(

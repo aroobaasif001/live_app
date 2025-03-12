@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:live_app/entities/product_entity.dart';
+import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
 import '../../../custom_widgets/custom_gradiant_tab_button.dart';
 
 class PurchaseActivityScreen extends StatefulWidget {
@@ -57,7 +60,13 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
                   child: ListView(
                     children: [
                       Text("All Products", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      ...allProducts.map((product) => _buildProductCard(product)).toList(),
+                      ...allProducts.map((product) => GestureDetector(
+
+                          onTap: (){Get.to(()=>ProductDetailScreen(product: product));},
+                          child
+
+
+                          : _buildProductCard(product))).toList(),
                       const SizedBox(height: 20),
                       Text("Sold Products", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                       ...soldProducts.map((product) => _buildSoldProductCard(product)).toList(),

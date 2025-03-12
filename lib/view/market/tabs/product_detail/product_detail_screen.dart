@@ -11,30 +11,40 @@ import 'package:live_app/utils/images_path.dart';
 import 'package:live_app/view/market/tabs/product_detail/tabs/about_the_product_screen.dart';
 import 'package:live_app/view/market/tabs/product_detail/tabs/seller_information_screen.dart';
 
+import '../../../../entities/product_entity.dart';
+
 class ProductDetailScreen extends StatelessWidget {
+  final ProductEntity product;
+
+  ProductDetailScreen({required this.product});
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Tab// count should match TabBarView children count
+      length: 2,
       child: Scaffold(
         backgroundColor: Color(0xffC9C9C9),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Product Image
               CustomContainer(
                 height: 376,
                 width: double.infinity,
-                image: DecorationImage(image: AssetImage(iphoneImage), fit: BoxFit.fill),
+                image: DecorationImage(
+                  image: product.images != null && product.images!.isNotEmpty
+                      ? NetworkImage(product.images!.first)
+                      : AssetImage(iphoneImage) as ImageProvider, // Use first image or default
+                  fit: BoxFit.fill,
+                ),
                 child: Align(
                   alignment: Alignment.topRight,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 50, right: 12),
                     child: IconButton(
                       padding: EdgeInsets.zero,
-                      onPressed: () {
-                        Get.back();
-                      },
+                      onPressed: () => Get.back(),
                       icon: CustomContainer(
                         height: 30,
                         width: 30,
@@ -53,14 +63,14 @@ class ProductDetailScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: 'Iphone 16 PRO MAX 512 GB',
+                      text: product.title ?? 'Unknown Product',
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'SFProRounded',
                     ),
                     SizedBox(height: 6),
                     CustomText(
-                      text: 'Iphone - New - Original',
+                      text: '${product.category ?? 'Unknown'} - ${product.saleType ?? 'N/A'}',
                       fontFamily: "Gilroy",
                       fontSize: 17,
                     ),
@@ -72,7 +82,7 @@ class ProductDetailScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                       conColor: Color(0xff7246F1).withOpacity(0.1),
                       child: CustomText(
-                        text: 'Sold Out',
+                        text: product.isSold ?? false ? 'Sold Out' : 'Available',
                         fontSize: 12,
                         color: Color(0xff7246F1),
                       ),
@@ -80,27 +90,21 @@ class ProductDetailScreen extends StatelessWidget {
                     SizedBox(height: 10),
                     CustomTable(
                       leftText: 'Selling price',
-                      rightText: '100,000 ₽',
+                      rightText: '${product.price ?? 'N/A'} ₽',
                     ),
                     CustomTable(
                       leftText: 'Type of sale',
-                      rightText: 'Auction',
+                      rightText: product.saleType ?? 'N/A',
                       conColor: Colors.white,
                     ),
                     CustomTable(
-                      image: appleGBlackImage,
-                      leftText: 'Buyer',
-                      rightText: 'company_name',
+                      leftText: 'Streamer',
+                      rightText: product.streamer ?? 'Unknown',
                     ),
                     CustomTable(
-                      image: appleGBlackImage,
-                      leftText: 'Seller',
-                      rightText: 'company_name',
+                      leftText: 'Delivery',
+                      rightText: product.delivery ?? 'N/A',
                       conColor: Colors.white,
-                    ),
-                    CustomTable(
-                      leftText: 'Date of sale',
-                      rightText: 'September 25, 2022',
                     ),
                     SizedBox(height: 12),
                     Divider(color: conLineColor),
@@ -127,7 +131,7 @@ class ProductDetailScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         gradient: LinearGradient(
-                          colors: [Colors.blue, Colors.pinkAccent], // Gradient for selected tab
+                          colors: [Colors.blue, Colors.pinkAccent],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -145,9 +149,7 @@ class ProductDetailScreen extends StatelessWidget {
                 height: MediaQuery.of(context).size.height,
                 child: TabBarView(
                   children: [
-                    /// **First Tab: About the Product**
                     AboutTheProductScreen(),
-                    /// **Second Tab: Seller Information**
                     SellerInformationScreen(),
                   ],
                 ),
@@ -161,11 +163,7 @@ class ProductDetailScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
           conColor: Colors.white,
           boxShadow: [
-            BoxShadow(
-                color: greyColor,
-                blurRadius: 5,
-                offset: Offset(-1, 3)
-            )
+            BoxShadow(color: greyColor, blurRadius: 5, offset: Offset(-1, 3))
           ],
           child: Center(
             child: CustomContainer(
@@ -181,7 +179,7 @@ class ProductDetailScreen extends StatelessWidget {
                     width: 24,
                     image: DecorationImage(image: AssetImage(storeIcon)),
                   ),
-                  CustomText(text: '1000 ₽',color: Colors.white)
+                  CustomText(text: '${product.price} ₽', color: Colors.white),
                 ],
               ),
             ),

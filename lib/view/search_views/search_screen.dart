@@ -1,5 +1,6 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -167,7 +168,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
             const SizedBox(height: 12),
-            _buildHorizontalUsers(itemCount: 3),
+            _buildHorizontalUsers(),
             const SizedBox(height: 12),
 
             // PRODUCTS SECTION
@@ -459,66 +460,173 @@ class _SearchScreenState extends State<SearchScreen> {
       },
     );
   }
-  Widget _buildHorizontalUsers({required int itemCount}) {
-    return SizedBox(
-      height: 165,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: itemCount,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Container(
-              width: 150,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-                child: Column(
-                  children: [
-                    // user image
-                    Container(
-                      height: 45,
-                      width: 45,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage(appleIcon),
-                          fit: BoxFit.cover,
+
+
+
+  Widget _buildHorizontalUsers() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('UserEntity').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(child: Text("No Users Found".tr));
+        }
+
+        List<DocumentSnapshot> users = snapshot.data!.docs;
+        String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? "";
+
+        return SizedBox(
+          height: 165,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: users.length,
+            itemBuilder: (context, index) {
+              var userData = users[index].data() as Map<String, dynamic>?;
+
+              // Extract user details safely
+              String userId = users[index].id;
+              String userName = userData?['firstName'] ?? 'Unknown';
+              String userImage = userData?['image'] ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6vBz9VgjksAaZZkWOm8Lk3ZSb7gO25eP0-Q&s';
+
+              List<dynamic> subscribersList = userData?['subscribers'] != null
+                  ? List<dynamic>.from(userData?['subscribers'])
+                  : [];
+
+              bool isSubscribed = subscribersList.contains(currentUserId);
+              int subscriberCount = subscribersList.length;
+
+              return Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Container(
+                  width: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                    child: Column(
+                      children: [
+                        // User image
+                        Container(
+                          height: 45,
+                          width: 45,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: userImage.startsWith("http")
+                                  ? NetworkImage(userImage)
+                                  : AssetImage(userImage) as ImageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 8),
+                        CustomText(
+                          text: userName,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          fontFamily: "Gilroy-Bold",
+                        ),
+                        const SizedBox(height: 2),
+                        CustomText(
+                          text: "$subscriberCount Subscribers",
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          fontFamily: "Gilroy-Bold",
+                        ),
+                        const SizedBox(height: 8),
+                        GestureDetector(
+                          onTap: () async {
+                            if (isSubscribed) {
+                              await _unsubscribeUser(userId, currentUserId);
+                            } else {
+                              await _subscribeUser(userId, currentUserId);
+                            }
+                          },
+                          child: CustomGradientButton(
+                            text: isSubscribed ? "Unsubscribe" : "Subscribe",
+                            height: 35,
+                            width: 100,
+
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8),
-                    CustomText(
-                      text: "company_name".tr,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      fontFamily: "Gilroy-Bold",
-                    ),
-                    const SizedBox(height: 2),
-                    CustomText(
-                      text: "2.3K Subscribers",
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      fontFamily: "Gilroy-Bold",
-                    ),
-                    const SizedBox(height: 8),
-                    CustomGradientButton(
-                      text: "Subscribe",
-                      height: 35,
-                      width: 100,
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
+
+  Future<void> _unsubscribeUser(String userId, String currentUserId) async {
+    DocumentReference userDoc = FirebaseFirestore.instance.collection('UserEntity').doc(userId);
+
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(userDoc);
+
+        if (!snapshot.exists) return;
+
+        Map<String, dynamic>? userData = snapshot.data() as Map<String, dynamic>?;
+
+        List<dynamic> subscribersList = userData?['subscribers'] != null
+            ? List<dynamic>.from(userData?['subscribers'])
+            : [];
+
+        if (subscribersList.contains(currentUserId)) {
+          subscribersList.remove(currentUserId);
+          transaction.update(userDoc, {'subscribers': subscribersList});
+        }
+      });
+
+      Get.snackbar("Success", "You have unsubscribed successfully!",
+          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange, colorText: Colors.white);
+    } catch (e) {
+      Get.snackbar("Error", "Failed to unsubscribe: ${e.toString()}",
+          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
+
+  /// **Function to handle subscription logic**
+  Future<void> _subscribeUser(String userId, String currentUserId) async {
+    DocumentReference userDoc = FirebaseFirestore.instance.collection('UserEntity').doc(userId);
+
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(userDoc);
+
+        if (!snapshot.exists) return;
+
+        Map<String, dynamic>? userData = snapshot.data() as Map<String, dynamic>?;
+
+        List<dynamic> subscribersList = userData?['subscribers'] != null
+            ? List<dynamic>.from(userData?['subscribers'])
+            : [];
+
+        if (!subscribersList.contains(currentUserId)) {
+          subscribersList.add(currentUserId);
+          transaction.update(userDoc, {'subscribers': subscribersList});
+        }
+      });
+
+      Get.snackbar("Success", "You have subscribed successfully!",
+          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white);
+    } catch (e) {
+      Get.snackbar("Error", "Failed to subscribe: ${e.toString()}",
+          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
+
+
+
   Widget _buildProductList({required int itemCount}) {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
@@ -691,6 +799,7 @@ Widget _buildStreamGrid(BuildContext context) {
                   final title = data['title'] as String? ?? '';
                   final description = data['description'] as String? ?? '';
                   final liveImage = data['liveImage'] as String? ?? '';
+                  final category = data['category'] ?? '';
 
 
 
@@ -703,7 +812,7 @@ Widget _buildStreamGrid(BuildContext context) {
                       adminName: adminName,
                       adminImage: adminImage,
                       viewsCount: viewsCount,
-                      title: title, liveImage: liveImage,
+                      title: title, liveImage: liveImage, category: category,
                     ),
                   );
                 },
