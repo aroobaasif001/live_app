@@ -218,6 +218,10 @@ class TranslationsApp extends Translations {
           'analytics': 'Analytics',
           'edit_profile': 'Edit Profile',
           'back': 'Back',
+          'sports': 'Sports',
+          'music': 'Music',
+          'tech': 'Technology',
+          'travel': 'Travel',
 
           // My Products Screen
           'my_products': 'My Products',
@@ -541,6 +545,10 @@ class TranslationsApp extends Translations {
           'wrong_password': 'Неверный пароль. Пожалуйста, попробуйте снова.',
           'fill_all_fields': 'Пожалуйста, заполните все поля',
 
+          'sports': 'Спорт',
+          'music': 'Музыка',
+          'tech': 'Технологии',
+          'travel': 'Путешествия',
           // Delivery Address Screen
           'delivery_address': 'Адрес доставки',
           'skip': 'Пропустить',

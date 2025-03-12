@@ -62,6 +62,8 @@ dependencies:
   responsive_grid_list: ^1.4.0
   cloud_functions: ^5.3.3
   flutter_launcher_icons: any
+  path_provider: ^2.1.5
+
 flutter_icons:
   android: true
   ios: true

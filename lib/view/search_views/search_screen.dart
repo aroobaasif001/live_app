@@ -689,16 +689,21 @@ Widget _buildStreamGrid(BuildContext context) {
                   final adminImage = data['adminPhoto'] as String? ?? '';
                   final viewsCount = data['viewsCount'] as int? ?? 0;
                   final title = data['title'] as String? ?? '';
+                  final description = data['description'] as String? ?? '';
+                  final liveImage = data['liveImage'] as String? ?? '';
+
+
 
                   return GestureDetector(
                     onTap: () {
                       // Navigate to live stream or any action
                     },
                     child: LiveVideoCard(
+                      description:description,
                       adminName: adminName,
                       adminImage: adminImage,
                       viewsCount: viewsCount,
-                      title: title,
+                      title: title, liveImage: liveImage,
                     ),
                   );
                 },
