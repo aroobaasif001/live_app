@@ -53,7 +53,41 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
 
   int? adminUid;
   int? cohostUid;
+  bool isSubscribed = false;
+  int subscriberCount = 0;
+  String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? "";
+  void checkSubscriptionStatus() async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('UserEntity')
+        .doc(widget.channelId) // Assuming channelId is the admin's user ID
+        .get();
 
+    if (userDoc.exists) {
+      Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+      List<dynamic> subscribersList = userData?['subscribers'] ?? [];
+
+      setState(() {
+        isSubscribed = subscribersList.contains(currentUserId);
+        subscriberCount = subscribersList.length;
+      });
+    }
+  }
+
+  Future<void> toggleSubscription() async {
+    if (isSubscribed) {
+      await _unsubscribeUser(widget.channelId, currentUserId);
+      setState(() {
+        isSubscribed = true;
+      });
+    } else {
+      await _subscribeUser(widget.channelId, currentUserId);
+      setState(() {
+        isSubscribed = true;
+      });
+    }
+
+    checkSubscriptionStatus(); // Refresh the UI
+  }
   void monitorDocument() {
     documentStream = FirebaseFirestore.instance
         .collection('livestreams')
@@ -448,32 +482,32 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                   bottom: MediaQuery
                       .of(context)
                       .size
-                      .height * 0.25,
+                      .height * 0.2,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // More
-                      GestureDetector(
-                        onTap: () {
-                          // Handle 'More' tap
-                        },
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/icons/ic_more.png', // Dummy icon
-                              width: 40,
-                              height: 40,
-                            ),
-                            const SizedBox(height: 5),
-                            const Text(
-                              'More',
-                              style:
-                              TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     // Handle 'More' tap
+                      //   },
+                      //   child: Column(
+                      //     children: [
+                      //       Image.asset(
+                      //         'assets/icons/ic_more.png', // Dummy icon
+                      //         width: 40,
+                      //         height: 40,
+                      //       ),
+                      //       const SizedBox(height: 5),
+                      //       const Text(
+                      //         'More',
+                      //         style:
+                      //         TextStyle(color: Colors.white, fontSize: 12),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 20),
 
                       GestureDetector(
                         onTap: () {
@@ -489,8 +523,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                           children: [
                             Image.asset(
                               'assets/icons/ic_shop.png',
-                              width: 40,
-                              height: 40,
+                              width: 60,
+                              height: 60,
                             ),
                             const SizedBox(height: 5),
                             const Text(
@@ -501,7 +535,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
                           Get.defaultDialog(
@@ -523,8 +557,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                           children: [
                             Image.asset(
                               'assets/icons/ic_boost.png', // Dummy icon
-                              width: 40,
-                              height: 40,
+                              width: 60,
+                              height: 60,
                             ),
                             const SizedBox(height: 5),
                             const Text(
@@ -535,28 +569,28 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      GestureDetector(
-                        onTap: () {
-                          showUserProductsBottomSheet(context, widget.channelId);
-                        },
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/icons/ic_clip.png', // Dummy icon
-                              width: 40,
-                              height: 40,
-                            ),
-                            const SizedBox(height: 5),
-                            const Text(
-                              'Clip',
-                              style:
-                              TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     showUserProductsBottomSheet(context, widget.channelId);
+                      //   },
+                      //   child: Column(
+                      //     children: [
+                      //       Image.asset(
+                      //         'assets/icons/ic_clip.png', // Dummy icon
+                      //         width: 40,
+                      //         height: 40,
+                      //       ),
+                      //       const SizedBox(height: 5),
+                      //       const Text(
+                      //         'Clip',
+                      //         style:
+                      //         TextStyle(color: Colors.white, fontSize: 12),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                   //   const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () {
                           // Handle 'Wallet' tap
@@ -566,8 +600,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                           children: [
                             Image.asset(
                               'assets/icons/ic_wallet.png', // Dummy icon
-                              width: 40,
-                              height: 40,
+                              width: 60,
+                              height: 60,
                             ),
                             const SizedBox(height: 5),
                             const Text(
@@ -578,7 +612,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                           ],
                         ),
                       ),
-
+SizedBox(height: 50,)
                     ],
                   ),
                 ),
@@ -650,32 +684,35 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                                               color: Colors.white,
                                               fontSize: 18)),
                                       const SizedBox(width: 6),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 6, vertical: 2),
-                                        decoration: BoxDecoration(
-                                          // Replace 'color' with a gradient
-                                          gradient: const LinearGradient(
-                                            colors: [
-                                              Color(
-                                                  0xFF3A8EF2),
-                                              // Starting color (blueish)
-                                              Color(
-                                                  0xFFD53F8C),
-                                              // Ending color (pink/purpleish)
-                                            ],
-                                            begin: Alignment.centerLeft,
-                                            end: Alignment.centerRight,
+                                      GestureDetector(
+                                        onTap : (){toggleSubscription();},
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 6, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            // Replace 'color' with a gradient
+                                            gradient: const LinearGradient(
+                                              colors: [
+                                                Color(
+                                                    0xFF3A8EF2),
+                                                // Starting color (blueish)
+                                                Color(
+                                                    0xFFD53F8C),
+                                                // Ending color (pink/purpleish)
+                                              ],
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
+                                            ),
+                                            borderRadius:
+                                            BorderRadius.circular(15),
                                           ),
-                                          borderRadius:
-                                          BorderRadius.circular(15),
-                                        ),
-                                        child: const Text(
-                                          "Subscribe",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
+                                          child:  Text(
+                                                                isSubscribed ? "Unsubscribe" : "Subscribe",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       )
@@ -760,11 +797,11 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
               Positioned(
                 bottom: Get.height * .30,
                 left: 10,
-                right: 10,
+                right:  Get.width * .18,
                 child: Obx(() {
                   return Container(
                     height: 220,
-                    padding: const EdgeInsets.only(right: 100),
+                   // padding:  EdgeInsets.only(right:),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -832,22 +869,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                   );
                 }),
               ),
-              Obx(() {
-                return Stack(
-                  children: _controller.floatingHearts.map((heart) {
-                    return Positioned(
-                      bottom: 0,
-                      right: 0,
-                      // You can adjust this or use `left` for dynamic positioning
-                      child: Lottie.asset(
-                          'assets/heart.json', // Path to your Lottie file
-                          width: 150, // Adjust size as needed
-                          height: 350,
-                          repeat: false),
-                    );
-                  }).toList(),
-                );
-              }),
+
 
               // Bottom Controls
               Positioned(
@@ -1014,6 +1036,77 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
       return false;
     }
   }
+  Future<void> _unsubscribeUser(String userId, String currentUserId) async {
+    DocumentReference userDoc = FirebaseFirestore.instance.collection(
+        'UserEntity').doc(userId);
+
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(userDoc);
+
+        if (!snapshot.exists) return;
+
+        Map<String, dynamic>? userData = snapshot.data() as Map<String,
+            dynamic>?;
+
+        List<dynamic> subscribersList = userData?['subscribers'] != null
+            ? List<dynamic>.from(userData?['subscribers'])
+            : [];
+
+        if (subscribersList.contains(currentUserId)) {
+          subscribersList.remove(currentUserId);
+          transaction.update(userDoc, {'subscribers': subscribersList});
+        }
+      });
+
+      Get.snackbar("Success", "You have unsubscribed successfully!",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white);
+    } catch (e) {
+      Get.snackbar("Error", "Failed to unsubscribe: ${e.toString()}",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+    }
+  }
+
+  /// **Function to handle subscription logic**
+  Future<void> _subscribeUser(String userId, String currentUserId) async {
+    DocumentReference userDoc = FirebaseFirestore.instance.collection(
+        'UserEntity').doc(userId);
+
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(userDoc);
+
+        if (!snapshot.exists) return;
+
+        Map<String, dynamic>? userData = snapshot.data() as Map<String,
+            dynamic>?;
+
+        List<dynamic> subscribersList = userData?['subscribers'] != null
+            ? List<dynamic>.from(userData?['subscribers'])
+            : [];
+
+        if (!subscribersList.contains(currentUserId)) {
+          subscribersList.add(currentUserId);
+          transaction.update(userDoc, {'subscribers': subscribersList});
+        }
+      });
+
+      Get.snackbar("Success", "You have subscribed successfully!",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white);
+    } catch (e) {
+      Get.snackbar("Error", "Failed to subscribe: ${e.toString()}",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+    }
+  }
+
 }
 
 

@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../livestreaming/controller/livestreaming_controller.dart';
 
-void showBetBottomSheet(BuildContext context, double minimumBid , String name , String photo , String channelId) {
+void showBetBottomSheet(BuildContext context, double minimumBid , String name , String photo , String channelId , String prodId , ) {
   final TextEditingController bidController = TextEditingController();
   double bidAmount = 0;
 
@@ -93,7 +93,7 @@ void showBetBottomSheet(BuildContext context, double minimumBid , String name , 
                   );
                 } else {
                   // Get user information
-                  _controller.sendBidMessage(name, photo, channelId , 'Set Bid of $bidAmount' , bidAmount); // Send the data
+                  _controller.sendBidMessage(name, photo, channelId , 'Set Bid of $bidAmount' , bidAmount, prodId, FirebaseAuth.instance.currentUser!.uid); // Send the data
 
                   Get.back();
                 }

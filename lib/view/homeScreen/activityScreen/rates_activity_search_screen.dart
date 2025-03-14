@@ -1,64 +1,38 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/utils/images_path.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
 import '../../../custom_widgets/custom_gradiant_tab_button.dart';
+import '../../../entities/product_entity.dart';
 
 class RatesActivitySearchScreen extends StatefulWidget {
   @override
-  _RatesActivitySearchScreenState createState() =>
-      _RatesActivitySearchScreenState();
+  _RatesActivitySearchScreenState createState() => _RatesActivitySearchScreenState();
 }
 
 class _RatesActivitySearchScreenState extends State<RatesActivitySearchScreen> {
   RxInt selectedCategoryIndex = 0.obs;
-
+  List<DocumentSnapshot> products = [];
+  String currentUserId = FirebaseAuth.instance.currentUser!.uid;
   final List<String> categories = [
     "All".tr,
     "You are in the lead".tr,
     "The bid has been outbid".tr
   ];
 
-  final List<Map<String, dynamic>> auctions = [
-    {
-      "image": marketImage,
-      "status": "outbid",
-      "product": "iPhone 13",
-      "description": "Latest iPhone model",
-      "price": "1,000 ₽",
-      "company": "Apple Store",
-      "rating": "4.9"
-    },
-    {
-      "image": marketImage,
-      "status": "lead",
-      "product": "T-Shirt",
-      "description": "Cotton, size M",
-      "price": "500 ₽",
-      "company": "Clothing Hub",
-      "rating": "4.7"
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _fetchProducts();
+  }
 
-  final List<Map<String, dynamic>> completedAuctions = [
-    {
-      "image": marketImage,
-      "status": "win",
-      "product": "MacBook Air",
-      "description": "M2 Chip, 512GB SSD",
-      "price": "1,500 ₽",
-      "company": "Apple Store",
-      "rating": "5.0"
-    },
-    {
-      "image": marketImage,
-      "status": "lost",
-      "product": "Netflix Premium",
-      "description": "1 Year Subscription",
-      "price": "900 ₽",
-      "company": "Netflix Inc.",
-      "rating": "4.8"
-    },
-  ];
+  Future<void> _fetchProducts() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('products').get();
+    setState(() {
+      products = querySnapshot.docs;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,24 +48,23 @@ class _RatesActivitySearchScreenState extends State<RatesActivitySearchScreen> {
             SizedBox(height: 12),
             Expanded(
               child: Obx(() => SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ..._getFilteredAuctions()
-                            .map((item) => _buildAuctionCard(item))
-                            .toList(),
-                        SizedBox(height: 16),
-                        Text(
-                          "Recently Completed Auctions".tr,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        SizedBox(height: 8),
-                        ..._getFilteredCompletedAuctions()
-                            .map((item) => _buildAuctionCard(item))
-                            .toList(),
-                      ],
+                child: Column(
+                  children: [
+                    ..._getFilteredProducts()
+                        .map((item) => _buildAuctionCard(item))
+                        .toList(),
+                    SizedBox(height: 16),
+                    Text(
+                      "Recently Completed Auctions".tr,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
-                  )),
+                    SizedBox(height: 8),
+                    ..._getRecentlyAuctionedProducts()
+                        .map((item) => _buildAuctionCard(item))
+                        .toList(),
+                  ],
+                ),
+              )),
             ),
           ],
         ),
@@ -107,144 +80,74 @@ class _RatesActivitySearchScreenState extends State<RatesActivitySearchScreen> {
         child: Row(
           children: List.generate(categories.length, (index) {
             return Obx(() => Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: CustomGradiantTabButton(
-                    text: categories[index].tr,
-                    isSelected: selectedCategoryIndex.value == index,
-                    onPressed: () => selectedCategoryIndex.value = index,
-                  ),
-                ));
+              padding: EdgeInsets.only(right: 10),
+              child: CustomGradiantTabButton(
+                text: categories[index].tr,
+                isSelected: selectedCategoryIndex.value == index,
+                onPressed: () => selectedCategoryIndex.value = index,
+              ),
+            ));
           }),
         ),
       ),
     );
   }
 
-  Widget _buildAuctionCard(Map<String, dynamic> auction) {
-    Color statusColor = Colors.transparent;
+  Widget _buildAuctionCard(DocumentSnapshot product) {
+    Map<String, dynamic> data = product.data() as Map<String, dynamic>;
+    return GestureDetector(
+      onTap: (){
+        ProductEntity productEntity = ProductEntity(
+          id: product.id,
+          title: data['title'] ?? "Unknown",
+          description: data['description'] ?? "",
+          price: data['price'] ?? 0,
+          images: List<String>.from(data['images'] ?? []),
+        );
+        Get.to(()=>ProductDetailScreen(product: productEntity));
+      },
 
-    String statusText = "";
-
-    switch (auction["status"]) {
-      case "outbid":
-        statusColor = Colors.red;
-
-        statusText = "The bid has been outbid!".tr;
-
-        break;
-
-      case "lead":
-        statusColor = Colors.blue;
-
-        statusText = "You are in the lead!".tr;
-
-        break;
-
-      case "win":
-        statusColor = Colors.blue;
-
-        statusText = "You win!".tr;
-
-        break;
-
-      case "lost":
-        statusColor = Colors.red;
-
-        statusText = "You lost!".tr;
-
-        break;
-    }
-
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 0,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    bottomLeft: Radius.circular(12)),
-                child: Image.asset(auction["image"],
-                    width: 100, height: 100, fit: BoxFit.cover),
-              ),
-              if (statusText.isNotEmpty)
-                Positioned(
-                  bottom: 6,
-                  left: 6,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: statusColor,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      statusText,
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(auction["company"],
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 14)),
-                      SizedBox(width: 4),
-                      Icon(Icons.star, color: Colors.amber, size: 14),
-                      SizedBox(width: 4),
-                      Text(auction["rating"], style: TextStyle(fontSize: 12)),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  Text(auction["product"], style: TextStyle(fontSize: 14)),
-                  Text(auction["description"],
-                      style: TextStyle(fontSize: 12, color: Colors.grey)),
-                  SizedBox(height: 4),
-                  Text(auction["price"],
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                ],
-              ),
-            ),
-          ),
-        ],
+      child: Card(
+        margin: EdgeInsets.symmetric(vertical: 6),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 0,
+        child: ListTile(
+          leading: data['images'] != null && data['images'].isNotEmpty
+              ? Image.network(data['images'][0], width: 100, height: 100, fit: BoxFit.cover)
+              : Container(width: 100, height: 100, color: Colors.grey),
+          title: Text(data['title'] ?? "Unknown"),
+          subtitle: Text("${data['description']} - ${data['price']}"),
+        ),
       ),
     );
   }
 
-  List<Map<String, dynamic>> _getFilteredAuctions() {
-    String filter = categories[selectedCategoryIndex.value];
+  List<DocumentSnapshot> _getFilteredProducts() {
+    if (selectedCategoryIndex.value == 0) return products;
 
-    if (filter == "All") return auctions;
+    return products.where((product) {
+      Map<String, dynamic> data = product.data() as Map<String, dynamic>;
+      if (!data.containsKey('bidders')) return false; // Exclude products without bidders
 
-    if (filter == "You are in the lead") {
-      return auctions.where((item) => item["status"] == "lead").toList();
-    }
+      Map<String, dynamic> bidders = data['bidders'];
+      double currentUserBid = bidders[currentUserId] ?? 0;
+      double highestBid = bidders.values.isNotEmpty ? bidders.values.reduce((a, b) => a > b ? a : b) : 0;
 
-    if (filter == "The bid has been outbid") {
-      return auctions.where((item) => item["status"] == "outbid").toList();
-    }
-
-    return auctions;
+      if (selectedCategoryIndex.value == 1) {
+        // "You are in the lead" - Check if current user's bid is the highest
+        return currentUserBid > 0 && currentUserBid == highestBid;
+      } else if (selectedCategoryIndex.value == 2) {
+        // "The bid has been outbid" - Check if someone else has a higher bid
+        return currentUserBid > 0 && currentUserBid < highestBid;
+      }
+      return false;
+    }).toList();
   }
 
-  List<Map<String, dynamic>> _getFilteredCompletedAuctions() {
-    String filter = categories[selectedCategoryIndex.value];
-
-    if (filter == "All") return completedAuctions;
-
-    return completedAuctions;
+  List<DocumentSnapshot> _getRecentlyAuctionedProducts() {
+    return products.where((product) {
+      Map<String, dynamic> data = product.data() as Map<String, dynamic>;
+      return data['isSold'] == true;
+    }).toList();
   }
 }

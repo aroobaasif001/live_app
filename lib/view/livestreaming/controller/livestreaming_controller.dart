@@ -362,28 +362,33 @@ class LiveStreamController extends GetxController {
       }
     }
   }
-  void sendBidMessage(String name, String photo, String channelId , String message , double bid) async {
+  void sendBidMessage(String name, String photo, String channelId, String message, double bid, String productDocId, String currentUserId) async {
+    try {
+      // Add bid message to the comments collection in livestreams
+      await _firestore
+          .collection('livestreams')
+          .doc(channelId)
+          .collection('comments')
+          .add({
+        'message': message,
+        'bid': bid,
+        'timestamp': FieldValue.serverTimestamp(),
+        'user': name,
+        'photo': photo, // User photo
+      });
 
-      try {
-        await _firestore
-            .collection('livestreams')
-            .doc(channelId)
-            .collection('comments')
-            .add({
-          'message': message,
-          'bid': bid,
+      // Update the product document with bidder information
+      await _firestore.collection('products').doc(productDocId).set({
+        'bidders': {currentUserId: bid}
+      }, SetOptions(merge: true)); // Merge to avoid overwriting existing data
 
-          'timestamp': FieldValue.serverTimestamp(),
-          'user': name,
-          'photo': photo, // Random user identifier
-        });
-        chatController.clear();
-        print('[INFO] Comment added');
-      } catch (e) {
-        print('[ERROR] Failed to add comment: $e');
-      }
-
+      chatController.clear();
+      print('[INFO] Bid message added and product updated');
+    } catch (e) {
+      print('[ERROR] Failed to add bid: $e');
+    }
   }
+
 
   Future<void> deleteLiveStream(String channelId) async {
     try {

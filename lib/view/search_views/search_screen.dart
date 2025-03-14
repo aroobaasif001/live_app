@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/entities/product_entity.dart';
 import 'package:live_app/utils/colors.dart';
+import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
 import 'package:live_app/view/search_views/search_by_application.dart';
 import '../../custom_widgets/custom_gradient_button.dart';
 import '../../custom_widgets/custom_text.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
+import '../category_tab.dart';
 import '../homeScreen/widgets/live_video_card.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -95,10 +97,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: TabBarView(
                     children: [
                       _buildTopTab(),
-                      _buildGoodsTab(),
+                      _buildGoodsTab(FirebaseAuth.instance.currentUser!.uid),
                       _buildStreamsTab(),
-                      _buildUsersTab(),
-                      _buildCategoriesTab(),
+                    //  _buildUsersTab(),
+                      _buildGoodsTab(FirebaseAuth.instance.currentUser!.uid),
+                      CategoriesTab()
                     ],
                   ),
                 ),
@@ -194,8 +197,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   return const Center(child: Text('No products available'));
                 }
 
-                return _buildProductList(
-                    itemCount: snapshot.data!.length, products: snapshot.data!);
+                return GestureDetector(
+
+                  child: _buildProductList(
+                      itemCount: snapshot.data!.length, products: snapshot.data!),
+                );
               },
             )
           ],
@@ -215,53 +221,71 @@ class _SearchScreenState extends State<SearchScreen> {
   // ===========================================================================
   // ============================  GOODS TAB  ===================================
   // ===========================================================================
-  Widget _buildGoodsTab() {
-    return ListView.builder(
-      itemCount: 6,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Icon + “company_name” + “2.4K Subscribers”
-              Expanded(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      appleIcon,
-                      height: 40,
-                      width: 40,
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText(
-                          text: 'company_name'.tr,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: "Gilroy-Bold",
-                        ),
-                        CustomText(
-                          color: const Color(0xff8C8C8C),
-                          fontSize: 14,
-                          fontFamily: "Gilroy-Bold",
-                          text: '2.4K Subscribers',
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ],
-                    ),
-                  ],
+  Widget _buildGoodsTab( String currentUserId) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('UserEntity').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(child: Text("No Users Found"));
+        }
+
+        List<DocumentSnapshot> users = snapshot.data!.docs;
+
+        return ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            var userData = users[index].data() as Map<String, dynamic>?;
+
+            // Extract user details safely
+            String userId = users[index].id;
+            if (userId == currentUserId) return Container(); // Skip current user
+
+            String userName = userData?['firstName'] ?? 'Unknown';
+            String userImage = userData?['image'] ??
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6vBz9VgjksAaZZkWOm8Lk3ZSb7gO25eP0-Q&s';
+
+            List<dynamic> subscribersList = userData?['subscribers'] != null
+                ? List<dynamic>.from(userData?['subscribers'])
+                : [];
+
+            bool isSubscribed = subscribersList.contains(currentUserId);
+            int subscriberCount = subscribersList.length;
+
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(userImage),
+                radius: 25,
+              ),
+              title: CustomText(
+                text: userName,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+              ),
+              subtitle: CustomText(
+                text: "$subscriberCount Subscribers",
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+              trailing: GestureDetector(
+                onTap: () async {
+                  if (isSubscribed) {
+                    await _unsubscribeUser(userId, currentUserId);
+                  } else {
+                    await _subscribeUser(userId, currentUserId);
+                  }
+                },
+                child: CustomGradientButton(
+                  text: isSubscribed ? "Unsubscribe" : "Subscribe",
+                  height: 35,
+                  width: 120,
                 ),
               ),
-              CustomGradientButton(
-                text: "Subscribe",
-                width: 100,
-                height: 35,
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -676,79 +700,83 @@ class _SearchScreenState extends State<SearchScreen> {
             thickness: 1,
             height: 20,
           ),
+
       itemBuilder: (context, index) {
         final product = products[index];
 
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Product Image
-            SizedBox(
-              width: 120,
-              height: 120,
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      product.images?.isNotEmpty == true
-                          ? product.images!.first
-                          : '',
-                      fit: BoxFit.cover,
-                      width: 120,
-                      height: 120,
-                    ),
-                  ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: Colors.black54,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: const [
-                          Icon(Icons.chat_bubble_outline, color: Colors.white,
-                              size: 14),
-                          SizedBox(width: 3),
-                          CustomText(text: '3',
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400),
-                        ],
+        return GestureDetector(
+          onTap: (){Get.to(()=>ProductDetailScreen(product: product));},
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Product Image
+              SizedBox(
+                width: 120,
+                height: 120,
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        product.images?.isNotEmpty == true
+                            ? product.images!.first
+                            : '',
+                        fit: BoxFit.cover,
+                        width: 120,
+                        height: 120,
                       ),
                     ),
-                  ),
-                ],
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.chat_bubble_outline, color: Colors.white,
+                                size: 14),
+                            SizedBox(width: 3),
+                            CustomText(text: '3',
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            // Product Details
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title
-                  CustomText(text: product.title ?? 'No Title',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14),
-                  // Description
-                  CustomText(text: product.description ?? 'No Description',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: Colors.grey),
-                  const SizedBox(height: 4),
-                  // Price
-                  CustomText(text: '${product.price ?? '0'} ₽',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14),
-                ],
+              const SizedBox(width: 12),
+              // Product Details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    CustomText(text: product.title ?? 'No Title',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14),
+                    // Description
+                    CustomText(text: product.description ?? 'No Description',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        color: Colors.grey),
+                    const SizedBox(height: 4),
+                    // Price
+                    CustomText(text: '${product.price ?? '0'} ₽',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
