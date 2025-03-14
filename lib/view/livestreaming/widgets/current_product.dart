@@ -18,97 +18,79 @@ class CurrentProductContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: Get.height * 0.21,
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        // Optional: add background color or styling here
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('livestreams')
-            .doc(channelId)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}',
-                style: const TextStyle(color: Colors.white));
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (!snapshot.hasData || !snapshot.data!.exists) {
-            return const Text('No livestream data found.',
-                style: TextStyle(color: Colors.white));
-          }
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('livestreams')
+          .doc(channelId)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const SizedBox.shrink(); // Hide on error
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox.shrink(); // Hide while loading
+        }
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return const SizedBox.shrink(); // Hide if no livestream data
+        }
 
-          final data = snapshot.data!.data() as Map<String, dynamic>?;
-          if (data == null) {
-            return const Text('', style: TextStyle(color: Colors.white));
-          }
+        final data = snapshot.data!.data() as Map<String, dynamic>?;
+        if (data == null) return const SizedBox.shrink();
 
-          final currentProductId = data['currentProduct'] as String?;
-          if (currentProductId == null || currentProductId.isEmpty) {
-            return const Text('', style: TextStyle(color: Colors.white));
-          }
+        final currentProductId = data['currentProduct'] as String?;
+        if (currentProductId == null || currentProductId.isEmpty) {
+          return const SizedBox.shrink(); // Hide if no product ID
+        }
 
-          return StreamBuilder<DocumentSnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('products')
-                .doc(currentProductId)
-                .snapshots(),
-            builder: (context, productSnapshot) {
-              if (productSnapshot.hasError) {
-                return Text('Error: ${productSnapshot.error}',
-                    style: const TextStyle(color: Colors.white));
-              }
-              if (productSnapshot.connectionState ==
-                  ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (!productSnapshot.hasData ||
-                  !productSnapshot.data!.exists) {
-                return Text(
-                  'No product found for ID: $currentProductId',
-                  style: const TextStyle(color: Colors.white),
-                );
-              }
+        return StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('products')
+              .doc(currentProductId)
+              .snapshots(),
+          builder: (context, productSnapshot) {
+            if (productSnapshot.hasError) return const SizedBox.shrink();
+            if (productSnapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox.shrink();
+            }
+            if (!productSnapshot.hasData || !productSnapshot.data!.exists) {
+              return const SizedBox.shrink(); // Hide if no product
+            }
 
-              final productData =
-              productSnapshot.data!.data() as Map<String, dynamic>?;
-              if (productData == null) {
-                return Text(
-                  'Product data is empty for ID: $currentProductId',
-                  style: const TextStyle(color: Colors.white),
-                );
-              }   final productDoc = productSnapshot.data!;
-              final productId = productDoc.id; // ✅ Product ID
+            final productData =
+            productSnapshot.data!.data() as Map<String, dynamic>?;
+            if (productData == null) return const SizedBox.shrink();
 
-              final productTitle = productData['title'] ?? 'No Title';
-              final productDescription =
-                  productData['description'] ?? 'No Description';
-              final productPrice = productData['price'] ?? 0;
-              final productSaleType = productData['saleType'] ?? '';
-              final productStartingBid = productData['startingBid'] ?? 0;
+            final productDoc = productSnapshot.data!;
+            final productId = productDoc.id;
+            final productTitle = productData['title'] ?? 'No Title';
+            final productDescription =
+                productData['description'] ?? 'No Description';
+            final productPrice = productData['price'] ?? 0;
+            final productSaleType = productData['saleType'] ?? '';
+            final productStartingBid = productData['startingBid'] ?? 0;
 
-              // Use startingBid if it's an Auction; otherwise, use productPrice.
-              final displayPrice = productSaleType == 'Auction'
-                  ? productStartingBid
-                  : productPrice;
+            final displayPrice = productSaleType == 'Auction'
+                ? productStartingBid
+                : productPrice;
+            final priceText = '$displayPrice P';
 
-              final priceText = '$displayPrice P';
+            double minimumBid = 0.0;
+            if (productStartingBid is String) {
+              minimumBid = double.tryParse(productStartingBid) ?? 0.0;
+            } else if (productStartingBid is num) {
+              minimumBid = productStartingBid.toDouble();
+            }
 
-              double minimumBid = 0.0;
-              if (productStartingBid is String) {
-                minimumBid = double.tryParse(productStartingBid) ?? 0.0;
-              } else if (productStartingBid is num) {
-                minimumBid = productStartingBid.toDouble();
-              }
-
-              return Column(
+            // Only return the UI if a valid product is found
+            return Container(
+              height: Get.height * 0.21,
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Top area for product details
@@ -180,7 +162,7 @@ class CurrentProductContainer extends StatelessWidget {
                               name,
                               photo,
                               channelId,
-                                productId
+                              productId,
                             );
                           },
                           child: Container(
@@ -213,13 +195,11 @@ class CurrentProductContainer extends StatelessWidget {
                     ),
                   ),
                 ],
-              );
-            },
-          );
-        },
-      ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
-
-

@@ -104,31 +104,38 @@ class LiveStreamController extends GetxController {
   Future<void> initializeAgora(
       String channelId, int uid, bool isAdmin, int adminId) async {
     try {
-      // Debug: Log the initial parameters
-      print('[DEBUG] initializeAgora called with:');
+      // Initial debug logs
+      print('[DEBUG] initializeAgora() called with:');
       print('  channelId: $channelId');
       print('  uid: $uid');
       print('  isAdmin: $isAdmin');
       print('  adminId: $adminId');
 
       // Generate token and log its value
-      print('[DEBUG] Calling generateAgoraToken with channelId: $channelId and uid: $uid');
+      print('[DEBUG] Calling generateToken with channelId: $channelId and uid: $uid');
       String token = await generateToken(channelId, uid);
       print('[DEBUG] Received token: $token');
 
       // Create and initialize the RTC engine
+      print('[DEBUG] Creating RTC engine...');
       _rtcEngine = createAgoraRtcEngine();
-      print('[DEBUG] RTC engine created');
+      if (_rtcEngine == null) {
+        print('[ERROR] Failed to create RTC engine.');
+        return;
+      }
+      print('[DEBUG] RTC engine created successfully.');
 
+      print('[DEBUG] Initializing RTC engine...');
       await _rtcEngine?.initialize(
         const RtcEngineContext(
-          appId: '8f1bc40d90374b78be10a2e851ba9140',
+          appId: '0f0b7dc97d754349a53fa35ee828ab03',
           channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
         ),
       );
-      print('[DEBUG] RTC engine initialized');
+      print('[DEBUG] RTC engine initialized successfully.');
 
-      // Register event handlers with additional logging
+      // Register event handlers
+      print('[DEBUG] Registering event handlers...');
       _rtcEngine?.registerEventHandler(
         RtcEngineEventHandler(
           onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
@@ -136,7 +143,6 @@ class LiveStreamController extends GetxController {
             print('[INFO] Joined channel: ${connection.channelId}, uid: $uid, elapsed: $elapsed');
             updateUserCount(connection.channelId!);
           },
-
           onLeaveChannel: (RtcConnection connection, RtcStats stats) {
             isJoined.value = false;
             print('[INFO] Left channel: ${connection.channelId}');
@@ -148,9 +154,10 @@ class LiveStreamController extends GetxController {
             updateUserCount(connection.channelId!);
           },
           onUserOffline: (RtcConnection connection, int rUid, UserOfflineReasonType reason) {
-            print('[INFO] Remote user $rUid offline, Reason: $reason');
+            print('[INFO] Remote user $rUid went offline, Reason: $reason');
             remoteUids.removeWhere((element) => element == rUid);
             _allUserLeft.value = true;
+
             if (adminId == rUid) {
               print('[DEBUG] Admin ($adminId) went offline, deleting live stream for channel: ${connection.channelId}');
               deleteLiveStream(channelId);
@@ -159,19 +166,26 @@ class LiveStreamController extends GetxController {
           },
         ),
       );
-      print('[DEBUG] Event handlers registered');
+      if (_rtcEngine == null) {
+        print('[ERROR] _rtcEngine is null. Initialization might have failed.');
+        return;
+      }
 
-      // Create data stream and log result
+      print('[DEBUG] Event handlers registered successfully.');
+
+      // Create data stream
+      print('[DEBUG] Creating data stream...');
       streamId = await _rtcEngine?.createDataStream(
         const DataStreamConfig(syncWithAudio: false),
       );
       if (streamId == null) {
-        print('[ERROR] Failed to create data stream');
+        print('[ERROR] Failed to create data stream.');
       } else {
-        print('[INFO] Data stream created with streamId: $streamId');
+        print('[INFO] Data stream created successfully with streamId: $streamId');
       }
 
-      // Set client role based on isAdmin flag and log role
+      // Set client role
+      print('[DEBUG] Setting client role...');
       await _rtcEngine?.setClientRole(
         role: isAdmin
             ? ClientRoleType.clientRoleBroadcaster // Admin can speak
@@ -179,19 +193,23 @@ class LiveStreamController extends GetxController {
       );
       print('[DEBUG] Client role set: ${isAdmin ? "Broadcaster" : "Audience"}');
 
-
-
+      // Enable video and audio
+      print('[DEBUG] Enabling video and audio...');
       await _rtcEngine?.enableVideo();
       await _rtcEngine?.enableAudio();
       await _rtcEngine?.enableLocalVideo(true);
-            await _rtcEngine?.enableLocalVideo(true);
-
       await _rtcEngine?.startPreview();
+      print('[DEBUG] Video and audio enabled.');
+
+      // Set audio profile
+      print('[DEBUG] Setting audio profile...');
       await _rtcEngine?.setAudioProfile(
         profile: AudioProfileType.audioProfileMusicHighQuality,
         scenario: AudioScenarioType.audioScenarioGameStreaming,
       );
-      // Finally, join the channel
+      print('[DEBUG] Audio profile set.');
+
+      // Join channel
       print('[DEBUG] Joining channel with token: $token, channelId: $channelId, uid: $uid');
       await _rtcEngine?.joinChannel(
         token: token,
@@ -204,19 +222,14 @@ class LiveStreamController extends GetxController {
               : ClientRoleType.clientRoleAudience,
         ),
       );
-           await _rtcEngine?.enableVideo();
-      await _rtcEngine?.enableAudio();
-      await _rtcEngine?.enableLocalVideo(true);
-            await _rtcEngine?.enableLocalVideo(true);
-
-      await _rtcEngine?.startPreview();
-
       print('[INFO] Successfully joined channel: $channelId');
+      isJoined.value = true;
+
     } catch (e) {
       print('[ERROR] Agora initialization error: $e');
-      // Optionally, you can rethrow the error or handle it further here.
     }
   }
+
 
 
   void updateUserCount(String channelId) async {

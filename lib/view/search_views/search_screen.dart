@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/entities/product_entity.dart';
 import 'package:live_app/utils/colors.dart';
+import 'package:live_app/view/find_friendsd.dart';
+import 'package:live_app/view/homeScreen/homeMainScreen/home_main_screen.dart';
 import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
 import 'package:live_app/view/search_views/search_by_application.dart';
 import '../../custom_widgets/custom_gradient_button.dart';
@@ -13,6 +15,7 @@ import '../../custom_widgets/custom_text.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
 import '../category_tab.dart';
+import '../homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import '../homeScreen/widgets/live_video_card.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -134,12 +137,17 @@ class _SearchScreenState extends State<SearchScreen> {
                   fontSize: 16,
                   fontFamily: "Gilroy-Bold",
                 ),
-                CustomText(
-                  text: "see_all".tr,
-                  color: const Color(0xff815BFF),
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
-                  fontFamily: "Gilroy-Bold",
+                GestureDetector(
+                  onTap: (){
+                    Get.offAll(()=>BottomNavigationBarWidget());
+                  },
+                  child: CustomText(
+                    text: "see_all".tr,
+                    color: const Color(0xff815BFF),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    fontFamily: "Gilroy-Bold",
+                  ),
                 ),
               ],
             ),
@@ -148,7 +156,12 @@ class _SearchScreenState extends State<SearchScreen> {
             const SizedBox(height: 12),
             // "Watch more streams" button
 
-            CustomGradientButton(text: "watch_more_streams".tr),
+            GestureDetector(
+              onTap: (){
+                Get.offAll(()=>BottomNavigationBarWidget());
+              },
+
+                child: CustomGradientButton(text: "watch_more_streams".tr)),
 
             const SizedBox(height: 12),
 
@@ -162,12 +175,17 @@ class _SearchScreenState extends State<SearchScreen> {
                   fontSize: 16,
                   fontFamily: "Gilroy-Bold",
                 ),
-                CustomText(
-                  text: "see_all".tr,
-                  color: const Color(0xff815BFF),
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
-                  fontFamily: "Gilroy-Bold",
+                GestureDetector(
+                  onTap: (){
+                    Get.to(()=>FindFriendsScreen());
+                  },
+                  child: CustomText(
+                    text: "see_all".tr,
+                    color: const Color(0xff815BFF),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    fontFamily: "Gilroy-Bold",
+                  ),
                 ),
               ],
             ),

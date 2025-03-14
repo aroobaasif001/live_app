@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:live_app/user_profile.dart';
 import 'package:live_app/view/livestreaming/widgets/current_product.dart';
 
 import 'package:live_app/view/livestreaming/widgets/products_pick.dart';
@@ -270,6 +271,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
       _controller.initializeAgora(widget.channelId, widget.uid, widget.isAdmin, adminUid ?? 0);
       initializeFirestore(widget.channelId);
     });
+    checkSubscriptionStatus(); // Refresh the UI
+
     super.initState();
     requestCameraAndMicrophonePermissions();
     if (widget.isAdmin) {
@@ -353,12 +356,15 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
       adminUid = data?['adminUid'];
       return {
         'adminName': data?['adminName'] ?? 'Unknown',
+        'adminFirebaseId': data?['adminFirebaseId'] ?? 'Unknown',
         'adminPhoto': data?['adminPhoto'] ??
+
             'https://via.placeholder.com/150', // Default image
       };
     } else {
       return {
         'adminName': 'Unknown',
+        'adminFirebaseId': 'Unknown',
         'adminPhoto': 'https://via.placeholder.com/150', // Default image
       };
     }
@@ -412,67 +418,6 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
 
               // Top Streamer Info
               if (widget.isAdmin || cohostUid == widget.uid)
-              // Positioned(
-              //     bottom: MediaQuery.of(context).size.height * 0.55,
-              //
-              //     // Adjust top position based on screen height
-              //     // Adjust left margin
-              //     right: MediaQuery.of(context).size.width * 0.015,
-              //     child: Column(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
-              //         GestureDetector(
-              //             onTap: () {
-              //               _controller.toggleMute();
-              //             },
-              //             child: Image.asset(
-              //               _controller.isMuted.value
-              //                   ? 'assets/icons/live_micoff.png'
-              //                   : 'assets/icons/live_micon.png',
-              //               height: 35.r,
-              //             )),
-              //         SizedBox(
-              //           height: _controller.isCameraOn.value ? 20 : 10,
-              //         ),
-              //         GestureDetector(
-              //             onTap: () {
-              //               _controller.toggleCamera();
-              //             },
-              //             child: Image.asset(
-              //               _controller.isCameraOn.value
-              //                   ? 'assets/icons/live_cameraon.png'
-              //                   : 'assets/icons/live_cameraoff.png',
-              //               height:
-              //                   _controller.isCameraOn.value ? 22.r : 35.r,
-              //             )),
-              //         SizedBox(
-              //           height: 15,
-              //         ),
-              //         GestureDetector(
-              //             onTap: () {
-              //               showUserProductsBottomSheet(
-              //                   context, widget.channelId);
-              //             },
-              //             child: Icon(
-              //               Icons.shop,
-              //               color: Colors.white,
-              //             )),
-              //         SizedBox(
-              //           height: 2,
-              //         ),
-              //         GestureDetector(
-              //             onTap: () {
-              //               _controller.switchCamera();
-              //             },
-              //             child: Image.asset(
-              //               'assets/icons/live_rotate.png',
-              //               height: 50.r,
-              //             )),
-              //         SizedBox(
-              //           height: 5,
-              //         ),
-              //       ],
-              //     )),
 
                 Positioned(
                   right: MediaQuery
@@ -646,6 +591,8 @@ SizedBox(height: 50,)
 
                         final adminName = snapshot.data!['adminName']!;
                         final adminPhoto = snapshot.data!['adminPhoto']!;
+                        final adminFirebaseId = snapshot.data!['adminFirebaseId']!;
+
 
                         return Container(
                           padding: const EdgeInsets.symmetric(
@@ -656,9 +603,15 @@ SizedBox(height: 50,)
                           ),
                           child: Row(
                             children: [
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(adminPhoto),
-                                radius: 22,
+                              GestureDetector(
+                                onTap : (){
+                                  Get.to(()=>UserProfile(userId: adminFirebaseId));
+
+                                },
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(adminPhoto),
+                                  radius: 22,
+                                ),
                               ),
                               const SizedBox(width: 6),
                               Column(
@@ -795,109 +748,124 @@ SizedBox(height: 50,)
               //commentmessage
 
               Positioned(
-                bottom: Get.height * .30,
+                bottom: Get.height * .01,
                 left: 10,
                 right:  Get.width * .18,
                 child: Obx(() {
-                  return Container(
-                    height: 220,
-                   // padding:  EdgeInsets.only(right:),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: _controller.comments.isNotEmpty
-                        ? ListView.builder(
-                      controller:
-                      _scrollController, // Attach the scroll controller
-                      itemCount: _controller.comments.length,
-                      itemBuilder: (context, index) {
-                        final comment = _controller.comments[index];
-                        return Container(
-                          decoration: BoxDecoration(
-                              color:
-                              (comment['message'].contains('Set Bid')
-                                  ? Colors.purple
-                                  : Colors.transparent)),
-                          child: Padding(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 8),
-                            child: Row(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.center,
-                              children: [
-                                // Profile Picture
-                                CircleAvatar(
-                                  backgroundImage:
-                                  NetworkImage(comment['photo']),
-                                  radius: 22,
-                                ),
-                                const SizedBox(width: 10),
-                                // Comment Bubble
-                                Column(
+                  return Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      Container(
+                        height: 220,
+                       // padding:  EdgeInsets.only(right:),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: _controller.comments.isNotEmpty
+                            ? ListView.builder(
+                          controller:
+                          _scrollController, // Attach the scroll controller
+                          itemCount: _controller.comments.length,
+                          itemBuilder: (context, index) {
+                            final comment = _controller.comments[index];
+                            return Container(
+                              decoration: BoxDecoration(
+                                  color:
+                                  (comment['message'].contains('Set Bid')
+                                      ? Colors.purple
+                                      : Colors.transparent)),
+                              child: Padding(
+                                padding:
+                                const EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
                                   crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                  CrossAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      comment['user'],
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
+                                    // Profile Picture
+                                    CircleAvatar(
+                                      backgroundImage:
+                                      NetworkImage(comment['photo']),
+                                      radius: 22,
                                     ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      comment['message'],
-                                      style: TextStyle(
-                                        fontSize: 18.r,
-                                        fontWeight: (comment['message']
-                                            .contains('Set Bid')
-                                            ? FontWeight.bold
-                                            : FontWeight.normal),
-                                        color: Colors.white,
-                                      ),
+                                    const SizedBox(width: 10),
+                                    // Comment Bubble
+                                    Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          comment['user'],
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          comment['message'],
+                                          style: TextStyle(
+                                            fontSize: 18.r,
+                                            fontWeight: (comment['message']
+                                                .contains('Set Bid')
+                                                ? FontWeight.bold
+                                                : FontWeight.normal),
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                        : const Center(),
+                              ),
+                            );
+                          },
+                        )
+                            : const Center(),
+                      ),
+                      ChatInputField(
+                        chatController: _controller.chatController,
+                        focusNode: _focusNode,
+                        onSend: (message) {
+                          _controller.sendMessage(name, photo, widget.channelId);
+                        },
+                      ),
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: CurrentProductContainer(
+                          channelId: widget.channelId,
+                          name: name,
+                          photo: photo,
+                        ),
+                      ),
+                    ],
                   );
                 }),
               ),
 
 
               // Bottom Controls
-              Positioned(
-                bottom: Get.height * .22,
-                left: 5,
-                child: Column(
-                  children: [
-                    // Chat Input Row
-                    ChatInputField(
-                      chatController: _controller.chatController,
-                      focusNode: _focusNode,
-                      onSend: (message) {
-                        _controller.sendMessage(name, photo, widget.channelId);
-                      },
-                    ),
-
-
-                  ],
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: CurrentProductContainer(
-                  channelId: widget.channelId,
-                  name: name,
-                  photo: photo,
-                ),
-              )
+              // Positioned(
+              //   bottom: Get.height * .22,
+              //   left: 5,
+              //   child: Column(
+              //     children: [
+              //       // Chat Input Row
+              //
+              //
+              //
+              //     ],
+              //   ),
+              // ),
+              // Align(
+              //   alignment: Alignment.bottomLeft,
+              //   child: CurrentProductContainer(
+              //     channelId: widget.channelId,
+              //     name: name,
+              //     photo: photo,
+              //   ),
+              // )
 
             ],
           );

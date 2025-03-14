@@ -88,6 +88,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                         "isAdmin": true,
                         "channelId": ChannelId,
                         'viewsCount': 0,
+                        'adminFirebaseId': FirebaseAuth.instance.currentUser!.uid,
                         'currentmusic': null,
                         'currentFilter': null,
                         'currentmusic_id': null,

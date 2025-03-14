@@ -27,8 +27,8 @@ class _ChatInputFieldState extends State<ChatInputField> {
   Widget build(BuildContext context) {
     return Container(
       width: Get.width * .6,
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+      //padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
         // Transparent or slightly translucent background
       //  color: Colors.black.withOpacity(0.2),
