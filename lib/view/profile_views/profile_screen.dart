@@ -12,9 +12,11 @@ import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
 import 'package:live_app/translate/controller/translations_controller.dart';
 import 'package:live_app/utils/colors.dart';
+import 'package:live_app/view/auth/delivery_address_screen.dart';
 import 'package:live_app/view/auth/notification_screen.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
 import 'package:live_app/view/homeScreen/paymentMethodScreen/reward_screen.dart';
+import 'package:live_app/view/market/tabs/payment_screen.dart';
 import 'package:live_app/view/profile_views/my_rewards_screen.dart';
 import 'package:live_app/view/profile_views/settings_screen.dart';
 import 'package:live_app/view/profile_views/sold_products_screen.dart';
@@ -58,12 +60,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       {
         "icon": 'assets/icons/Card.png',
         "title": "payment_delivery".tr,
-        "screen": SettingsScreen()
+        "screen": PaymentScreen()
       },
       {
         "icon": 'assets/icons/Map Point.png',
         "title": "addresses".tr,
-        "screen": SettingsScreen()
+        "screen": DeliveryAddressScreen()
       },
       {
         "icon": 'assets/icons/Bell.png',
@@ -83,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       {
         "icon": 'assets/icons/Settings.png',
         "title": "settings".tr,
-        "screen": NotificationSettingsScreen()
+        "screen": SettingsScreen()
       },
     ];
     final List<Map<String, dynamic>> helpAndContact = [

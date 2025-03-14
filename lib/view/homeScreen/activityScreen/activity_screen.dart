@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/utils/icons_path.dart';
+import 'package:live_app/view/find_friendsd.dart';
 import '../../../custom_widgets/custom_text.dart';
 import 'message_list_screen.dart';
 import 'feature_activity_screen.dart';
@@ -35,19 +37,24 @@ class _ActivityScreenState extends State<ActivityScreen> with SingleTickerProvid
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(width: 1, color: Color(0xffCACACA)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: Row(
-                children: [
-                  Image.asset(findfriendsIcon, height: 18),
-                  SizedBox(width: 10),
-                  CustomText(text: 'find_friends'.tr),
-                ],
+          GestureDetector(
+            onTap: (){
+              Get.to(()=>FindFriendsScreen());
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(width: 1, color: Color(0xffCACACA)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Row(
+                  children: [
+                    Image.asset(findfriendsIcon, height: 18),
+                    SizedBox(width: 10),
+                    CustomText(text: 'find_friends'.tr),
+                  ],
+                ),
               ),
             ),
           )
@@ -68,7 +75,7 @@ class _ActivityScreenState extends State<ActivityScreen> with SingleTickerProvid
       body: TabBarView(
         controller: _tabController,
         children: [
-          PurchaseActivityScreen(),
+          PurchaseActivityScreen(currentUserId: FirebaseAuth.instance.currentUser!.uid,),
           RatesActivitySearchScreen(),
           MessagesList(),
           FeatureActivityScreen()

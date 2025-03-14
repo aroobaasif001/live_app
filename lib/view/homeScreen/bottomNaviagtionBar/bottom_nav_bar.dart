@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -59,17 +60,30 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                     String title = 'Live Streaming';
 
                     if (title.isEmpty) {
-                      // If title is empty, set a default title.
                       title = 'Live Streaming';
                     }
 
-                    // Store live stream details in Firebase Firestore
                     try {
+                      // Fetch admin details from Firestore
+                      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+                          .collection('UserEntity')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .get();
+
+                      String adminName = userDoc.exists && userDoc.data() != null
+                          ? (userDoc['firstName'] ?? 'Admin')
+                          : 'Admin';
+
+                      String adminPhoto = userDoc.exists && userDoc.data() != null
+                          ? (userDoc['image'] ?? 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D')
+                          : 'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D'; // Dummy image if null
+                      List<dynamic>? interests = userDoc['interests'] as List<dynamic>?;
+                      String category = (interests != null && interests.isNotEmpty) ? interests[0] : 'General';
+
                       final liveStreamData = {
                         "title": title,
-                        "adminName": 'Admin',
-                        "adminPhoto":
-                            'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D',
+                        "adminName": adminName,
+                        "adminPhoto": adminPhoto,
                         "adminUid": uid,
                         "isAdmin": true,
                         "channelId": ChannelId,
@@ -79,6 +93,9 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                         'currentmusic_id': null,
                         'heartbeat': null,
                         "timestamp": FieldValue.serverTimestamp(),
+                        "description": "description is added here",
+                        'liveImage' : null,
+                        'category' : category
                       };
 
                       await FirebaseFirestore.instance
@@ -86,24 +103,22 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                           .doc(ChannelId)
                           .set(liveStreamData);
 
-                      // Navigate to LiveStreamingScreen
-                      // _cameraController?.dispose();
-                      // _titleController.dispose();
                       Get.to(() => LiveStreamingScreen(
-                            channelId: ChannelId ?? '',
-                            isAdmin: true,
-                            uid: uid ?? 0,
-                          ));
+                        channelId: ChannelId ?? '',
+                        isAdmin: true,
+                        uid: uid ?? 0,
+                      ));
                     } catch (e) {
                       Get.snackbar(
-                        "error".tr,
-                        "live_stream_error".tr,
+                        "Error",
+                        "Failed to start live stream",
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.red,
                         colorText: Colors.white,
                       );
                     }
-                  },
+                  }
+,
                   child: _buildOption(
                       context, Icons.play_circle_fill, "Schedule a Show")),
               GestureDetector(

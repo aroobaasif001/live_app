@@ -21,28 +21,71 @@ class MessagesList extends StatelessWidget {
         body: Center(child: Text("Please log in to view messages".tr)),
       );
     }
+
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('UserEntity').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+        builder: (context, userSnapshot) {
+          if (userSnapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          if (!userSnapshot.hasData || userSnapshot.data!.docs.isEmpty) {
             return Center(child: Text("No users available".tr));
           }
 
-          List<RegistrationEntity> users = snapshot.data!.docs
-              .map((doc) => RegistrationEntity.fromJson(
-                  doc.data() as Map<String, dynamic>))
-              .where((user) => user.regId != currentUser!.uid)
+          String currentUserId = currentUser!.uid;
+
+          // Extract users who have currentUserId in their subscribers list
+          List<RegistrationEntity> users = userSnapshot.data!.docs
+              .map((doc) {
+            Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+            List<String> subscribers = List<String>.from(data['subscribers'] ?? []);
+            return RegistrationEntity(
+              regId: doc.id,
+              firstName: data['firstName'] ?? 'Unknown',
+              image: data['image'] ?? applegImage,
+              subscribers: subscribers,
+            );
+          })
+              .where((user) => user.regId != currentUserId && user.subscribers!.contains(currentUserId))
               .toList();
 
-          return ListView.builder(
-            itemCount: users.length,
-            itemBuilder: (context, index) {
-              return buildUserItem(context, users[index]);
+          if (users.isEmpty) {
+            return Center(child: Text("No subscribers yet".tr));
+          }
+
+          // Fetch messages from Firestore
+          return StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('messages').snapshots(),
+            builder: (context, chatSnapshot) {
+              if (chatSnapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              List<String> usersWhoMessagedMe = chatSnapshot.hasData
+                  ? chatSnapshot.data!.docs
+                  .map((doc) => (doc.data() as Map<String, dynamic>)['senderId'] as String)
+                  .toSet()
+                  .toList()
+                  : [];
+
+              // Show users who are subscribers OR messaged first
+              List<RegistrationEntity> filteredUsers = users.where((user) =>
+              usersWhoMessagedMe.contains(user.regId) || // Sent message
+                  user.subscribers!.contains(currentUserId) // Subscribed to me
+              ).toList();
+
+              if (filteredUsers.isEmpty) {
+                return Center(child: Text("No messages from subscribers".tr));
+              }
+
+              return ListView.builder(
+                itemCount: filteredUsers.length,
+                itemBuilder: (context, index) {
+                  return buildUserItem(context, filteredUsers[index]);
+                },
+              );
             },
           );
         },
@@ -66,7 +109,13 @@ class MessagesList extends StatelessWidget {
 
   Widget buildUserItem(BuildContext context, RegistrationEntity user) {
     return ListTile(
-      leading: Image.asset(applegImage),
+      leading: Image.network(
+        user.image ?? applegImage,
+        height: 40,
+        width: 40,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Image.asset(applegImage, height: 40, width: 40),
+      ),
       title: CustomText(
         text: user.firstName ?? '',
         fontWeight: FontWeight.w500,

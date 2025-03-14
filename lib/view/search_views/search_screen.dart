@@ -1,8 +1,10 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/entities/product_entity.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/search_views/search_by_application.dart';
 import '../../custom_widgets/custom_gradient_button.dart';
@@ -167,7 +169,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
             const SizedBox(height: 12),
-            _buildHorizontalUsers(itemCount: 3),
+            _buildHorizontalUsers(),
             const SizedBox(height: 12),
 
             // PRODUCTS SECTION
@@ -179,12 +181,36 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             const SizedBox(height: 12),
             // Updated to match your screenshot design
-            _buildProductList(itemCount: 3),
+            StreamBuilder<List<ProductEntity>>(
+              stream: fetchProducts(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No products available'));
+                }
+
+                return _buildProductList(
+                    itemCount: snapshot.data!.length, products: snapshot.data!);
+              },
+            )
           ],
         ),
       ),
     );
   }
+
+  Stream<List<ProductEntity>> fetchProducts() {
+    return ProductEntity.collection().snapshots().map(
+          (snapshot) =>
+          snapshot.docs.map((doc) => doc.data()).toList(),
+    );
+  }
+
 
   // ===========================================================================
   // ============================  GOODS TAB  ===================================
@@ -253,7 +279,7 @@ class _SearchScreenState extends State<SearchScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildStreamGrid(
-              context
+                context
             ),
           ],
         ),
@@ -459,81 +485,204 @@ class _SearchScreenState extends State<SearchScreen> {
       },
     );
   }
-  Widget _buildHorizontalUsers({required int itemCount}) {
-    return SizedBox(
-      height: 165,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: itemCount,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Container(
-              width: 150,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-                child: Column(
-                  children: [
-                    // user image
-                    Container(
-                      height: 45,
-                      width: 45,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage(appleIcon),
-                          fit: BoxFit.cover,
+
+
+  Widget _buildHorizontalUsers() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('UserEntity').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(child: Text("No Users Found".tr));
+        }
+
+        List<DocumentSnapshot> users = snapshot.data!.docs;
+        String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? "";
+
+        return SizedBox(
+          height: 165,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: users.length,
+            itemBuilder: (context, index) {
+              var userData = users[index].data() as Map<String, dynamic>?;
+
+              // Extract user details safely
+              String userId = users[index].id;
+              String userName = userData?['firstName'] ?? 'Unknown';
+              String userImage = userData?['image'] ??
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6vBz9VgjksAaZZkWOm8Lk3ZSb7gO25eP0-Q&s';
+
+              List<dynamic> subscribersList = userData?['subscribers'] != null
+                  ? List<dynamic>.from(userData?['subscribers'])
+                  : [];
+
+              bool isSubscribed = subscribersList.contains(currentUserId);
+              int subscriberCount = subscribersList.length;
+
+              return Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Container(
+                  width: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 15),
+                    child: Column(
+                      children: [
+                        // User image
+                        Container(
+                          height: 45,
+                          width: 45,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: userImage.startsWith("http")
+                                  ? NetworkImage(userImage)
+                                  : AssetImage(userImage) as ImageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 8),
+                        CustomText(
+                          text: userName,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          fontFamily: "Gilroy-Bold",
+                        ),
+                        const SizedBox(height: 2),
+                        CustomText(
+                          text: "$subscriberCount Subscribers",
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          fontFamily: "Gilroy-Bold",
+                        ),
+                        const SizedBox(height: 8),
+                        GestureDetector(
+                          onTap: () async {
+                            if (isSubscribed) {
+                              await _unsubscribeUser(userId, currentUserId);
+                            } else {
+                              await _subscribeUser(userId, currentUserId);
+                            }
+                          },
+                          child: CustomGradientButton(
+                            text: isSubscribed ? "Unsubscribe" : "Subscribe",
+                            height: 35,
+                            width: 100,
+
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8),
-                    CustomText(
-                      text: "company_name".tr,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      fontFamily: "Gilroy-Bold",
-                    ),
-                    const SizedBox(height: 2),
-                    CustomText(
-                      text: "2.3K Subscribers",
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      fontFamily: "Gilroy-Bold",
-                    ),
-                    const SizedBox(height: 8),
-                    CustomGradientButton(
-                      text: "Subscribe",
-                      height: 35,
-                      width: 100,
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
-  Widget _buildProductList({required int itemCount}) {
+
+  Future<void> _unsubscribeUser(String userId, String currentUserId) async {
+    DocumentReference userDoc = FirebaseFirestore.instance.collection(
+        'UserEntity').doc(userId);
+
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(userDoc);
+
+        if (!snapshot.exists) return;
+
+        Map<String, dynamic>? userData = snapshot.data() as Map<String,
+            dynamic>?;
+
+        List<dynamic> subscribersList = userData?['subscribers'] != null
+            ? List<dynamic>.from(userData?['subscribers'])
+            : [];
+
+        if (subscribersList.contains(currentUserId)) {
+          subscribersList.remove(currentUserId);
+          transaction.update(userDoc, {'subscribers': subscribersList});
+        }
+      });
+
+      Get.snackbar("Success", "You have unsubscribed successfully!",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white);
+    } catch (e) {
+      Get.snackbar("Error", "Failed to unsubscribe: ${e.toString()}",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+    }
+  }
+
+  /// **Function to handle subscription logic**
+  Future<void> _subscribeUser(String userId, String currentUserId) async {
+    DocumentReference userDoc = FirebaseFirestore.instance.collection(
+        'UserEntity').doc(userId);
+
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(userDoc);
+
+        if (!snapshot.exists) return;
+
+        Map<String, dynamic>? userData = snapshot.data() as Map<String,
+            dynamic>?;
+
+        List<dynamic> subscribersList = userData?['subscribers'] != null
+            ? List<dynamic>.from(userData?['subscribers'])
+            : [];
+
+        if (!subscribersList.contains(currentUserId)) {
+          subscribersList.add(currentUserId);
+          transaction.update(userDoc, {'subscribers': subscribersList});
+        }
+      });
+
+      Get.snackbar("Success", "You have subscribed successfully!",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white);
+    } catch (e) {
+      Get.snackbar("Error", "Failed to subscribe: ${e.toString()}",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+    }
+  }
+
+
+  Widget _buildProductList(
+      {required int itemCount, required List<ProductEntity> products}) {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: itemCount,
-      separatorBuilder: (context, index) => Divider(
-        color: Colors.grey.shade300,
-        thickness: 1,
-        height: 20,
-      ),
+      separatorBuilder: (context, index) =>
+          Divider(
+            color: Colors.grey.shade300,
+            thickness: 1,
+            height: 20,
+          ),
       itemBuilder: (context, index) {
+        final product = products[index];
+
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Left side: product image with small badge (icon + "3")
+            // Product Image
             SizedBox(
               width: 120,
               height: 120,
@@ -541,8 +690,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      marketImage,
+                    child: Image.network(
+                      product.images?.isNotEmpty == true
+                          ? product.images!.first
+                          : '',
                       fit: BoxFit.cover,
                       width: 120,
                       height: 120,
@@ -553,27 +704,20 @@ class _SearchScreenState extends State<SearchScreen> {
                     right: 8,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 3,
-                      ),
+                          horizontal: 6, vertical: 3),
                       decoration: BoxDecoration(
                         color: Colors.black54,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         children: const [
-                          Icon(
-                            Icons.chat_bubble_outline,
-                            color: Colors.white,
-                            size: 14,
-                          ),
+                          Icon(Icons.chat_bubble_outline, color: Colors.white,
+                              size: 14),
                           SizedBox(width: 3),
-                          CustomText(
-                            text: '3',
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          CustomText(text: '3',
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400),
                         ],
                       ),
                     ),
@@ -582,62 +726,25 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             const SizedBox(width: 12),
-            // Right side: brand name + rating, product name, description, price
+            // Product Details
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // brand name + star rating row
-                  Row(
-                    children: [
-                      Image.asset(
-                        appleIcon,
-                        height: 20,
-                        width: 20,
-                      ),
-                      const SizedBox(width: 6),
-                      CustomText(
-                        text: 'company_name'.tr,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                      ),
-
-                      const SizedBox(width: 6),
-                      const Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 3),
-                      CustomText(
-                        text: '4.9',
-                        color: Colors.grey.shade600,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                      ),
-                    ],
-                  ),
+                  // Title
+                  CustomText(text: product.title ?? 'No Title',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14),
+                  // Description
+                  CustomText(text: product.description ?? 'No Description',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
+                      color: Colors.grey),
                   const SizedBox(height: 4),
-                  // product name
-                  CustomText(
-                    text: 'Product name',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                  // description
-                  const CustomText(
-                    text: 'Description',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 13,
-                    color: Colors.grey,
-                  ),
-                  const SizedBox(height: 4),
-                  // price
-                  CustomText(
-                    text: '1,000 ₽',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+                  // Price
+                  CustomText(text: '${product.price ?? '0'} ₽',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14),
                 ],
               ),
             ),
@@ -648,7 +755,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-Widget _buildStreamGrid(BuildContext context) {
+  Widget _buildStreamGrid(BuildContext context) {
   return StreamBuilder<QuerySnapshot>(
     stream: FirebaseFirestore.instance.collection('livestreams').snapshots(),
     builder: (context, snapshot) {
@@ -689,16 +796,22 @@ Widget _buildStreamGrid(BuildContext context) {
                   final adminImage = data['adminPhoto'] as String? ?? '';
                   final viewsCount = data['viewsCount'] as int? ?? 0;
                   final title = data['title'] as String? ?? '';
+                  final description = data['description'] as String? ?? '';
+                  final liveImage = data['liveImage'] as String? ?? '';
+                  final category = data['category'] ?? '';
+
+
 
                   return GestureDetector(
                     onTap: () {
                       // Navigate to live stream or any action
                     },
                     child: LiveVideoCard(
+                      description:description,
                       adminName: adminName,
                       adminImage: adminImage,
                       viewsCount: viewsCount,
-                      title: title,
+                      title: title, liveImage: liveImage, category: category,
                     ),
                   );
                 },
