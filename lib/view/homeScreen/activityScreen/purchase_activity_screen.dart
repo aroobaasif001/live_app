@@ -281,8 +281,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
                       child: Column(
                         children: [
                           ..._getFilteredAuctions()
-                              .map((item) => _buildAuctionCard(item))
-                              .toList(),
+                              .map((item) => _buildAuctionCard(item)),
                           const SizedBox(height: 16),
                           Text(
                             "recently_completed_auctions".tr,
