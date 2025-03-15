@@ -28,88 +28,70 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 5,
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 15),
-                // Search Bar
-                Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: TextField(
-                    onTap: () {
-                      // Opens "SearchByApplication" screen
-                      Get.to(() => const SearchByApplication());
-                    },
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'search'.tr,
-                      prefixIcon: Icon(Icons.search, color: Colors.grey),
-                    ),
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 15),
+              // Search Bar
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: TextField(
+                  onTap: () {
+                    // Opens "SearchByApplication" screen
+                    Get.to(() => const SearchByApplication());
+                  },
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'search'.tr,
+                    prefixIcon: Icon(Icons.search, color: Colors.grey),
                   ),
                 ),
-                const SizedBox(height: 12),
-                // Top-level TabBar
-                ButtonsTabBar(
-                  unselectedBackgroundColor: Colors.white,
-                  borderWidth: 0,
-                  unselectedBorderColor: Colors.transparent,
-                  borderColor: Colors.transparent,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                  labelStyle: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                  unselectedLabelStyle: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    gradient: const LinearGradient(
-                      colors: [Colors.blue, Colors.pinkAccent],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  tabs: [
-                    Tab(text: 'top'.tr),
-                    Tab(text: 'goods'.tr),
-                    Tab(text: 'streams'.tr),
-                    Tab(text: 'users'.tr),
-                    Tab(text: 'categories'.tr),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      _buildTopTab(),
-                      _buildGoodsTab(FirebaseAuth.instance.currentUser!.uid),
-                      _buildStreamsTab(),
-                    //  _buildUsersTab(),
-                      _buildGoodsTab(FirebaseAuth.instance.currentUser!.uid),
-                      CategoriesTab()
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 12),
+              // Top-level TabBar
+              // ButtonsTabBar(
+              //   unselectedBackgroundColor: Colors.white,
+              //   borderWidth: 0,
+              //   unselectedBorderColor: Colors.transparent,
+              //   borderColor: Colors.transparent,
+              //   contentPadding: const EdgeInsets.symmetric(
+              //     horizontal: 16,
+              //     vertical: 10,
+              //   ),
+              //   labelStyle: const TextStyle(
+              //     color: Colors.white,
+              //     fontWeight: FontWeight.bold,
+              //     fontSize: 14,
+              //   ),
+              //   unselectedLabelStyle: const TextStyle(
+              //     color: Colors.black,
+              //     fontWeight: FontWeight.bold,
+              //     fontSize: 14,
+              //   ),
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(12),
+              //     gradient: const LinearGradient(
+              //       colors: [Colors.blue, Colors.pinkAccent],
+              //       begin: Alignment.topLeft,
+              //       end: Alignment.bottomRight,
+              //     ),
+              //   ),
+              //
+              // ),
+              const SizedBox(height: 12),
+              Expanded(
+                child: CategoriesTab(),
+              ),
+            ],
           ),
         ),
       ),
