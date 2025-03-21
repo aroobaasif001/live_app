@@ -3,8 +3,8 @@ const { logger } = require("firebase-functions");
 const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
 
 // Hard-coded Agora credentials (consider using environment config in production)
-const appId = "0f0b7dc97d754349a53fa35ee828ab03";
-const appCertificate = "0f0b7dc97d754349a53fa35ee828ab03";
+const appId = "1c3a1707c34d47999c698ab18f220b94";
+const appCertificate = "699d58be80f94da5be2cd215736fbe68";
 
 exports.generateAgoraToken = onCall((request) => {
   const data = request.data;

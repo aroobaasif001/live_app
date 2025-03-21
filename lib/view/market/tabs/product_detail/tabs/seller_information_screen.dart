@@ -13,9 +13,9 @@ import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
 
 class SellerInformationScreen extends StatefulWidget {
-  final String? sellerProfileId;
+  final String sellerProfileId;
 
-  const SellerInformationScreen({super.key, this.sellerProfileId});
+  const SellerInformationScreen({super.key,required this.sellerProfileId});
 
   @override
   State<SellerInformationScreen> createState() =>

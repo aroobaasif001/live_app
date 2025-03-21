@@ -108,6 +108,7 @@ class SocialsLoginScreen extends StatelessWidget {
                   CustomIconButton(
                     onPressed: () {
                       // Email sign in functionality here.
+                      Get.to(()=>RegistrationScreen());
                     },
                     text: 'continue_with_email'.tr,
                     iconPath: emailIcon,

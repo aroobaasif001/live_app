@@ -47,7 +47,7 @@ class HomeMainScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              height: 40,
+              //height: 40,
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(12),
@@ -56,16 +56,18 @@ class HomeMainScreen extends StatelessWidget {
               child: TextField(
                 onTap: () {
                   // Opens "SearchByApplication" screen
-                  Get.to(() => const SearchByApplication());
+                  Get.to(() => const SearchByProduct());
                 },
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'search'.tr,
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
                 ),
+                textAlignVertical: TextAlignVertical.center, // Vertically center the text
               ),
             ),
           ),
+
           const SizedBox(width: 10),
           _buildNotificationIcon(notificationCount),
           const SizedBox(width: 10),

@@ -330,7 +330,7 @@ class _FixCardScreenState extends State<FixCardScreen> {
 
                     /// **Second Tab: Seller Information**
                     SellerInformationScreen(
-                      sellerProfileId:widget.productCompanyId,
+                      sellerProfileId:widget.productCompanyId ?? '',
                     ),
                   ],
                 ),

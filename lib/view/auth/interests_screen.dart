@@ -76,7 +76,6 @@ class _InterestsScreenState extends State<InterestsScreen> {
     'cloth',
     'shoes',
     'electronics',
-    'bags',
     'sport',
     'toys',
     'beauty',

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradiant_tab_button.dart';
 import 'package:live_app/entities/product_entity.dart';
+import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
 import '../../livestreaming/livestreamingview_screen.dart';
+import '../../search_views/search_by_application.dart';
 import '../widgets/live_video_card.dart';
 import 'widget/build_action_card.dart';
 
@@ -55,7 +57,11 @@ class FeatureActivityScreen extends StatelessWidget {
               }
             }),
             const SizedBox(height: 16),
-            _buildSectionTitle("Search"),
+            SizedBox(
+                height: Get.height * .4
+                ,
+                child: SearchByProduct()),
+           // _buildSectionTitle("Search"),
             _buildSearchFilters(),
           ],
         ),
@@ -179,7 +185,18 @@ class FeatureActivityScreen extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: products.length,
             itemBuilder: (context, index) {
-              return buildAuctionCard(products[index]);
+              return GestureDetector(
+
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailScreen(product: products[index]),
+                      ),
+                    );
+                  },
+
+                  child: buildAuctionCard(products[index]));
             },
           );
         },

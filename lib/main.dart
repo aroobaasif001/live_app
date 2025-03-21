@@ -1,5 +1,7 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -32,7 +34,10 @@ Future<void> main() async {
 
   Get.put(TranslationsController());
 
-  runApp(MyApp(isLoggedIn: isLoggedIn));
+  runApp( DevicePreview(
+    enabled: !kReleaseMode,
+    builder: (context) => MyApp(isLoggedIn: isLoggedIn,), // Wrap your app
+  ),);
 }
 
 

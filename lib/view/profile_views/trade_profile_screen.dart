@@ -127,8 +127,13 @@ Future<void> _fetchUserProfile() async {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Icon(Icons.arrow_back,
-                                    color: Colors.white, size: 24),
+                                GestureDetector(
+                                  onTap: (){
+                        Get.back();
+                      },
+                                  child: Icon(Icons.arrow_back,
+                                      color: Colors.white, size: 24),
+                                ),
                                 CustomContainer(
                                   height: 32,
                                   width: 32,

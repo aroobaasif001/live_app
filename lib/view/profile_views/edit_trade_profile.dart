@@ -94,11 +94,12 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
 
   Future<void> _pickImage(bool isProfile) async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedImage =
-        await picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedImage != null) {
       File imageFile = File(pickedImage.path);
+
+      // Upload image and get URL
       String imageUrl = await _uploadImage(imageFile, isProfile);
 
       setState(() {
@@ -108,23 +109,46 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
           _coverImageUrl = imageUrl;
         }
       });
-      await FirebaseFirestore.instance
-          .collection("UserEntity")
-          .doc(widget.userId)
-          .update({
-        isProfile ? "image" : "coverImage": imageUrl,
-      });
+
+      // Log the image URL and Firestore update logic for debugging
+      print("Uploaded image URL: $imageUrl");
+
+      // Update Firestore with the image URL for profile or cover image
+      try {
+        await FirebaseFirestore.instance
+            .collection("UserEntity")
+            .doc(widget.userId)
+            .update({
+          isProfile ? "image" : "coverImage": imageUrl,
+        });
+        print(isProfile ? "Profile image updated" : "Cover image updated");
+      } catch (e) {
+        print("Error updating Firestore: $e");
+      }
+    } else {
+      print("No image selected");
     }
   }
 
-  Future<String> _uploadImage(File imageFile, bool isProfile) async {
-    String fileName = "${widget.userId}_${isProfile ? 'profile' : 'cover'}.jpg";
-    Reference storageRef =
-        FirebaseStorage.instance.ref().child("users/$fileName");
 
-    await storageRef.putFile(imageFile);
-    return await storageRef.getDownloadURL();
+
+  Future<String> _uploadImage(File imageFile, bool isProfile) async {
+    try {
+      String fileName = "${widget.userId}_${isProfile ? 'profile' : 'cover'}.jpg";
+      Reference storageRef = FirebaseStorage.instance.ref().child("users/$fileName");
+
+      // Upload the image to Firebase Storage
+      TaskSnapshot taskSnapshot = await storageRef.putFile(imageFile);
+
+      // Get the URL after upload completion
+      String imageUrl = await taskSnapshot.ref.getDownloadURL();
+      return imageUrl;
+    } catch (e) {
+      print("Error uploading image: $e");
+      throw Exception("Error uploading image");
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {

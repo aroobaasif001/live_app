@@ -128,7 +128,7 @@ class LiveStreamController extends GetxController {
       print('[DEBUG] Initializing RTC engine...');
       await _rtcEngine?.initialize(
         const RtcEngineContext(
-          appId: '0f0b7dc97d754349a53fa35ee828ab03',
+          appId: '1c3a1707c34d47999c698ab18f220b94',
           channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
         ),
       );

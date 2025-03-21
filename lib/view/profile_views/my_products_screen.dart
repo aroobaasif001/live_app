@@ -106,7 +106,6 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
               //   ),
               // ),
               Container(
-                height: 40,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(12),
@@ -134,7 +133,10 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                             },
                           )
                         : null,
+
                   ),
+                  textAlignVertical: TextAlignVertical.center, // Vertically center the text
+
                 ),
               ),
 

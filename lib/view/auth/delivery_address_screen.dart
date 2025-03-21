@@ -84,7 +84,22 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              _continueToNextScreen();
+            //  _continueToNextScreen();
+              Get.to(() => InterestsScreen(
+                country: widget.country,
+                gender: widget.gender,
+                firstName: widget.firstName,
+                lastName: widget.lastName,
+                email: widget.email,
+                password: widget.password,
+                city: _cityController.text.trim(),
+                street: _streetController.text.trim(),
+                house: _houseController.text.trim(),
+                apartment: _apartmentController.text.trim(),
+                entrance: _entranceController.text.trim(),
+                index: _indexController.text.trim(),
+                isSignUpWithGoogle:widget.isSignUpWithGoogle!,
+              ));
             },
             child: Row(
               children: [

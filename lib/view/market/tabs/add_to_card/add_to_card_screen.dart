@@ -65,7 +65,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             children: [
               _buildProductDetails(widget.productPrice),
               SellerInformationScreen(
-                sellerProfileId:widget.productCompanyId,
+                sellerProfileId:widget.productCompanyId ?? '',
               ),
               // _buildSellerInformation(),
             ],

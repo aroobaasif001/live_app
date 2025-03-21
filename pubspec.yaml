@@ -63,7 +63,8 @@ dependencies:
   cloud_functions: ^5.3.3
   flutter_launcher_icons: any
   path_provider: ^2.1.5
-
+  yookassa_client: ^1.0.5
+  device_preview: ^1.2.0
 flutter_icons:
   android: true
   ios: true

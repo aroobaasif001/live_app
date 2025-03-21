@@ -1,4 +1,5 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
@@ -109,38 +110,58 @@ class ProductDetailScreen extends StatelessWidget {
                     SizedBox(height: 12),
                     Divider(color: conLineColor),
                     SizedBox(height: 12),
-                    ButtonsTabBar(
-                      unselectedBackgroundColor: Colors.white,
-                      borderWidth: 0,
-                      elevation: 0.0001,
-                      unselectedBorderColor: Colors.transparent,
-                      borderColor: Colors.transparent,
-                      radius: 8,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                      buttonMargin: EdgeInsets.symmetric(horizontal: 10),
-                      labelStyle: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                    DefaultTabController(
+                      length: 2,
+                      child: Builder(
+                        builder: (context) {
+                          final TabController tabController = DefaultTabController.of(context);
+                          tabController.addListener(() {
+                            if (tabController.indexIsChanging && tabController.index == 1) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) =>                    SellerInformationScreen(sellerProfileId: product.id ?? FirebaseAuth.instance.currentUser!.uid,),
+                                ),
+                              );
+                              // Reset back to previous tab after navigation (optional)
+                              tabController.index = 0;
+                            }
+                          });
+                          return ButtonsTabBar(
+                            unselectedBackgroundColor: Colors.white,
+                            borderWidth: 0,
+                            elevation: 0.0001,
+                            unselectedBorderColor: Colors.transparent,
+                            borderColor: Colors.transparent,
+                            radius: 8,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                            buttonMargin: EdgeInsets.symmetric(horizontal: 10),
+                            labelStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                            unselectedLabelStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              gradient: LinearGradient(
+                                colors: [Colors.blue, Colors.pinkAccent],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            tabs: [
+                              Tab(text: 'About the product'),
+                              Tab(text: 'Seller Information'),
+                            ],
+                          );
+                        },
                       ),
-                      unselectedLabelStyle: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        gradient: LinearGradient(
-                          colors: [Colors.blue, Colors.pinkAccent],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      tabs: [
-                        Tab(text: 'About the product'),
-                        Tab(text: 'Seller Information'),
-                      ],
                     ),
+
                     SizedBox(height: 12),
                   ],
                 ),
@@ -150,7 +171,7 @@ class ProductDetailScreen extends StatelessWidget {
                 child: TabBarView(
                   children: [
                     AboutTheProductScreen(),
-                    SellerInformationScreen(),
+                    SellerInformationScreen(sellerProfileId: product.id ?? FirebaseAuth.instance.currentUser!.uid,),
                   ],
                 ),
               ),
