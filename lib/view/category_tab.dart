@@ -3,6 +3,8 @@ import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 import '../categorize_prod.dart';
 import '../custom_widgets/custom_text.dart';
@@ -15,14 +17,31 @@ class CategoriesTab extends StatefulWidget {
 }
 
 class _CategoriesTabState extends State<CategoriesTab> {
+
   List<String> categories = [];
   List<String> filteredCategories = [];
   int selectedTabIndex = 0;
 
   @override
+  void dispose() {
+    // Restore normal rotation when leaving the screen
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     fetchCategories();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
   }
 
   Future<void> fetchCategories() async {
@@ -76,7 +95,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomText(
-              text: "Search by category",
+              text: "search_by_category".tr,
               fontSize: 18,
               fontWeight: FontWeight.w800,
             ),
@@ -105,9 +124,9 @@ class _CategoriesTabState extends State<CategoriesTab> {
                 gradient: primaryGradientColor,
               ),
               tabs: [
-                Tab(text: "Recommended"),
-                Tab(text: "Popular"),
-                Tab(text: "A-Z"),
+                Tab(text: "recommended".tr),
+                Tab(text: "popular".tr),
+                Tab(text: "a_z".tr),
               ],
               onTap: applyFilter, // Apply filter on tab change
             ),

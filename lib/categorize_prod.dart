@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
 
 import 'entities/product_entity.dart';
@@ -13,7 +14,8 @@ class ProductsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Products - $category"),
+        title: Text("${'products'.tr} - $category")
+        ,
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -30,7 +32,7 @@ class ProductsPage extends StatelessWidget {
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text("No products available"));
+            return  Center(child: Text("No products available".tr));
           }
 
           var products = snapshot.data!.docs;

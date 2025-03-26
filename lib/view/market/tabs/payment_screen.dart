@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_pay_background.dart';
@@ -28,21 +29,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   SizedBox(height: 30),
                   Center(
                     child: CustomText(
-                      text: 'To pay',
+                      text: 'to_pay'.tr,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Center(
                     child: CustomText(
-                      text: '100,000 ₽',
+                      text: 'amount'.tr,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 30),
                   CustomText(
-                    text: 'Delivery address',
+                    text: 'delivery_address'.tr,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -57,7 +58,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       SizedBox(width: 10),
                       Expanded(
                         child: CustomText(
-                          text: '109155, Moscow, Ryazansky Prospekt, 58/2, 193',
+                          text: 'address_details'.tr,
                           fontSize: 14,
                         ),
                       ),
@@ -65,7 +66,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   SizedBox(height: 20),
                   CustomText(
-                    text: 'Payment method',
+                    text: 'payment_method'.tr,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -73,7 +74,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   // Radio buttons with onChanged
                   CustomRadioTile(
                     imagePath: payIcon1,
-                    title: 'Mir **2882',
+                    title: 'mir_card'.tr,
                     selectedOption: selectedOption,
                     onChanged: (String? value) {
                       setState(() {
@@ -83,7 +84,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   CustomRadioTile(
                     imagePath: payIcon2,
-                    title: 'Sber Pay',
+                    title: 'sber_pay'.tr,
                     selectedOption: selectedOption,
                     onChanged: (String? value) {
                       setState(() {
@@ -93,7 +94,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   CustomRadioTile(
                     imagePath: payIcon3,
-                    title: 'YouMoney',
+                    title: 'you_money'.tr,
                     selectedOption: selectedOption,
                     onChanged: (String? value) {
                       setState(() {
@@ -103,7 +104,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   CustomRadioTile(
                     imagePath: payIcon4,
-                    title: 'SBP',
+                    title: 'sbp'.tr,
                     selectedOption: selectedOption,
                     onChanged: (String? value) {
                       setState(() {
@@ -113,7 +114,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   CustomRadioTile(
                     imagePath: payIcon5,
-                    title: 'T-Pay',
+                    title: 't_pay'.tr,
                     selectedOption: selectedOption,
                     onChanged: (String? value) {
                       setState(() {
@@ -123,7 +124,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   CustomRadioTile(
                     imagePath: payIcon1,
-                    title: 'New Card',
+                    title: 'new_card'.tr,
                     selectedOption: selectedOption,
                     onChanged: (String? value) {
                       setState(() {
@@ -134,7 +135,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   SizedBox(height: 20),
                   // Payment Button
                   CustomGradientButton(
-                    text: 'Pay',
+                    text: 'pay'.tr,
                     onPressed: () {
                       // Implement payment action here
                     },

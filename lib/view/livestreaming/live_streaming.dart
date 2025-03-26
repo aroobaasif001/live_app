@@ -472,8 +472,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                               height: 60,
                             ),
                             const SizedBox(height: 5),
-                            const Text(
-                              'Shop',
+                             Text(
+                              'Shop'.tr,
                               style: TextStyle(
                                   color: Colors.white, fontSize: 12),
                             ),
@@ -484,17 +484,17 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                       GestureDetector(
                         onTap: () {
                           Get.defaultDialog(
-                            title: "Boost Video",
-                            middleText: "Do you want to boost your video?",
-                            textCancel: "No",
-                            textConfirm: "Yes",
+                            title: "Boost Video".tr,
+                            middleText: "Do you want to boost your video?".tr,
+                            textCancel: "No".tr,
+                            textConfirm: "Yes".tr,
                             confirmTextColor: Colors.white,
                             onConfirm: () {
-                              print("Boost video confirmed.");
+                              print("Boost video confirmed.".tr);
                               Get.back();
                             },
                             onCancel: () {
-                              print("Boost video canceled.");
+                              print("Boost video canceled.".tr);
                             },
                           );
                         },
@@ -506,8 +506,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                               height: 60,
                             ),
                             const SizedBox(height: 5),
-                            const Text(
-                              'Boost',
+                             Text(
+                              'Boost'.tr,
                               style:
                               TextStyle(color: Colors.white, fontSize: 12),
                             ),
@@ -549,8 +549,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                               height: 60,
                             ),
                             const SizedBox(height: 5),
-                            const Text(
-                              'Wallet',
+                             Text(
+                              'Wallet'.tr,
                               style:
                               TextStyle(color: Colors.white, fontSize: 12),
                             ),
@@ -585,7 +585,7 @@ SizedBox(height: 50,)
                             ConnectionState.waiting) {
                           return const SizedBox.shrink();
                         } else if (snapshot.hasError || !snapshot.hasData) {
-                          return const Text('Error loading admin details',
+                          return  Text('Error loading admin details'.tr,
                               style: TextStyle(color: Colors.red));
                         }
 
@@ -897,7 +897,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Do you want to end Live video?',
+                  'Do you want to end Live video?'.tr,
 
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -930,7 +930,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
                     }
                   },
                   child: Text(
-                    'Yes', // Button text
+                    'Yes'.tr, // Button text
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18, // Adjust font size
@@ -943,7 +943,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
                     Navigator.of(context).pop(false);
                   },
                   child: Text(
-                    'No', // Button text
+                    'No'.tr, // Button text
                     style: TextStyle(
                       color: Colors.white, // Match text color
                       fontSize: 18, // Adjust font size

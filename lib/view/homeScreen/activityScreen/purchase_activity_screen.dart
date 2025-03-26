@@ -40,7 +40,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text("No products found"));
+            return Center(child: Text("no_products_found".tr));
           }
 
           List<ProductEntity> allProducts = snapshot.data!.docs.map((doc) =>

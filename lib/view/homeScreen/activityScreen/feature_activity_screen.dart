@@ -114,7 +114,7 @@ class FeatureActivityScreen extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No livestreams available'));
+            return  Center(child: Text('no_livestreams'.tr));
           }
 
           final livestreamsData = snapshot.data!.docs;

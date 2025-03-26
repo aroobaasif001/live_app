@@ -426,8 +426,8 @@ class LiveStreamController extends GetxController {
       // Delete the document itself
       await liveStreamDoc.delete();
       Get.snackbar(
-        "Success",
-        "Live stream successfully deleted",
+        "Success".tr,
+        "Live stream successfully deleted".tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white,

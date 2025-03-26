@@ -44,18 +44,21 @@ class _ChatInputFieldState extends State<ChatInputField> {
               onTap: () {
                 widget.focusNode.requestFocus(); // Ensure focus on tap
               },
-              child: TextField(
-                controller: widget.chatController,
-                focusNode: widget.focusNode,
-                maxLines: 1,
-                // Keep the field at a single line
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  hintText: 'Message...',
-                  hintStyle: TextStyle(color: Colors.white54),
-                  border: InputBorder.none,
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(vertical: 12),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: TextField(
+                  controller: widget.chatController,
+                  focusNode: widget.focusNode,
+                  maxLines: 1,
+                  // Keep the field at a single line
+                  style: const TextStyle(color: Colors.white),
+                  decoration:  InputDecoration(
+                    hintText: 'Message...'.tr,
+                    hintStyle: TextStyle(color: Colors.white54),
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(vertical: 12),
+                  ),
                 ),
               ),
             ),

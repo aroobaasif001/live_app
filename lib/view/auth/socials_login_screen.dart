@@ -26,51 +26,59 @@ class SocialsLoginScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Column(
                 children: [
-                  /// Register
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => RegistrationScreen());
-                    },
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GradientText(
-                          'register'.tr,
-                          colors: [purpleColor, pinkColor],
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'MontserratAlternates',
+                        /// Register
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(() => RegistrationScreen());
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              GradientText(
+                                'register'.tr,
+                                colors: [purpleColor, pinkColor],
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'MontserratAlternates',
+                                ),
+                              ),
+                              Icon(Icons.arrow_forward_ios_rounded,
+                                  color: Color(0xffE26ADC), size: 15)
+                            ],
                           ),
                         ),
-                        Icon(Icons.arrow_forward_ios_rounded,
-                            color: Color(0xffE26ADC), size: 15)
-                      ],
-                    ),
-                  ),
-                  /// Login
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => LoginScreen());
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GradientText(
-                          'login'.tr,
-                          colors: [purpleColor, pinkColor],
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'MontserratAlternates',
+                        /// Login
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(() => LoginScreen());
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GradientText(
+                                'login'.tr,
+                                colors: [purpleColor, pinkColor],
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'MontserratAlternates',
+                                ),
+                              ),
+                              Icon(Icons.arrow_forward_ios_rounded,
+                                  color: Color(0xffE26ADC), size: 15)
+                            ],
                           ),
                         ),
-                        Icon(Icons.arrow_forward_ios_rounded,
-                            color: Color(0xffE26ADC), size: 15)
-                      ],
-                    ),
-                  ),
 
+                      ],
+                    ),
+                  ),
                   /// Central logo and images
                   Image(image: AssetImage(backgroundImage)),
                   /// Main text

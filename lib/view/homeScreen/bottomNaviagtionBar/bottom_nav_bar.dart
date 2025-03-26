@@ -45,7 +45,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Sell",
+              Text("sell".tr,
                   style: GoogleFonts.poppins(
                       fontSize: 20, fontWeight: FontWeight.bold)),
               SizedBox(height: 10),
@@ -54,7 +54,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                   Get.to(()=>CreateProductScreen());
                 },
                   child: _buildOption(
-                      context, Icons.local_offer, "Create a Product")),
+                      context, Icons.local_offer, "create_product".tr)),
               GestureDetector(
                   onTap: () async {
                     String title = 'Live Streaming';
@@ -111,8 +111,8 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                       ));
                     } catch (e) {
                       Get.snackbar(
-                        "Error",
-                        "Failed to start live stream",
+                        "error".tr,
+                        "failed_to_start_live_stream".tr,
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.red,
                         colorText: Colors.white,
@@ -121,13 +121,13 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                   }
 ,
                   child: _buildOption(
-                      context, Icons.play_circle_fill, "Schedule a Show")),
+                      context, Icons.play_circle_fill, "schedule_show".tr)),
               GestureDetector(
                 onTap: (){
                   Get.to(() => MyProductsScreen());
                 },
-                child: _buildOption(context, Icons.store, "Seller Hub",
-                    subtitle: "Manage Inventory, Orders and more"),
+                child: _buildOption(context, Icons.store, "seller_hub".tr,
+                    subtitle: "seller_hub_subtitle".tr),
               ),
             ],
           ),

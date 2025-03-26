@@ -64,14 +64,14 @@ class ProductDetailScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: product.title ?? 'Unknown Product',
+                      text: product.title ?? 'unknown_product'.tr,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'SFProRounded',
                     ),
                     SizedBox(height: 6),
                     CustomText(
-                      text: '${product.category ?? 'Unknown'} - ${product.saleType ?? 'N/A'}',
+                      text: '${product.category ?? 'unknown'.tr} - ${product.saleType ?? 'N/A'}',
                       fontFamily: "Gilroy",
                       fontSize: 17,
                     ),
@@ -83,27 +83,27 @@ class ProductDetailScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                       conColor: Color(0xff7246F1).withOpacity(0.1),
                       child: CustomText(
-                        text: product.isSold ?? false ? 'Sold Out' : 'Available',
+                        text: product.isSold ?? false ? 'sold_out'.tr : 'available'.tr,
                         fontSize: 12,
                         color: Color(0xff7246F1),
                       ),
                     ),
                     SizedBox(height: 10),
                     CustomTable(
-                      leftText: 'Selling price',
+                      leftText: 'selling_price'.tr,
                       rightText: '${product.price ?? 'N/A'} ₽',
                     ),
                     CustomTable(
-                      leftText: 'Type of sale',
+                      leftText: 'type_of_sale'.tr,
                       rightText: product.saleType ?? 'N/A',
                       conColor: Colors.white,
                     ),
                     CustomTable(
-                      leftText: 'Streamer',
+                      leftText: 'streamer'.tr,
                       rightText: product.streamer ?? 'Unknown',
                     ),
                     CustomTable(
-                      leftText: 'Delivery',
+                      leftText: 'delivery'.tr,
                       rightText: product.delivery ?? 'N/A',
                       conColor: Colors.white,
                     ),
@@ -154,8 +154,8 @@ class ProductDetailScreen extends StatelessWidget {
                               ),
                             ),
                             tabs: [
-                              Tab(text: 'About the product'),
-                              Tab(text: 'Seller Information'),
+                              Tab(text: 'about_the_product'.tr),
+                              Tab(text: 'seller_information'.tr),
                             ],
                           );
                         },

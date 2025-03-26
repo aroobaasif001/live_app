@@ -27,21 +27,21 @@ class AboutTheProductScreen extends StatelessWidget {
           ),
           SizedBox(height: 20),
           CustomTable(
-            leftText: 'Category',
-            rightText: 'Modern games',
+            leftText: 'category'.tr,
+            rightText: 'modern_games'.tr,
           ),
           CustomTable(
-            leftText: 'Platform',
-            rightText: 'Nintendo Switch',
+            leftText: 'platform'.tr,
+            rightText: 'nintendo_switch'.tr,
             conColor: Colors.white,
           ),
           CustomTable(
-            leftText: 'Notes',
-            rightText: 'New, From the factory',
+            leftText: 'notes'.tr,
+            rightText: 'new_from_factory'.tr,
           ),
           SizedBox(height: 20),
           CustomText(
-            text: 'Buyer protection',
+            text: 'buyer_protection'.tr,
             fontSize: 18,
           ),
           SizedBox(height: 10),
@@ -64,12 +64,12 @@ class AboutTheProductScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomText(
-                        text: 'Grab it! Guarantee of protection',
+                        text: 'grab_it'.tr,
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
                       ),
                       CustomText(
-                        text: 'Your friend receives a random amount\nbetween 100 ₽ and 2000 ₽',
+                        text: 'friend_receives_amount'.tr,
                         fontWeight: FontWeight.w500,
                       ),
                     ],
@@ -85,9 +85,9 @@ class AboutTheProductScreen extends StatelessWidget {
           SizedBox(height: 10),
           Row(
             children: [
-              CustomText(text: 'Created 01/28/25'),
+              CustomText(text: 'created_date'.tr),
               SizedBox(width: 20),
-              CustomText(text: 'Report Abuse',color: Color(0xffC0241E),),
+              CustomText(text: 'report_abuse'.tr,color: Color(0xffC0241E),),
             ],
           )
         ],

@@ -108,7 +108,7 @@ class _SearchByProductState extends State<SearchByProduct> {
                           },
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: "Search for products",
+                            hintText: "Search for products".tr,
                             prefixIcon: const Icon(Icons.search, color: Colors.grey),
                             suffixIcon: _searchController.text.isNotEmpty
                                 ? GestureDetector(
@@ -137,7 +137,7 @@ class _SearchByProductState extends State<SearchByProduct> {
                        Get.back();
                       },
                       child: CustomText(
-                        text: "Cancel",
+                        text: "Cancel".tr,
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
                         fontFamily: "Gilroy-Bold",
@@ -176,9 +176,9 @@ class _SearchByProductState extends State<SearchByProduct> {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  tabs: const [
-                    Tab(text: "Suggested"),
-                    Tab(text: "Saved"),
+                  tabs:  [
+                    Tab(text: "Suggested".tr),
+                    Tab(text: "Saved".tr),
                   ],
                 ),
 
@@ -189,7 +189,7 @@ class _SearchByProductState extends State<SearchByProduct> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomText(
-                      text: "Your previous searches",
+                      text: "Your previous searches".tr,
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
                       fontFamily: "Gilroy-Bold",
@@ -199,7 +199,7 @@ class _SearchByProductState extends State<SearchByProduct> {
                         _clearSearchHistory();
                       },
                       child: CustomText(
-                        text: "Clear",
+                        text: "Clear".tr,
                         color: const Color(0xff815BFF),
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
@@ -219,7 +219,7 @@ class _SearchByProductState extends State<SearchByProduct> {
                       .map((chip) => _buildRemovableChip(chip))
                       .toList(),
                 )
-                    : const Center(child: Text("No search history")),
+                    :  Center(child: Text("No search history".tr)),
 
                 const SizedBox(height: 12),
 
@@ -263,7 +263,7 @@ class _SearchByProductState extends State<SearchByProduct> {
               width: 40,
               fit: BoxFit.cover,
             ),
-            title: Text(product.title ?? 'Unknown Product'),
+            title: Text(product.title ?? 'Unknown Product'.tr),
             onTap: () {
               Navigator.push(
                 context,
