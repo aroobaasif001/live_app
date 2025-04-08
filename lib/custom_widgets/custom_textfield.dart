@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final TextInputType? keyboardType;
+  final Function(String)? onChanged; // Added onChanged callback
 
   const CustomTextField({
     super.key,
@@ -20,6 +21,7 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.keyboardType,
+    this.onChanged, // Added onChanged to constructor
   });
 
   @override
@@ -29,6 +31,7 @@ class CustomTextField extends StatelessWidget {
       obscureText: obscureText,
       validator: validator,
       keyboardType: keyboardType,
+      onChanged: onChanged, // Added onChanged event
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white, // Background color
@@ -45,7 +48,6 @@ class CustomTextField extends StatelessWidget {
         ),
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
-
       ),
     );
   }

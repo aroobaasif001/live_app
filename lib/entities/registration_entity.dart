@@ -26,6 +26,8 @@ class RegistrationEntity {
   final String? sold;
   final String? delivery;
   final List<String>? subscribers; // ✅ NEW: List of user IDs who subscribed
+  final bool? isBlocked;  // ✅ NEW: isBlocked field
+  final bool? isUserNew;  // ✅ NEW: isUserNew field
 
   RegistrationEntity({
     this.delivery,
@@ -49,6 +51,8 @@ class RegistrationEntity {
     this.image,
     this.coverImage,
     this.subscribers, // ✅ NEW FIELD
+    this.isBlocked,  // ✅ NEW FIELD
+    this.isUserNew,  // ✅ NEW FIELD
   });
 
   factory RegistrationEntity.fromJson(Map<String, dynamic> json) =>

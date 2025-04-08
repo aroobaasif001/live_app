@@ -25,6 +25,8 @@ ProductEntity _$ProductEntityFromJson(Map<String, dynamic> json) =>
           (json['images'] as List<dynamic>?)?.map((e) => e as String).toList(),
       isActive: json['isActive'] as bool?,
       isSold: json['isSold'] as bool?,
+          bidders: json['bidders'] as Map<String, dynamic>?, // Deserialize bidders here
+
     );
 
 Map<String, dynamic> _$ProductEntityToJson(ProductEntity instance) =>
@@ -45,4 +47,6 @@ Map<String, dynamic> _$ProductEntityToJson(ProductEntity instance) =>
       'images': instance.images,
       'isActive': instance.isActive,
       'isSold': instance.isSold,
+          'bidders': instance.bidders, // Serialize bidders here
+
     };

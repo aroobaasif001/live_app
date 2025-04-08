@@ -146,6 +146,8 @@ class _InterestsScreenState extends State<InterestsScreen> {
           rating: "",
           reviews: "",
           sold: "",
+          isBlocked: false,
+          isUserNew: true,
         );
 
         await RegistrationEntity.doc(userId: docId).set(registrationEntity);
@@ -197,6 +199,8 @@ class _InterestsScreenState extends State<InterestsScreen> {
           index: widget.index,
           interests: selectedInterests,
           detailedInterests: [],
+          isBlocked: false,
+          isUserNew: true,
         );
 
         await RegistrationEntity.doc(userId: docId).set(registrationEntity);

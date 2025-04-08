@@ -1,16 +1,19 @@
-import 'package:device_preview/device_preview.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
+import 'package:live_app/view/auth/socials_login_screen.dart';
+import 'firebase_options.dart';
+import 'translate/translations_app.dart';
+import 'utils/store_services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:live_app/translate/controller/translations_controller.dart';
-import 'package:live_app/utils/store_services.dart';
-import 'package:live_app/view/auth/socials_login_screen.dart';
-import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
-import 'firebase_options.dart';
-import 'translate/translations_app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,12 +37,11 @@ Future<void> main() async {
 
   Get.put(TranslationsController());
 
-  runApp( DevicePreview(
+  runApp(DevicePreview(
     enabled: !kReleaseMode,
-    builder: (context) => MyApp(isLoggedIn: isLoggedIn,), // Wrap your app
-  ),);
+    builder: (context) => MyApp(isLoggedIn: isLoggedIn),
+  ));
 }
-
 
 class MyApp extends StatelessWidget {
   final bool? isLoggedIn;
@@ -56,14 +58,93 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Live App',
-          home: (isLoggedIn ?? false)
-              ? BottomNavigationBarWidget()
-              : SocialsLoginScreen(),
+          home: FutureBuilder(
+            future: _checkIfUserIsBlocked(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return SocialsLoginScreen(); // Handle any error scenario
+              } else if (snapshot.hasData && snapshot.data == true) {
+                return BlockedScreen(); // If blocked, navigate to BlockedScreen
+              } else {
+                return (isLoggedIn ?? false)
+                    ? BottomNavigationBarWidget()
+                    : SocialsLoginScreen();
+              }
+            },
+          ),
           translations: TranslationsApp(),
           locale: Get.deviceLocale ?? const Locale('en'),
           fallbackLocale: const Locale('en'),
         );
       },
+    );
+  }
+
+  Future<bool> _checkIfUserIsBlocked() async {
+    if (isLoggedIn == true) {
+      try {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('UserEntity')
+            .doc(FirebaseAuth.instance.currentUser!.uid) // Get the current user's UID
+            .get();
+
+        if (userDoc.exists) {
+          final userData = userDoc.data();
+          bool isBlocked = userData?['isBlocked'] ?? false;
+          return isBlocked;
+        }
+      } catch (e) {
+        debugPrint("Error checking user blocked status: $e");
+      }
+    }
+    return false; // Default to not blocked if no data or error occurs
+  }
+}
+
+// Blocked Screen: If the user is blocked, they will be shown this screen
+class BlockedScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Blocked'),
+        centerTitle: true,
+        backgroundColor: Colors.red,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.block,
+              size: 80,
+              color: Colors.red,
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Your account has been blocked by the admin.',
+              style: TextStyle(fontSize: 20, color: Colors.red),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Please contact support for more details.',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Close the app or navigate elsewhere
+                SystemNavigator.pop();
+              },
+              child: Text('Exit'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

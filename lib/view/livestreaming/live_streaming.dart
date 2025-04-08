@@ -834,9 +834,11 @@ crossAxisAlignment: CrossAxisAlignment.start,
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: CurrentProductContainer(
+
                           channelId: widget.channelId,
                           name: name,
                           photo: photo,
+                          isAdmin: widget.isAdmin,
                         ),
                       ),
                     ],

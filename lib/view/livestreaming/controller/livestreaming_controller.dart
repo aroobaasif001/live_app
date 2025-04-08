@@ -396,7 +396,9 @@ class LiveStreamController extends GetxController {
       }, SetOptions(merge: true)); // Merge to avoid overwriting existing data
 
       chatController.clear();
+
       print('[INFO] Bid message added and product updated');
+      Get.snackbar('Congrulations', 'Bid Placed Successfully');
     } catch (e) {
       print('[ERROR] Failed to add bid: $e');
     }

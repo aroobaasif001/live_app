@@ -41,7 +41,7 @@ class TranslationsApp extends Translations {
           'enter_email': 'Please enter your email',
           'invalid_email': 'Enter a valid email',
           'enter_password': 'Please enter your password',
-          'password_length': 'Password must be at least 6 characters',
+          'password_length': 'Password must be at least 8 characters',
           'accept_terms_age': 'You must accept the terms and confirm your age',
 
           // Login Screen
