@@ -138,42 +138,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Obx(() => TextButton(
-                                onPressed: () =>
-                                    translationController.updateLanguage('en'),
-                                child: Text(
-                                  'English',
-                                  style: TextStyle(
-                                    color: translationController
-                                                .selectedLanguage.value ==
-                                            'English'
-                                        ? purpleColor
-                                        : Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              )),
-                          Text(' | '),
-                          Obx(() => TextButton(
-                                onPressed: () =>
-                                    translationController.updateLanguage('ru'),
-                                child: Text(
-                                  'Russian',
-                                  style: TextStyle(
-                                    color: translationController
-                                                .selectedLanguage.value ==
-                                            'Russian'
-                                        ? purpleColor
-                                        : Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              )),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     Obx(() => TextButton(
+                      //           onPressed: () =>
+                      //               translationController.updateLanguage('en'),
+                      //           child: Text(
+                      //             'English',
+                      //             style: TextStyle(
+                      //               color: translationController
+                      //                           .selectedLanguage.value ==
+                      //                       'English'
+                      //                   ? purpleColor
+                      //                   : Colors.grey,
+                      //               fontWeight: FontWeight.bold,
+                      //             ),
+                      //           ),
+                      //         )),
+                      //     Text(' | '),
+                      //     Obx(() => TextButton(
+                      //           onPressed: () =>
+                      //               translationController.updateLanguage('ru'),
+                      //           child: Text(
+                      //             'Russian',
+                      //             style: TextStyle(
+                      //               color: translationController
+                      //                           .selectedLanguage.value ==
+                      //                       'Russian'
+                      //                   ? purpleColor
+                      //                   : Colors.grey,
+                      //               fontWeight: FontWeight.bold,
+                      //             ),
+                      //           ),
+                      //         )),
+                      //   ],
+                      // ),
                       SizedBox(
                         height: 25,
                       ),
@@ -308,7 +308,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(
-                                color:Colors.grey.withOpacity(0.1),
+                                color:Colors.white,
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(color: Colors.grey.withOpacity(0.2))
                               ),
@@ -356,7 +356,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                    color:Colors.grey.withOpacity(0.1),
+                                    color:Colors.white,
                                     borderRadius: BorderRadius.circular(15),
                                     border: Border.all(color: Colors.grey.withOpacity(0.2))
                                 ),

@@ -25,7 +25,7 @@ class CustomReview extends StatelessWidget {
               CustomContainer(
                 width: 18,
                 height: 18,
-                image: DecorationImage(image: AssetImage(iconPath!)),
+                image: DecorationImage(image: AssetImage(iconPath!),),
               ),  // Show icon only if it's provided
             if (iconPath != null) SizedBox(width: 3), // Space between icon and value if icon is shown
             CustomText(
