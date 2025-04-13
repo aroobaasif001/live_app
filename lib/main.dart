@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
+import 'package:live_app/view/profile_views/statistic_screen.dart';
 import 'firebase_options.dart';
 import 'translate/translations_app.dart';
 import 'utils/store_services.dart';

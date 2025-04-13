@@ -8,8 +8,14 @@ import 'package:live_app/utils/colors.dart';
 import 'package:live_app/utils/icons_path.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
-class BidScreen extends StatelessWidget {
+class BidScreen extends StatefulWidget {
+  @override
+  State<BidScreen> createState() => _BidScreenState();
+}
+
+class _BidScreenState extends State<BidScreen> {
   TextEditingController priceController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +38,8 @@ class BidScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomText(
-                text: 'Enter the maximum bid amount for participation (1 BOX) in the GRAND GAME STREAM 35,000 ₽ NINTENDO SWITCH, PLAYSTATION, XBOX). If you enter the maximum bid, we will automatically place bids for you up to this amount when the auction starts.',
+                text:
+                'Enter the maximum bid amount for participation (1 BOX) in the GRAND GAME STREAM 35,000 ₽ NINTENDO SWITCH, PLAYSTATION, XBOX). If you enter the maximum bid, we will automatically place bids for you up to this amount when the auction starts.',
                 fontSize: 14,
                 color: Colors.black,
               ),
@@ -59,23 +66,20 @@ class BidScreen extends StatelessWidget {
               SizedBox(height: 10),
               CustomTextField(
                 controller: priceController,
-                  hintText: '200 ₽',
-                 keyboardType: TextInputType.phone,
+                hintText: '200 ₽',
+                keyboardType: TextInputType.phone,
               ),
               SizedBox(height: 20),
               CustomGradientButton(
                 text: 'Place Bid',
                 onPressed: () {
                   _showSuccessDialog(context);
-                  Future.delayed(Duration(milliseconds: 3000),() {
-                    Get.back();
-                  },);
-
                 },
               ),
               SizedBox(height: 20),
               CustomText(
-                text: 'Bids are final. You can increase them at any time, but you cannot decrease or cancel them.',
+                text:
+                'Bids are final. You can increase them at any time, but you cannot decrease or cancel them.',
                 fontSize: 14,
                 textAlign: TextAlign.center,
               ),
@@ -102,15 +106,26 @@ class BidScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Icon(
+                      Icons.close_outlined,
+                    )),
+              ),
               CustomContainer(
                 height: 60,
                 width: 60,
                 image: DecorationImage(
-                    image: AssetImage(checkWithCircleIcon),
+                  image: AssetImage(checkWithCircleIcon),
                 ),
               ),
               SizedBox(height: 10),
@@ -119,15 +134,9 @@ class BidScreen extends StatelessWidget {
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
-              GradientText(
-                  'Successfully Placed',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600
-                  ),
-                  colors: [
-                blueLiteColor, purpleLiteColor,deepPurpleColor
-              ])
+              GradientText('Successfully Placed',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                  colors: [blueLiteColor, purpleLiteColor, deepPurpleColor])
             ],
           ),
         );
