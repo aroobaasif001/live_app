@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -106,10 +107,12 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
               backgroundImage: AssetImage(applegImage),
@@ -119,11 +122,11 @@ class _ChatScreenState extends State<ChatScreen> {
                 text: widget.receiver.firstName ?? "", color: Colors.black),
           ],
         ),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.more_horiz, color: Colors.black),
-              onPressed: () {}),
-        ],
+        // actions: [
+        //   IconButton(
+        //       icon: Icon(Icons.more_horiz, color: Colors.black),
+        //       onPressed: () {}),
+        // ],
       ),
       body: Column(
         children: [

@@ -62,16 +62,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     } else if (RegExp(r'^(?=.*[A-Za-z])(?=.*\d)').hasMatch(password)) {
       _passwordStrength = 0.6;
       _passwordStrengthText = "Good";
-    } else if (RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])').hasMatch(password)) {
+    } else if (RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])')
+        .hasMatch(password)) {
       _passwordStrength = 0.8;
       _passwordStrengthText = "Very Good";
     } else if (password.length >= 10 &&
-        RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])').hasMatch(password)) {
+        RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])')
+            .hasMatch(password)) {
       _passwordStrength = 1.0;
       _passwordStrengthText = "Strong";
     }
   }
-
 
   void _storeUser() async {
     if (!_formKey.currentState!.validate()) {
@@ -98,14 +99,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     try {
       Get.to(() => DeliveryAddressScreen(
-        country: country,
-        lastName: _lastNameController.text.trim(),
-        email: _emailController.text.trim(),
-        firstName: _firstNameController.text.trim(),
-        gender: gender,
-        password: _passwordController.text.trim(),
-        isSignUpWithGoogle: widget.isSignUpWithGoogle,
-      ));
+            country: country,
+            lastName: _lastNameController.text.trim(),
+            email: _emailController.text.trim(),
+            firstName: _firstNameController.text.trim(),
+            gender: gender,
+            password: _passwordController.text.trim(),
+            isSignUpWithGoogle: widget.isSignUpWithGoogle,
+          ));
     } catch (e) {
       Get.snackbar(
         "Error",
@@ -144,11 +145,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return null;
   }
 
+  bool _obscurePassword = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.grey[100],
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: CustomText(
@@ -170,7 +175,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -181,35 +186,93 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   CustomTextField(
                     hintText: 'First Name',
                     controller: _firstNameController,
-                    validator: (value) =>
-                    value == null || value.isEmpty ? 'Enter first name' : null,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Enter first name'
+                        : null,
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 15),
                   CustomTextField(
                     hintText: 'Last Name',
                     controller: _lastNameController,
-                    validator: (value) =>
-                    value == null || value.isEmpty ? 'Enter last name' : null,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Enter last name'
+                        : null,
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 15),
                   CustomTextField(
                     hintText: 'Email',
                     controller: _emailController,
                     validator: _validateEmail,
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 15),
                   if (!widget.isSignUpWithGoogle)
-                    CustomTextField(
-                      hintText: 'Password',
-                      controller: _passwordController,
-                      isPassword: true,
-                      validator: _validatePassword,
-                      onChanged: (value) {
-                        setState(() {
-                          _updatePasswordStrength(value);
-                        });
-                      },
-                    ),
+                    if (!widget.isSignUpWithGoogle)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTextField(
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            hintText: 'Password',
+                            controller: _passwordController,
+                            obscureText: _obscurePassword,
+                            validator: _validatePassword,
+                            onChanged: (value) {
+                              setState(() {
+                                _updatePasswordStrength(value);
+                              });
+                            },
+                          ),
+
+                          /// 👇 Password rule hint
+                          Padding(
+                            padding: const EdgeInsets.only(top: 6.0, left: 4.0),
+                            child: Text(
+                              "Password must be at least 6 characters,\ninclude a capital letter and a special character.",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+SizedBox(height: 10,),
+                  // CustomTextField(
+                  //   suffixIcon: IconButton(
+                  //     onPressed: () {
+                  //       setState(() {
+                  //         _obscurePassword = !_obscurePassword;
+                  //       });
+                  //     },
+                  //     icon: Icon(
+                  //       _obscurePassword
+                  //           ? Icons.visibility_off
+                  //           : Icons.visibility,
+                  //       color: Colors.grey,
+                  //     ),
+                  //   ),
+                  //   hintText: 'Password',
+                  //   controller: _passwordController,
+                  //  obscureText: _obscurePassword,
+                  //   validator: _validatePassword,
+                  //   onChanged: (value) {
+                  //     setState(() {
+                  //       _updatePasswordStrength(value);
+                  //     });
+                  //   },
+                  // ),
                   LinearProgressIndicator(
                     value: _passwordStrength,
                     backgroundColor: Colors.grey[300],
@@ -217,10 +280,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       _passwordStrength < 0.3
                           ? Colors.red
                           : _passwordStrength < 0.6
-                          ? Colors.orange
-                          : _passwordStrength < 0.9
-                          ? Colors.blue
-                          : Colors.green,
+                              ? Colors.orange
+                              : _passwordStrength < 0.9
+                                  ? Colors.blue
+                                  : Colors.green,
                     ),
                   ),
                   SizedBox(height: 5),
@@ -230,10 +293,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       color: _passwordStrength < 0.3
                           ? Colors.red
                           : _passwordStrength < 0.6
-                          ? Colors.orange
-                          : _passwordStrength < 0.9
-                          ? Colors.blue
-                          : Colors.green,
+                              ? Colors.orange
+                              : _passwordStrength < 0.9
+                                  ? Colors.blue
+                                  : Colors.green,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -251,9 +314,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     items: ['Male', 'Female', 'Other']
                         .map((gender) => DropdownMenuItem(
-                      value: gender,
-                      child: Text(gender),
-                    ))
+                              value: gender,
+                              child: Text(gender),
+                            ))
                         .toList(),
                     onChanged: (value) => setState(() => gender = value),
                   ),
@@ -271,9 +334,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     items: ['Russia', 'USA', 'India']
                         .map((country) => DropdownMenuItem(
-                      value: country,
-                      child: Text(country),
-                    ))
+                              value: country,
+                              child: Text(country),
+                            ))
                         .toList(),
                     onChanged: (value) => setState(() => country = value),
                   ),
@@ -292,7 +355,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     children: [
                       Checkbox(
                         value: isAbove18,
-                        onChanged: (value) => setState(() => isAbove18 = value!),
+                        onChanged: (value) =>
+                            setState(() => isAbove18 = value!),
                       ),
                       Expanded(child: CustomText(text: 'Confirm age')),
                     ],

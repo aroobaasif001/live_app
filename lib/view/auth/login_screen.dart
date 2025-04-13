@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
@@ -33,7 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await FirebaseAuth.instance.setLanguageCode(Get.locale?.languageCode ?? "en");
+      await FirebaseAuth.instance
+          .setLanguageCode(Get.locale?.languageCode ?? "en");
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
@@ -42,7 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
       Get.snackbar("Success", "login_successful".tr);
       await StorageService.setLoggedIn(true);
       Get.to(() => BottomNavigationBarWidget());
-
     } on FirebaseAuthException catch (e) {
       String errorMessage = "login_failed".tr;
       if (e.code == 'user-not-found') {
@@ -57,15 +58,17 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = false;
     });
   }
+bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Align(
                 alignment: Alignment.topRight,
@@ -77,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 20),
               CustomText(
+                
                 text: 'login'.tr,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -90,7 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (value == null || value.isEmpty) {
                     return 'enter_email'.tr;
                   }
-                  if (!RegExp(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+                  if (!RegExp(
+                          r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
                       .hasMatch(value)) {
                     return 'invalid_email'.tr;
                   }
@@ -99,8 +104,17 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 20),
               CustomTextField(
+                suffixIcon: IconButton(   onPressed: () {
+        setState(() {
+          _obscurePassword = !_obscurePassword;
+        });
+      },icon:     Icon(
+        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+        color: Colors.grey,
+      ),),
                 hintText: 'password'.tr,
                 controller: _passwordController,
+                obscureText:_obscurePassword ,
                 isPassword: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {

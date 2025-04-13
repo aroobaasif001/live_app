@@ -117,12 +117,14 @@ void showNewMessageBottomSheet(BuildContext context) {
               children: [
                 // Header (Title + Close Button)
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Spacer(),
                     Text(
                       "New message".tr,
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
+                    Spacer(),
                     IconButton(
                       icon: Icon(Icons.close),
                       onPressed: () => Navigator.pop(context),
@@ -144,7 +146,7 @@ void showNewMessageBottomSheet(BuildContext context) {
                           });
                         },
                         decoration: InputDecoration(
-                          hintText: "Nickname".tr,
+                          hintText: "contact search".tr,
                           border: InputBorder.none,
                         ),
                       ),
@@ -182,27 +184,27 @@ void showNewMessageBottomSheet(BuildContext context) {
                 ),
 
                 // Message Input Field (Kept for future implementation)
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.text_format),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: "Type a message...".tr,
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                //   decoration: BoxDecoration(
+                //     color: Colors.grey[200],
+                //     borderRadius: BorderRadius.circular(30),
+                //   ),
+                //   child: Row(
+                //     children: [
+                //       Icon(Icons.text_format),
+                //       SizedBox(width: 8),
+                //       Expanded(
+                //         child: TextField(
+                //           decoration: InputDecoration(
+                //             hintText: "Type a message...".tr,
+                //             border: InputBorder.none,
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           );
@@ -227,9 +229,9 @@ Widget buildUserItem(BuildContext context, RegistrationEntity user) {
     ),
     subtitle: CustomText(
       text: "You are Subscribed".tr,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w300,
       fontFamily: 'Gilroy-Bold',
-      fontSize: 16,
+      fontSize: 12,
       color: textColor,
     ),
     trailing: CustomText(

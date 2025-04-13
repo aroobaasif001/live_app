@@ -17,12 +17,14 @@ class MessagesList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (currentUser == null) {
       return Scaffold(
+        backgroundColor: Colors.grey[100],
         appBar: AppBar(title: Text("Messages".tr)),
         body: Center(child: Text("Please log in to view messages".tr)),
       );
     }
 
     return Scaffold(
+        backgroundColor: Colors.grey[100],
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('UserEntity').snapshots(),
         builder: (context, userSnapshot) {

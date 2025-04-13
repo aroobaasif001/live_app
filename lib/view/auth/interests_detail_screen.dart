@@ -125,19 +125,19 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
           fontFamily: 'SFProRounded',
         ),
         actions: [
-          GestureDetector(
-            onTap: _skipAndContinue, // ✅ Skip without updating Firestore
-            child: Row(
-              children: [
-                CustomText(
-                  text: 'skip'.tr,
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-                Icon(Icons.keyboard_double_arrow_right_rounded),
-              ],
-            ),
-          ),
+          // GestureDetector(
+          //   onTap: _skipAndContinue, // ✅ Skip without updating Firestore
+          //   child: Row(
+          //     children: [
+          //       CustomText(
+          //         text: 'skip'.tr,
+          //         fontSize: 16,
+          //         color: Colors.black,
+          //       ),
+          //       Icon(Icons.keyboard_double_arrow_right_rounded),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
       body: SafeArea(

@@ -89,6 +89,12 @@ class SocialsLoginScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontFamily: 'SFProRounded',
                   ),
+                      CustomText(
+                    text: 'YourPurchaseisProtected'.tr,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'SFProRounded',
+                  ),
                   CustomText(
                     text: 'join_community'.tr,
                     textAlign: TextAlign.center,
@@ -97,14 +103,14 @@ class SocialsLoginScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   // Buttons
-                  CustomIconButton(
-                    onPressed: () {
-                      // Add Apple sign-in functionality if needed.
-                    },
-                    text: 'continue_with_apple'.tr,
-                    iconPath: appleIcon,
-                  ),
-                  SizedBox(height: 10),
+                  // CustomIconButton(
+                  //   onPressed: () {
+                  //     // Add Apple sign-in functionality if needed.
+                  //   },
+                  //   text: 'continue_with_apple'.tr,
+                  //   iconPath: appleIcon,
+                  // ),
+                 // SizedBox(height: 10),
                   CustomIconButton(
                     onPressed: () {
                       signUpGoogle();
@@ -124,20 +130,55 @@ class SocialsLoginScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   // Terms and conditions
                   CustomText(
-                    text: 'terms_conditions'.tr,
+                    text: 'terms_conditions11'.tr,
                     textAlign: TextAlign.center,
                     fontSize: 12,
                     color: Colors.grey,
                   ),
                   const SizedBox(width: 5),
-                  GradientText(
-                    'terms_conditions2'.tr,
-                    textAlign: TextAlign.center,
-                    colors: [
-                      Color(0xff8385E6),
-                      Color(0xffE569DB),
-                    ],
-                  ),
+                      const SizedBox(height: 5),
+                  // GradientText(
+                  //   'terms_conditions2'.tr,
+                  //   textAlign: TextAlign.center,
+                  //   colors: [
+                  //     Color(0xff8385E6),
+                  //     Color(0xffE569DB),
+                  //   ],
+                  // ),
+                  RichText(
+  textAlign: TextAlign.center,
+  text: TextSpan(
+    style: TextStyle(fontSize: 16.0), // Base style
+    children: [
+      TextSpan(
+        text: 'Terms of Service ',
+        style: TextStyle(
+          fontSize: 14,
+          foreground: Paint()
+            ..shader = LinearGradient(
+              colors: [Color(0xff8385E6), Color(0xffE569DB)],
+            ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+        ),
+      ),
+      TextSpan(
+        text: 'and',
+        style: TextStyle(color: Colors.black,fontSize: 14),
+      ),
+      TextSpan(
+        
+        text: ' Privacy Policy.',
+        style: TextStyle(
+               fontSize: 14,
+          foreground: Paint()
+            ..shader = LinearGradient(
+              colors: [Color(0xff8385E6), Color(0xffE569DB)],
+            ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+        ),
+      ),
+    ],
+  ),
+)
+,
                   SizedBox(height: 20),
                 ],
               ),

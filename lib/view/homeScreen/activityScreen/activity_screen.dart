@@ -26,6 +26,7 @@ class _ActivityScreenState extends State<ActivityScreen> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: CustomText(
           text: "activity".tr,

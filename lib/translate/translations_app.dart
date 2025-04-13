@@ -14,8 +14,8 @@ class TranslationsApp extends Translations {
           'continue_with_apple': 'Continue with Apple',
           'continue_with_google': 'Continue with Google',
           'continue_with_email': 'Continue with Email',
-          'terms_conditions': 'By continuing, you agree to',
-          'terms_conditions2': 'our Terms of Service and Privacy Policy.',
+          'terms_conditions11': 'By continuing, you agree to our',
+          'terms_conditions2': 'Terms of Service and Privacy Policy.',
 
           // Registration Screen
           'first_name': 'First Name',
@@ -77,7 +77,7 @@ class TranslationsApp extends Translations {
           'back': 'Back',
           'interests_title': 'What are you interested in?',
           'interests_subtitle': 'Select a few to get started',
-          'cloth': 'Cloth',
+          'cloth': 'Cloths',
           'shoes': 'Shoes',
           'electronics': 'Electronics',
           'bags': 'Bags',
@@ -100,7 +100,7 @@ class TranslationsApp extends Translations {
           'tell_more': 'Tell us a little more',
           'choose_interests': 'Choose what interests you',
           'updating': 'Updating...',
-          'select_detailed_interest': 'Please select at least one detailed interest.',
+          'select_detailed_interest': 'Please select at least one option to continue.',
           'interests_updated': 'Interests updated successfully!',
           'update_failed': 'Failed to update interests:',
 
@@ -150,7 +150,7 @@ class TranslationsApp extends Translations {
           'email_send_failed': 'Failed to send verification email.',
 
           // Interest Categories
-          'Cloth': 'Cloth',
+          'Cloth': 'Cloths',
           'Shoes': 'Shoes',
           'Electronics': 'Electronics',
           'Bags': 'Bags',
@@ -455,7 +455,7 @@ class TranslationsApp extends Translations {
           'everyday_electronics': 'Everyday Electronics',
           'video_games': 'Video games',
           'shoes': 'Shoes',
-          'cloth': 'Cloth',
+          'cloth': 'Cloths',
 
           // Home Main Screen
           'search_hint': 'Search by application',
@@ -468,7 +468,7 @@ class TranslationsApp extends Translations {
           'for_you': 'For you',
           'subscriptions': 'Subscriptions',
           'electronics': 'Electronics',
-          'cloth_category': 'Cloth',
+          'cloth_category': 'Cloths',
 
           // Settings Screen Translations
           'country_of_residence': 'Country of Residence',
@@ -570,7 +570,8 @@ class TranslationsApp extends Translations {
           "notes": "Notes",
           "new_from_factory": "New, From the Factory",
           "buyer_protection": "Buyer Protection",
-          "grab_it": "Grab it! Guarantee of Protection",
+          "grab_it": "Grab it! ",
+          'YourPurchaseisProtected':'Your Purchase is Protected',
           "friend_receives_amount": "Your friend receives a random amount\nbetween 100 ₽ and 2000 ₽",
           "created_date": "Created 01/28/25",
           "report_abuse": "Report Abuse"
@@ -583,6 +584,7 @@ class TranslationsApp extends Translations {
 
         'ru': {
           // Auth screens (Corrected Russian Translations)
+           'YourPurchaseisProtected':'Гарантия защиты покупки',
           'register': 'Регистрация!',
            "sell": "Продать",
             "no_products_found": "Товары не найдены",
@@ -603,7 +605,7 @@ class TranslationsApp extends Translations {
   "notes": "Заметки",
   "new_from_factory": "Новый, с завода",
   "buyer_protection": "Защита покупателя",
-  "grab_it": "Забери! Гарантия защиты",
+  "grab_it": "Забери!",
   "friend_receives_amount": "Ваш друг получает случайную сумму\nот 100 ₽ до 2000 ₽",
   "created_date": "Создано 28.01.25",
   "report_abuse": "Пожаловаться на нарушение",
@@ -616,7 +618,7 @@ class TranslationsApp extends Translations {
           'continue_with_apple': 'Продолжить с Apple',
           'continue_with_google': 'Продолжить с Google',
           'continue_with_email': 'Продолжить с почтой',
-          'terms_conditions': 'Продолжая, Вы соглашаетесь с',
+          'terms_conditions11': 'Продолжая, Вы соглашаетесь с',
           'terms_conditions2': 'условиями предоставления услуг и Политикой конфиденциальности',
 
           // Registration Screen

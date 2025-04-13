@@ -73,8 +73,10 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+         backgroundColor: Colors.grey[100],
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+           backgroundColor: Colors.grey[100],
         title: CustomText(
           text: 'delivery_address'.tr,
           fontSize: 20,

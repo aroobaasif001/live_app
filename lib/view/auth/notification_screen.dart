@@ -149,7 +149,7 @@ class NotificationScreen extends StatelessWidget {
                                           children: [
                                             Expanded(
                                               child: GestureDetector(
-                                                onTap: () => Get.back(),
+                                                onTap: () =>  Get.offAll(() => BottomNavigationBarWidget()),
                                                 child: CustomContainer(
                                                   height: 44,
                                                   border: Border(

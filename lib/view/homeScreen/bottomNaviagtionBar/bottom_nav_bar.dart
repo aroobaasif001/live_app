@@ -45,9 +45,21 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("sell".tr,
-                  style: GoogleFonts.poppins(
-                      fontSize: 20, fontWeight: FontWeight.bold)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                 Spacer(),
+                  Text("sell".tr,
+                      style: GoogleFonts.poppins(
+                          fontSize: 20, fontWeight: FontWeight.bold)),
+                             Spacer(),
+                          GestureDetector(
+                            onTap: (){
+                              Get.back();
+                            },
+                            child: Icon(Icons.close))
+                ],
+              ),
               SizedBox(height: 10),
               GestureDetector(
                 onTap: (){
@@ -145,7 +157,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
               GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500)),
       subtitle: subtitle != null
           ? Text(subtitle,
-              style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey))
+              style: GoogleFonts.poppins(fontSize: 12, color: Colors.black))
           : null,
       // onTap: () {
       //   Navigator.pop(context); // Close the bottom sheet on tap

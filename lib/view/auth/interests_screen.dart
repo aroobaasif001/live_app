@@ -73,7 +73,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
   ];
 
   final List<String> interestKeys = [
-    'cloth',
+    'cloths',
     'shoes',
     'electronics',
     'sport',
@@ -111,7 +111,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
         "error".tr,
         "select_interest".tr,
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.purple,
         colorText: Colors.white,
       );
       return;
@@ -339,8 +339,9 @@ class _InterestsScreenState extends State<InterestsScreen> {
                                     text: interestKeys[index].tr,
                                     fontSize: 12.sp,
                                     textAlign: TextAlign.center,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontFamily: 'SFProRounded',
                                   ),
                                 ),
                                 Expanded(
