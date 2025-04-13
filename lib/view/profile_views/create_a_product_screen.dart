@@ -33,9 +33,17 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   String? startingBid = "0";
   String? price = "0";
 
-  final List<String> categories = ["electronics".tr, "cloth".tr, "accessories".tr];
+  final List<String> categories = [
+    "electronics".tr,
+    "cloth".tr,
+    "accessories".tr
+  ];
   final List<String> streamers = ["Streamer 1", "Streamer 2", "Streamer 3"];
-  final List<String> deliveryOptions = ["standard".tr, "express".tr, "next_day".tr];
+  final List<String> deliveryOptions = [
+    "standard".tr,
+    "express".tr,
+    "next_day".tr
+  ];
 
   Future<void> _pickImages() async {
     final List<XFile>? pickedFiles = await _picker.pickMultiImage();
@@ -111,72 +119,74 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   ),
                   child: selectedImages.isEmpty
                       ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.photo_camera_outlined,
-                          size: 40, color: Colors.grey),
-                      SizedBox(height: 8),
-                      Text(
-                        "photo_required".tr,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  )
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.photo_camera_outlined,
+                                size: 40, color: Colors.grey),
+                            SizedBox(height: 8),
+                            Text(
+                              "photo_required".tr,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )
                       : SizedBox(
-                    height: 100,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: selectedImages.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.file(
-                                  selectedImages[index],
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Positioned(
-                                top: 4,
-                                right: 4,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedImages.removeAt(index);
-                                    });
-                                  },
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
+                          height: 100,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: selectedImages.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.file(
+                                        selectedImages[index],
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                    child: const Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                      size: 16,
+                                    Positioned(
+                                      top: 4,
+                                      right: 4,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedImages.removeAt(index);
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.red,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  ),
+                        ),
                 ),
               ),
 
               Text(
-                "photos_uploaded".tr.replaceAll("{0}", selectedImages.length.toString()),
+                "photos_uploaded"
+                    .tr
+                    .replaceAll("{0}", selectedImages.length.toString()),
                 style: TextStyle(fontSize: 12, color: Colors.grey[600]),
               ),
               const SizedBox(height: 16),
@@ -187,26 +197,49 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              DropdownButtonFormField(
-                decoration: InputDecoration(
-                  hintText: "category".tr,
-                  labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                  filled: true,
-                  fillColor: Colors.grey[50],
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
+              GestureDetector(
+                onTap: () => _showCategoryBottomSheet(context),
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: (selectedCategory ?? '').isEmpty
+                          ? "category".tr
+                          : selectedCategory!,
+                      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                      filled: true,
+                      fillColor: Colors.grey[50],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 18),
+                      suffixIcon: const Icon(Icons.arrow_drop_down),
+                    ),
+                  ),
                 ),
-                value: selectedCategory,
-                items: categories
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                    .toList(),
-                onChanged: (val) {
-                  setState(() => selectedCategory = val as String);
-                },
               ),
 
-              const SizedBox(height: 8),
+              // DropdownButtonFormField(
+              //   decoration: InputDecoration(
+              //     hintText: "category".tr,
+              //     labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+              //     filled: true,
+              //     fillColor: Colors.grey[50],
+              //     border: InputBorder.none,
+              //     enabledBorder: InputBorder.none,
+              //     focusedBorder: InputBorder.none,
+              //   ),
+              //   value: selectedCategory,
+              //   items: categories
+              //       .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              //       .toList(),
+              //   onChanged: (val) {
+              //     setState(() => selectedCategory = val as String);
+              //   },
+              // ),
+
+              SizedBox(height: 8),
               TextField(
                 decoration: InputDecoration(
                   hintText: "title".tr,
@@ -413,7 +446,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                     Text(
                       "select_stream".tr,
                       style:
-                      TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 6),
                     DropdownButtonFormField(
@@ -427,7 +460,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                       ),
                       value: selectedStreamer,
                       items: streamers
-                          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                          .map(
+                              (e) => DropdownMenuItem(value: e, child: Text(e)))
                           .toList(),
                       onChanged: (val) {
                         setState(() => selectedStreamer = val as String);
@@ -436,7 +470,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                     const SizedBox(height: 16),
                     Text(
                       "delivery".tr,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 6),
                     DropdownButtonFormField(
@@ -451,7 +486,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                       value: selectedDelivery,
                       hint: Text("delivery_details".tr),
                       items: deliveryOptions
-                          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                          .map(
+                              (e) => DropdownMenuItem(value: e, child: Text(e)))
                           .toList(),
                       onChanged: (val) {
                         setState(() => selectedDelivery = val as String);
@@ -499,5 +535,68 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       ),
     );
   }
-}
 
+  void _showCategoryBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              Center(
+                child: const Text(
+                  'Select Category',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'SFProRounded'),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: categories.isEmpty
+                    ? const Center(child: Text("No categories available"))
+                    : ListView.builder(
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) {
+                          final category = categories[index];
+                          return ListTile(
+                            title: Text(
+                              category,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                selectedCategory = category;
+                              });
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}

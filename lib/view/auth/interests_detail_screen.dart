@@ -185,9 +185,14 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
                                   .map((item) {
                                     final isSelected = selectedDetailedInterests.contains(item);
                                     return ChoiceChip(
+                                      side: BorderSide(
+                                        color: Colors.white
+                                      ),
                                       label: CustomText(
                                         text: item.tr, // Translate the item text
                                         fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'SFProRounded',
                                       ),
                                       selected: isSelected,
                                       onSelected: (selected) {

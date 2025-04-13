@@ -9,6 +9,7 @@ import 'package:live_app/view/auth/verification_screen.dart';
 import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 
 import '../../utils/store_services.dart';
+import 'forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
@@ -58,7 +59,8 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = false;
     });
   }
-bool _obscurePassword = true;
+
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +82,6 @@ bool _obscurePassword = true;
               ),
               SizedBox(height: 20),
               CustomText(
-                
                 text: 'login'.tr,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -104,17 +105,20 @@ bool _obscurePassword = true;
               ),
               SizedBox(height: 20),
               CustomTextField(
-                suffixIcon: IconButton(   onPressed: () {
-        setState(() {
-          _obscurePassword = !_obscurePassword;
-        });
-      },icon:     Icon(
-        _obscurePassword ? Icons.visibility_off : Icons.visibility,
-        color: Colors.grey,
-      ),),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                  icon: Icon(
+                    _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.grey,
+                  ),
+                ),
                 hintText: 'password'.tr,
                 controller: _passwordController,
-                obscureText:_obscurePassword ,
+                obscureText: _obscurePassword,
                 isPassword: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -134,6 +138,23 @@ bool _obscurePassword = true;
               CustomGradientButton(
                 text: 'login'.tr,
                 onPressed: isLoading ? null : _loginUser,
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () => Get.to(() => ForgetPasswordScreen()),
+                    child: CustomText(
+                      text: 'Forgot Password',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Colors.blue, // Optional: clickable color
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

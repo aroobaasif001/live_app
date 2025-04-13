@@ -166,6 +166,10 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                               child: CustomTextField(
                                 hintText: 'apartment'.tr,
                                 controller: _apartmentController,
+                                 validator: (value) =>
+                                    value!.isEmpty ? 'required'.tr : null,
+                           
+                              
                               ),
                             ),
                           ],
@@ -177,6 +181,8 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                               child: CustomTextField(
                                 hintText: 'entrance'.tr,
                                 controller: _entranceController,
+                                  validator: (value) =>
+                                    value!.isEmpty ? 'enter_index'.tr : null,
                               ),
                             ),
                             SizedBox(width: 10),
@@ -191,19 +197,19 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                           ],
                         ),
                         SizedBox(height: 20),
-                        Center(
-                          child: TextButton.icon(
-                            onPressed: () {
-                              // Auto-fill logic here
-                            },
-                            icon: Icon(Icons.location_on, color: purpleColor1),
-                            label: CustomText(
-                              text: 'fill_automatically'.tr,
-                              fontSize: 16,
-                              color: purpleColor1,
-                            ),
-                          ),
-                        ),
+                        // Center(
+                        //   child: TextButton.icon(
+                        //     onPressed: () {
+                        //       // Auto-fill logic here
+                        //     },
+                        //     icon: Icon(Icons.location_on, color: purpleColor1),
+                        //     label: CustomText(
+                        //       text: 'fill_automatically'.tr,
+                        //       fontSize: 16,
+                        //       color: purpleColor1,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
