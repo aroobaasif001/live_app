@@ -31,6 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     print("Chat with: ${widget.receiver.firstName} (${widget.receiver.regId})");
   }
+bool _isSendingImage = false;
 
   Future<void> _pickImageFromGallery() async {
     final pickedFile =
@@ -73,10 +74,14 @@ class _ChatScreenState extends State<ChatScreen> {
 
     _messageController.clear();
   }
+Future<void> _sendImageMessage() async {
+  if (_selectedImage == null) return;
 
-  Future<void> _sendImageMessage() async {
-    if (_selectedImage == null) return;
+  setState(() {
+    _isSendingImage = true;
+  });
 
+  try {
     String fileName =
         "${currentUser!.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
     Reference storageRef =
@@ -94,15 +99,55 @@ class _ChatScreenState extends State<ChatScreen> {
       timestamp: Timestamp.now(),
     );
 
-    FirebaseFirestore.instance.collection('messages').add({
+    await FirebaseFirestore.instance.collection('messages').add({
       ...message.toJson(),
       "participants": [currentUser!.uid, widget.receiver.regId],
     });
 
     setState(() {
       _selectedImage = null;
+      _isSendingImage = false;
     });
+  } catch (e) {
+    print("Image upload error: $e");
+    setState(() {
+      _isSendingImage = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to send image')),
+    );
   }
+}
+
+  // Future<void> _sendImageMessage() async {
+  //   if (_selectedImage == null) return;
+
+  //   String fileName =
+  //       "${currentUser!.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
+  //   Reference storageRef =
+  //       FirebaseStorage.instance.ref().child("chat_images/$fileName");
+
+  //   UploadTask uploadTask = storageRef.putFile(_selectedImage!);
+  //   TaskSnapshot taskSnapshot = await uploadTask;
+  //   String imageUrl = await taskSnapshot.ref.getDownloadURL();
+
+  //   MessageModel message = MessageModel(
+  //     senderId: currentUser!.uid,
+  //     receiverId: widget.receiver.regId!,
+  //     text: "",
+  //     imageUrl: imageUrl,
+  //     timestamp: Timestamp.now(),
+  //   );
+
+  //   FirebaseFirestore.instance.collection('messages').add({
+  //     ...message.toJson(),
+  //     "participants": [currentUser!.uid, widget.receiver.regId],
+  //   });
+
+  //   setState(() {
+  //     _selectedImage = null;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -131,49 +176,111 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: [
           Expanded(child: _buildMessagesList()),
+          if (_isSendingImage)
+      Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            CircularProgressIndicator(),
+            SizedBox(width: 10),
+            Text("Sending image..."),
+          ],
+        ),
+      ),
           _buildMessageInput(),
         ],
       ),
     );
   }
+final ScrollController _scrollController = ScrollController();
+
+  // Widget _buildMessagesList() {
+  //   return StreamBuilder<QuerySnapshot>(
+  //     stream: FirebaseFirestore.instance
+  //         .collection('messages')
+  //         .where('participants', arrayContains: currentUser!.uid)
+  //         .orderBy('timestamp',descending: true)
+  //         .snapshots(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return Center(child: CircularProgressIndicator());
+  //       }
+
+  //       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+  //         return Center(child: Text("No messages yet"));
+  //       }
+
+  //       List<MessageModel> messages = snapshot.data!.docs
+  //           .map((doc) =>
+  //               MessageModel.fromJson(doc.data() as Map<String, dynamic>))
+  //           .where((msg) =>
+  //               (msg.senderId == currentUser!.uid &&
+  //                   msg.receiverId == widget.receiver.regId) ||
+  //               (msg.senderId == widget.receiver.regId &&
+  //                   msg.receiverId == currentUser!.uid))
+  //           .toList();
+
+  //       return ListView.builder(
+  //        // reverse: true,
+  //        controller: _scrollController,
+  //         padding: EdgeInsets.all(16),
+  //         itemCount: messages.length,
+  //         itemBuilder: (context, index) {
+  //           return buildMessageItem(messages[index]);
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _buildMessagesList() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('messages')
-          .where('participants', arrayContains: currentUser!.uid)
-          //.orderBy('timestamp', descending: false)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+  return StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance
+        .collection('messages')
+        .where('participants', arrayContains: currentUser!.uid)
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return const Center(child: Text("No messages yet"));
+      }
+
+      List<MessageModel> messages = snapshot.data!.docs
+          .map((doc) =>
+              MessageModel.fromJson(doc.data() as Map<String, dynamic>))
+          .where((msg) =>
+              (msg.senderId == currentUser!.uid &&
+                  msg.receiverId == widget.receiver.regId) ||
+              (msg.senderId == widget.receiver.regId &&
+                  msg.receiverId == currentUser!.uid))
+          .toList();
+
+      // 🔃 Sort by timestamp manually
+      messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
+      // 🔽 Scroll to bottom
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
         }
+      });
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Center(child: Text("No messages yet"));
-        }
+      return ListView.builder(
+        controller: _scrollController,
+        padding: const EdgeInsets.all(16),
+        itemCount: messages.length,
+        itemBuilder: (context, index) {
+          return buildMessageItem(messages[index]);
+        },
+      );
+    },
+  );
+}
 
-        List<MessageModel> messages = snapshot.data!.docs
-            .map((doc) =>
-                MessageModel.fromJson(doc.data() as Map<String, dynamic>))
-            .where((msg) =>
-                (msg.senderId == currentUser!.uid &&
-                    msg.receiverId == widget.receiver.regId) ||
-                (msg.senderId == widget.receiver.regId &&
-                    msg.receiverId == currentUser!.uid))
-            .toList();
-
-        return ListView.builder(
-          reverse: true,
-          padding: EdgeInsets.all(16),
-          itemCount: messages.length,
-          itemBuilder: (context, index) {
-            return buildMessageItem(messages[index]);
-          },
-        );
-      },
-    );
-  }
 
   Widget buildMessageItem(MessageModel message) {
     bool isMe = message.senderId == currentUser!.uid;
@@ -294,7 +401,7 @@ class _ChatScreenState extends State<ChatScreen> {
             child: TextField(
               controller: _messageController,
               decoration: InputDecoration(
-                hintText: "Send message...",
+                hintText: "Send message..",
                 border: InputBorder.none,
               ),
             ),

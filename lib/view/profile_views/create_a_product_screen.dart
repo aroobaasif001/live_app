@@ -54,6 +54,12 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     }
   }
 
+  final TextEditingController _descriptionController = TextEditingController();
+
+  String? descriptionError;
+
+  String title1 = '';
+  String? titleError;
   Future<void> _saveProduct() async {
     // Upload images
     List<String> imageUrls = await FirebaseService.uploadImages(selectedImages);
@@ -91,7 +97,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text(
           "create_product".tr,
@@ -252,11 +258,24 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
                 ),
-                onChanged: (val) => setState(() => title = val),
+                onChanged: (val) {
+                  final words = val.trim().split(RegExp(r"\s+"));
+                  if (words.length <= 20) {
+                    setState(() {
+                      title1 = val;
+                      titleError = null; // ✅ clear error
+                    });
+                  } else {
+                    setState(() {
+                      titleError = "Maximum 10 words allowed";
+                    });
+                  }
+                },
               ),
               const SizedBox(height: 8),
-
               TextField(
+                controller: _descriptionController,
+                maxLines: 3,
                 decoration: InputDecoration(
                   hintText: "description".tr,
                   labelStyle: const TextStyle(fontWeight: FontWeight.bold),
@@ -265,10 +284,40 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
+                  errorText: descriptionError,
                 ),
-                maxLines: 3,
-                onChanged: (val) => setState(() => description = val),
+                onChanged: (val) {
+                  final words = val.trim().split(RegExp(r"\s+"));
+                  if (words.length <= 30) {
+                    setState(() {
+                      description = val;
+                      descriptionError = null;
+                    });
+                  } else {
+                    _descriptionController.text = description;
+                    _descriptionController.selection =
+                        TextSelection.fromPosition(
+                      TextPosition(offset: _descriptionController.text.length),
+                    );
+                    setState(() {
+                      descriptionError = "Maximum 30 words allowed";
+                    });
+                  }
+                },
               ),
+              // TextField(
+              //   decoration: InputDecoration(
+              //     hintText: "description".tr,
+              //     labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+              //     filled: true,
+              //     fillColor: Colors.grey[50],
+              //     border: InputBorder.none,
+              //     enabledBorder: InputBorder.none,
+              //     focusedBorder: InputBorder.none,
+              //   ),
+              //   maxLines: 3,
+              //   onChanged: (val) => setState(() => description = val),
+              // ),
 
               const SizedBox(height: 16),
 
@@ -324,52 +373,58 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                 fontWeight: FontWeight.w600,
               ),
               const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () => setState(() => isAuction = true),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        gradient: isAuction
-                            ? primaryGradientColor
-                            : secondaryGradientColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
-                        child: CustomText(
-                          text: 'auction'.tr,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 4),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () => setState(() => isAuction = true),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          gradient: isAuction
+                              ? primaryGradientColor
+                              : secondaryGradientColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 40),
+                          child: CustomText(
+                            text: 'auction'.tr,
+                            color: isAuction ? Colors.white : Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () => setState(() => isAuction = false),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        gradient: !isAuction
-                            ? primaryGradientColor
-                            : secondaryGradientColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
-                        child: CustomText(
-                          text: 'buy_now'.tr,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () => setState(() => isAuction = false),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          gradient: !isAuction
+                              ? primaryGradientColor
+                              : secondaryGradientColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 40),
+                          child: CustomText(
+                            text: 'buy_now'.tr,
+                            color: isAuction ? Colors.black : Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
 
               const SizedBox(height: 16),
@@ -501,8 +556,21 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                 children: [
                   Expanded(
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xffefefef),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(5), // 🔲 No rounded corners
+                        ),
+                      ),
                       onPressed: () => Navigator.pop(context),
-                      child: Text("cancel".tr),
+                      child: Text(
+                        "cancel".tr,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Gilroy-Bold',
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -544,56 +612,61 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          height: MediaQuery.of(context).size.height * 0.6,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(10),
+        return ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.3,
+            // ✅ limit height
+          ),
+          child: Container(
+            // padding: const EdgeInsets.all(16),
+            // height: MediaQuery.of(context).size.height * 0.6,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
-              ),
-              Center(
-                child: const Text(
-                  'Select Category',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'SFProRounded'),
+                Center(
+                  child: const Text(
+                    'Select Category',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'SFProRounded'),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: categories.isEmpty
-                    ? const Center(child: Text("No categories available"))
-                    : ListView.builder(
-                        itemCount: categories.length,
-                        itemBuilder: (context, index) {
-                          final category = categories[index];
-                          return ListTile(
-                            title: Text(
-                              category,
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                selectedCategory = category;
-                              });
-                              Navigator.pop(context);
-                            },
-                          );
-                        },
-                      ),
-              ),
-            ],
+                Expanded(
+                  child: categories.isEmpty
+                      ? const Center(child: Text("No categories available"))
+                      : ListView.builder(
+                          itemCount: categories.length,
+                          itemBuilder: (context, index) {
+                            final category = categories[index];
+                            return ListTile(
+                              title: Text(
+                                category,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  selectedCategory = category;
+                                });
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           ),
         );
       },

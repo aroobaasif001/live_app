@@ -82,6 +82,7 @@ class _SearchByProductState extends State<SearchByProduct> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -95,7 +96,7 @@ class _SearchByProductState extends State<SearchByProduct> {
                   children: [
                     Expanded(
                       child: Container(
-                        height: 40,
+                        height: 45,
                         decoration: BoxDecoration(
                           color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(12),

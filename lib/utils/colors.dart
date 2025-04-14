@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 const purpleColor = Color(0xff8385E6);
 const purpleColor1 = Color(0xff815BFF);
 const greyLiteColor = Color(0xffD0D0D0);
+const whiteColor = Color(0xffffffff);
 const greyColor = Color(0xffB3B3B3);
  Color greyLiteLineColor = Color(0xff808080).withOpacity(0.5);
 const blackLiteColor = Color(0xff2A2A2A);
@@ -21,5 +22,5 @@ Color textColor=Color(0xff2A2A2A);
   colors: [blueLiteColor, purpleLiteColor,deepPurpleColor],
  );
   LinearGradient secondaryGradientColor = LinearGradient(
-  colors: [greyLiteColor, greyLiteColor,greyLiteColor],
+  colors: [whiteColor, whiteColor,whiteColor],
  );

@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDdp6G0_BuIlGwrTm7ugxXLSjmtrHcuO0s',
-    appId: '1:531418432199:android:2cc59bed540f6c0166b4e2',
+    appId: '1:531418432199:android:ba4ee4ce044a01dc66b4e2',
     messagingSenderId: '531418432199',
     projectId: 'hvatai',
     storageBucket: 'hvatai.firebasestorage.app',

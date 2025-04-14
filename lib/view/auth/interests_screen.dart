@@ -73,7 +73,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
   ];
 
   final List<String> interestKeys = [
-    'cloths',
+    'Clothes',
     'shoes',
     'electronics',
     'sport',

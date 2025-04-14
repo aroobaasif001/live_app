@@ -77,7 +77,7 @@ class TranslationsApp extends Translations {
           'back': 'Back',
           'interests_title': 'What are you interested in?',
           'interests_subtitle': 'Select a few to get started',
-          'cloth': 'Cloths',
+          'cloth': 'Clothes',
           'shoes': 'Shoes',
           'electronics': 'Electronics',
           'bags': 'Bags',
@@ -150,7 +150,7 @@ class TranslationsApp extends Translations {
           'email_send_failed': 'Failed to send verification email.',
 
           // Interest Categories
-          'Cloth': 'Cloths',
+          'Cloth': 'Clothes',
           'Shoes': 'Shoes',
           'Electronics': 'Electronics',
           'Bags': 'Bags',
@@ -455,7 +455,7 @@ class TranslationsApp extends Translations {
           'everyday_electronics': 'Everyday Electronics',
           'video_games': 'Video games',
           'shoes': 'Shoes',
-          'cloth': 'Cloths',
+          'cloth': 'Clothes',
 
           // Home Main Screen
           'search_hint': 'Search by application',
@@ -468,7 +468,7 @@ class TranslationsApp extends Translations {
           'for_you': 'For you',
           'subscriptions': 'Subscriptions',
           'electronics': 'Electronics',
-          'cloth_category': 'Cloths',
+          'cloth_category': 'Clothes',
 
           // Settings Screen Translations
           'country_of_residence': 'Country of Residence',

@@ -17,7 +17,7 @@ import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
+
 
 import '../homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import '../profile_views/wallet_screen.dart';
@@ -282,7 +282,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
     }
     captureAndStoreSnapshot();
 
-    WakelockPlus.enable();
+  //  WakelockPlus.enable();
     ever(_controller.comments, (_) {
       // Scroll to the bottom when a new comment is added
       Future.delayed(Duration(milliseconds: 100), () {

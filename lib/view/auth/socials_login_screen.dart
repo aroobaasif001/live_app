@@ -29,30 +29,30 @@ class SocialsLoginScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         /// Register
-                        GestureDetector(
-                          onTap: () {
-                            Get.to(() => RegistrationScreen());
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              GradientText(
-                                'register'.tr,
-                                colors: [purpleColor, pinkColor],
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'MontserratAlternates',
-                                ),
-                              ),
-                              Icon(Icons.arrow_forward_ios_rounded,
-                                  color: Color(0xffE26ADC), size: 15)
-                            ],
-                          ),
-                        ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     Get.to(() => RegistrationScreen());
+                        //   },
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.start,
+                        //     children: [
+                        //       GradientText(
+                        //         'register'.tr,
+                        //         colors: [purpleColor, pinkColor],
+                        //         style: TextStyle(
+                        //           fontSize: 14,
+                        //           fontWeight: FontWeight.w600,
+                        //           fontFamily: 'MontserratAlternates',
+                        //         ),
+                        //       ),
+                        //       Icon(Icons.arrow_forward_ios_rounded,
+                        //           color: Color(0xffE26ADC), size: 15)
+                        //     ],
+                        //   ),
+                        // ),
                         /// Login
                         GestureDetector(
                           onTap: () {
@@ -62,7 +62,7 @@ class SocialsLoginScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               GradientText(
-                                'login'.tr,
+                                'Enter'.tr,
                                 colors: [purpleColor, pinkColor],
                                 style: TextStyle(
                                   fontSize: 14,

@@ -73,7 +73,8 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
         }
 
         List<ProductEntity> allProducts = snapshot.data!.docs
-            .map((doc) => ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+            .map((doc) =>
+                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
 
         return _buildProductList(allProducts);
@@ -87,39 +88,45 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
       stream: FirebaseFirestore.instance.collection('products').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator()); // Show loading indicator
+          return const Center(
+              child: CircularProgressIndicator()); // Show loading indicator
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Center(child: Text("no_products_found".tr, style: TextStyle(color: Colors.black))); // No products found
+          return Center(
+              child: Text("no_products_found".tr,
+                  style: TextStyle(color: Colors.black))); // No products found
         }
 
-        List<ProductEntity> awaitingReceiptProducts = snapshot.data!.docs
-            .map((doc) {
-          final product = ProductEntity.fromJson(doc.data() as Map<String, dynamic>);
+        List<ProductEntity> awaitingReceiptProducts =
+            snapshot.data!.docs.map((doc) {
+          final product =
+              ProductEntity.fromJson(doc.data() as Map<String, dynamic>);
           print('Product ID: ${product.id}, Bidders: ${product.bidders}');
           return product;
-        })
-            .where((product) {
-          print('Checking if currentUserId: ${widget.currentUserId} is in bidders...');
+        }).where((product) {
+          print(
+              'Checking if currentUserId: ${widget.currentUserId} is in bidders...');
           // Check if bidders map exists and contains currentUserId
-          final isBidder = product.bidders != null && product.bidders!.containsKey(widget.currentUserId);
+          final isBidder = product.bidders != null &&
+              product.bidders!.containsKey(widget.currentUserId);
           print('Is currentUserId a bidder? $isBidder');
           return isBidder; // Only return products where currentUserId is a bidder
-        })
-            .toList();
+        }).toList();
 
         if (awaitingReceiptProducts.isEmpty) {
-          return Center(child: Text("No awaiting receipt products found.", style: TextStyle(color: Colors.black))); // Display message when no products match
+          return Center(
+              child: Text("No awaiting receipt products found.",
+                  style: TextStyle(
+                      color: Colors
+                          .black))); // Display message when no products match
         }
 
-        return _buildProductList(awaitingReceiptProducts); // Call to method to display filtered products
+        return _buildProductList(
+            awaitingReceiptProducts); // Call to method to display filtered products
       },
     );
   }
-
-
-
 
   // Tab 3: On the Way
   Widget _buildOnTheWayTab() {
@@ -130,39 +137,51 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator()); // Show loading spinner
+          return const Center(
+              child: CircularProgressIndicator()); // Show loading spinner
         }
 
         if (!snapshot.hasData || !snapshot.data!.exists) {
-          return Center(child: Text("No user data found".tr)); // Handle case if user data doesn't exist
+          return Center(
+              child: Text("No user data found"
+                  .tr)); // Handle case if user data doesn't exist
         }
 
         // Fetch the list of product IDs from the auctionedWinProduct array in UserEntity
         final userData = snapshot.data!.data() as Map<String, dynamic>;
         final List<String> auctionedProductIds =
-        List<String>.from(userData['auctionedWinProduct'] ?? []);
+            List<String>.from(userData['auctionedWinProduct'] ?? []);
 
         if (auctionedProductIds.isEmpty) {
-          return Center(child: Text("No auctioned products found.".tr)); // Handle case where no products are auctioned
+          return Center(
+              child: Text("No auctioned products found."
+                  .tr)); // Handle case where no products are auctioned
         }
 
         // Query the products collection for the products whose IDs are in the auctionedProductIds list
         return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('products')
-              .where(FieldPath.documentId, whereIn: auctionedProductIds) // Filter products based on auctioned IDs
+              .where(FieldPath.documentId,
+                  whereIn:
+                      auctionedProductIds) // Filter products based on auctioned IDs
               .snapshots(),
           builder: (context, productSnapshot) {
             if (productSnapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator()); // Show loading spinner
+              return const Center(
+                  child: CircularProgressIndicator()); // Show loading spinner
             }
 
-            if (!productSnapshot.hasData || productSnapshot.data!.docs.isEmpty) {
-              return Center(child: Text("No products found".tr)); // Handle case where no products are found
+            if (!productSnapshot.hasData ||
+                productSnapshot.data!.docs.isEmpty) {
+              return Center(
+                  child: Text("No products found"
+                      .tr)); // Handle case where no products are found
             }
 
             List<ProductEntity> onTheWayProducts = productSnapshot.data!.docs
-                .map((doc) => ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+                .map((doc) =>
+                    ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
                 .where((product) {
               // Filter out sold and inactive products
               return product.isActive == true && product.isSold == false;
@@ -174,7 +193,6 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
       },
     );
   }
-
 
   // Tab 4: Awaiting Shipment
   Widget _buildAwaitingShipmentTab() {
@@ -190,7 +208,8 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
         }
 
         List<ProductEntity> awaitingShipmentProducts = snapshot.data!.docs
-            .map((doc) => ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+            .map((doc) =>
+                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
             .where((product) {
           return product.selfDestruct == true && product.isSold == false;
         }).toList();
@@ -204,12 +223,14 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
   Widget _buildProductList(List<ProductEntity> products) {
     return ListView(
       children: [
-        ...products.map((product) => GestureDetector(
-          onTap: () {
-            Get.to(() => ProductDetailScreen(product: product));
-          },
-          child: _buildProductCard(product),
-        )).toList(),
+        ...products
+            .map((product) => GestureDetector(
+                  onTap: () {
+                    Get.to(() => ProductDetailScreen(product: product));
+                  },
+                  child: _buildProductCard(product),
+                ))
+            .toList(),
       ],
     );
   }
@@ -243,23 +264,36 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
   // Build the product card
   Widget _buildProductCard(ProductEntity product) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      color: Colors.grey[100],
+      margin: const EdgeInsets.symmetric(vertical: 6,),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 0,
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                bottomLeft: Radius.circular(12)),
+            // borderRadius: const BorderRadius.only(
+            //     topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
             child: Image.network(
-              (product.images != null && product.images!.isNotEmpty)
+              (product.images != null &&
+                      product.images!.isNotEmpty &&
+                      product.images!.first.isNotEmpty)
                   ? product.images!.first
-                  : 'https://via.placeholder.com/100',
+                  : '',
               width: 100,
               height: 100,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.broken_image),
             ),
+
+            //  Image.network(
+            //   (product.images != null && product.images!.isNotEmpty)
+            //       ? product.images!.first
+            //       : 'https://via.placeholder.com/100',
+            //   width: 100,
+            //   height: 100,
+            //   fit: BoxFit.cover,
+            // ),
           ),
           const SizedBox(width: 10),
           Expanded(
