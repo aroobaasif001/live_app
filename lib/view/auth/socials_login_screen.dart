@@ -91,7 +91,7 @@ class SocialsLoginScreen extends StatelessWidget {
                   ),
                       CustomText(
                     text: 'YourPurchaseisProtected'.tr,
-                    fontSize: 32,
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'SFProRounded',
                   ),

@@ -184,6 +184,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 children: [
                   SizedBox(height: 20),
                   CustomTextField(
+                    isRequired: true,
                     hintText: 'First Name',
                     controller: _firstNameController,
                     validator: (value) => value == null || value.isEmpty
@@ -192,6 +193,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   SizedBox(height: 15),
                   CustomTextField(
+
                     hintText: 'Last Name',
                     controller: _lastNameController,
                     validator: (value) => value == null || value.isEmpty
@@ -200,6 +202,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   SizedBox(height: 15),
                   CustomTextField(
+                      isRequired: true,
                     hintText: 'Email',
                     controller: _emailController,
                     validator: _validateEmail,
@@ -211,6 +214,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomTextField(
+                             isRequired: true,
                             suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {

@@ -131,6 +131,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                       children: [
                         SizedBox(height: 20),
                         CustomTextField(
+                           isRequired: true,
                           controller: _countryController,
                           hintText: 'country'.tr,
                           validator: (value) =>
@@ -138,6 +139,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                         ),
                         SizedBox(height: 20),
                         CustomTextField(
+                           isRequired: true,
                           hintText: 'city'.tr,
                           controller: _cityController,
                           validator: (value) =>
@@ -145,6 +147,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                         ),
                         SizedBox(height: 20),
                         CustomTextField(
+                           isRequired: true,
                           hintText: 'street'.tr,
                           controller: _streetController,
                           validator: (value) =>
