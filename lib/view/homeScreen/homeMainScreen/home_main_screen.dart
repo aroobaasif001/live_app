@@ -2,11 +2,14 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/view/auth/notification_screen.dart';
+import 'package:live_app/view/homeScreen/homeMainScreen/gift_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../livestreaming/livestreamingview_screen.dart';
 import '../../search_views/search_by_application.dart';
 import '../widgets/live_video_card.dart';
 import '../widgets/category_tab.dart';
+import 'notification_screen1.dart';
 
 class HomeMainScreen extends StatelessWidget {
   final int notificationCount = 2;
@@ -69,10 +72,19 @@ class HomeMainScreen extends StatelessWidget {
           ),
 
           const SizedBox(width: 10),
-          _buildNotificationIcon(notificationCount),
+          GestureDetector(
+            onTap: (){
+              Get.to(()=>NotificationScreen1());
+            },
+            child: _buildNotificationIcon(notificationCount)),
           const SizedBox(width: 10),
-          Image.asset('assets/icons/gift.png',
-              semanticLabel: "${'gift_icon'.tr}"),
+          GestureDetector(
+              onTap: (){
+              Get.to(()=>GiftScreen());
+            },
+            child: Image.asset('assets/icons/gift.png',
+                semanticLabel: "${'gift_icon'.tr}"),
+          ),
         ],
       ),
     );
