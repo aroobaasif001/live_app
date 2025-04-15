@@ -504,6 +504,7 @@ class _FixCardScreenState extends State<FixCardScreen> {
                     text: 'Continue'.tr,
                     onPressed: () {
                       Get.to(() => PaymentScreen());
+
                     },
                   ),
                   SizedBox(height: 10),

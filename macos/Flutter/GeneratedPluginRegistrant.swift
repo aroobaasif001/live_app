@@ -26,7 +26,8 @@ import package_info_plus
 import path_provider_foundation
 import share_plus
 import shared_preferences_foundation
-import wakelock_plus
+import url_launcher_macos
+
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   AgoraRtcNgPlugin.register(with: registry.registrar(forPlugin: "AgoraRtcNgPlugin"))

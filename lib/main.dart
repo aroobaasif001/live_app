@@ -170,7 +170,7 @@ import 'package:get/get.dart';
 import 'package:live_app/services/notification_service.dart';
 import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
-import 'package:live_app/view/profile_views/statistic_screen.dart';
+import 'package:live_app/view/market/tabs/payment_screen.dart';
 import 'firebase_options.dart';
 import 'translate/translations_app.dart';
 import 'utils/store_services.dart';
@@ -191,7 +191,6 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
 
   bool isLoggedIn = await StorageService.isLoggedIn();
-
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -231,7 +230,25 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Live App',
-          home: StartupWrapper(isLoggedIn: isLoggedIn ?? false),
+
+          home: FutureBuilder(
+            future: _checkIfUserIsBlocked(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return SocialsLoginScreen(); // Handle any error scenario
+              } else if (snapshot.hasData && snapshot.data == true) {
+                return BlockedScreen(); // If blocked, navigate to BlockedScreen
+              } else {
+                return (isLoggedIn ?? false)
+                    ? BottomNavigationBarWidget()
+                    : SocialsLoginScreen();
+              }
+            },
+          ),
+          
+
           translations: TranslationsApp(),
           locale: Get.deviceLocale ?? const Locale('en'),
           fallbackLocale: const Locale('en'),
