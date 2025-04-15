@@ -33,7 +33,8 @@ RegistrationEntity _$RegistrationEntityFromJson(Map<String, dynamic> json) =>
           image: json['image'] as String?,
           coverImage: json['coverImage'] as String?,
           isBlocked: json['isBlocked'] as bool?,  // ✅ NEW FIELD
-          isUserNew: json['isUserNew'] as bool?,  // ✅ NEW FIELD
+          isUserNew: json['isUserNew'] as bool?,
+          fcmToken: json['fcmToken'] as String?,  // ✅ NEW FIELD
     );
 
 Map<String, dynamic> _$RegistrationEntityToJson(RegistrationEntity instance) =>
@@ -59,5 +60,6 @@ Map<String, dynamic> _$RegistrationEntityToJson(RegistrationEntity instance) =>
           'sold': instance.sold,
           'delivery': instance.delivery,
           'isBlocked': instance.isBlocked,  // ✅ NEW FIELD
-          'isUserNew': instance.isUserNew,  // ✅ NEW FIELD
+          'isUserNew': instance.isUserNew, 
+          'fcmToken': instance.fcmToken, // ✅ NEW FIELD
     };

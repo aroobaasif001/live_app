@@ -66,6 +66,9 @@ dependencies:
   path_provider: ^2.1.5
   yookassa_client: ^1.0.5
   device_preview: ^1.2.0
+  googleapis_auth: ^2.0.0
+  flutter_local_notifications: ^19.1.0
+  firebase_messaging: ^15.2.5
 flutter_icons:
   android: true
   ios: true

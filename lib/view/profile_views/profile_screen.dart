@@ -10,6 +10,7 @@ import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_profile_background_scaffold.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
+import 'package:live_app/services/send_notification_service.dart';
 import 'package:live_app/translate/controller/translations_controller.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/auth/delivery_address_screen.dart';
@@ -42,18 +43,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? ChannelId;
   final TextEditingController _titleController = TextEditingController();
 
-  Stream<DocumentSnapshot<RegistrationEntity>> getCurrentUserData =
-      RegistrationEntity.doc(userId: FirebaseAuth.instance.currentUser!.uid)
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getCurrentUserData =
+      FirebaseFirestore.instance
+          .collection('UserEntity')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
           .snapshots();
-@override
+
+  @override
   void initState() {
-  uid = 10000 + Random().nextInt(90000); // Generates a 5-digit number
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  ChannelId =
-      List.generate(5, (index) => chars[Random().nextInt(chars.length)]).join();
+    uid = 10000 + Random().nextInt(90000); // Generates a 5-digit number
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    ChannelId =
+        List.generate(5, (index) => chars[Random().nextInt(chars.length)])
+            .join();
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> settingsOptions = [
@@ -117,6 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ];
     final TranslationsController translationController =
         Get.find<TranslationsController>();
+
     return CustomProfileBackgroundScaffold(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -196,8 +203,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               CustomText(
                                 fontFamily: "SF Pro Rounded",
-                                text:
-                                    snapshot.data!.data()!.firstName.toString(),
+                                text: (snapshot.data!.data()?['firstName'] ?? 'User').toString(),
+                                 // snapshot.data!.data()!.firstName.toString(),
                                 fontWeight: FontWeight.w800,
                                 fontSize: 20,
                               ),
@@ -226,59 +233,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       GestureDetector(
                         onTap: () async {
+                          final userData = snapshot.data!.data()!;
+                          final userName = userData['firstName'] ?? 'User';
+                          final fcmToken = userData['fcmToken'] ?? '';
 
-                            String title = _titleController.text.trim();
+                          await SendNotificationService
+                              .sendToAllUserEntityTokens(
+                               //  token: fcmToken,
+                                  title: '📢 $userName is Live!',
+                                  body: 'Join the live stream now.',
 
-                            if (title.isEmpty) {
-                              // If title is empty, set a default title.
-                              title = 'Live Streaming';
-                            }
+                                  
+                                  data: {});
+                          String title = _titleController.text.trim();
 
-                            // Store live stream details in Firebase Firestore
-                            try {
-                              final liveStreamData = {
-                                "title": title,
-                                "adminName": snapshot.data!.data()!.firstName.toString(),
-                                "adminPhoto":'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D',
-                                "adminUid": uid,
-                                "isAdmin": true,
-                                "channelId": ChannelId,
-                                'viewsCount': 0,
-                                'currentmusic': null,
-                                'currentFilter': null,
-                                'currentmusic_id': null,
-                                'heartbeat': null,
-                                "timestamp": FieldValue.serverTimestamp(),
-                              };
+                          if (title.isEmpty) {
+                            // If title is empty, set a default title.
+                            title = 'Live Streaming';
+                          }
 
-                              await FirebaseFirestore.instance
-                                  .collection('livestreams')
-                                  .doc(ChannelId)
-                                  .set(liveStreamData);
+                          // Store live stream details in Firebase Firestore
+                          try {
+                            final liveStreamData = {
+                              "title": title,
+                              "adminName":userName,
+                                  //snapshot.data!.data()!.firstName.toString(),
+                              "adminPhoto":
+                                  'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D',
+                              "adminUid": uid,
+                              "isAdmin": true,
+                              "channelId": ChannelId,
+                              'viewsCount': 0,
+                              'currentmusic': null,
+                              'currentFilter': null,
+                              'currentmusic_id': null,
+                              'heartbeat': null,
+                              "timestamp": FieldValue.serverTimestamp(),
+                            };
 
-                              // Navigate to LiveStreamingScreen
-                              // _cameraController?.dispose();
-                              // _titleController.dispose();
-                              Get.to(() => LiveStreamingScreen(
-                                channelId: ChannelId ?? '',
-                                isAdmin: true,
-                                uid: uid ?? 0,
-                              ));
-                            } catch (e) {
-                              Get.snackbar(
-                                "error".tr,
-                                "live_stream_error".tr,
-                                snackPosition: SnackPosition.BOTTOM,
-                                backgroundColor: Colors.red,
-                                colorText: Colors.white,
-                              );
-                            }
+                            await FirebaseFirestore.instance
+                                .collection('livestreams')
+                                .doc(ChannelId)
+                                .set(liveStreamData);
 
-
+                            // Navigate to LiveStreamingScreen
+                            // _cameraController?.dispose();
+                            // _titleController.dispose();
+                            Get.to(() => LiveStreamingScreen(
+                                  channelId: ChannelId ?? '',
+                                  isAdmin: true,
+                                  uid: uid ?? 0,
+                                ));
+                          } catch (e) {
+                            Get.snackbar(
+                              "error".tr,
+                              "live_stream_error".tr,
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          }
                         },
                         child: Container(
                           height: 155,
-                          margin: EdgeInsets.symmetric(horizontal: 10) ,
+                          margin: EdgeInsets.symmetric(horizontal: 10),
                           width: double.infinity,
                           decoration: BoxDecoration(
                               image: DecorationImage(
@@ -304,14 +322,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                       Row(
                         children: [
-                          SizedBox(width: 5,),
+                          SizedBox(
+                            width: 5,
+                          ),
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(
-                                color:Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(color: Colors.grey.withOpacity(0.2))
-                              ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                      color: Colors.grey.withOpacity(0.2))),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 14, vertical: 12),
@@ -356,10 +376,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                    color:Colors.white,
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(color: Colors.grey.withOpacity(0.2))
-                                ),
+                                    border: Border.all(
+                                        color: Colors.grey.withOpacity(0.2))),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 14, vertical: 12),
@@ -396,8 +416,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 5,),
-
+                          SizedBox(
+                            width: 5,
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -419,16 +440,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   child: CustomContainer(
                                     height: 24,
                                     width: 24,
-                                    image: DecorationImage(image: AssetImage(settingsOptions[index]['icon']),),
-                                  )
-                              ),
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                          settingsOptions[index]['icon']),
+                                    ),
+                                  )),
                             ),
                             title: Text(
                               settingsOptions[index]['title'],
                               style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "Gilroy-Bold",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "Gilroy-Bold",
                                 color: Colors.black.withOpacity(0.8),
                               ),
                             ),
@@ -478,9 +501,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   child: CustomContainer(
                                     height: 24,
                                     width: 24,
-                                    image: DecorationImage(image: AssetImage(helpAndContact[index]['icon']),),
-                                  )
-                              ),
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                          helpAndContact[index]['icon']),
+                                    ),
+                                  )),
                             ),
                             title: Text(
                               helpAndContact[index]['title'],
@@ -520,7 +545,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               CustomContainer(
                                 height: 18,
                                 width: 18,
-                                image: DecorationImage(image: AssetImage('assets/icons/Arrows ALogout 2.png')),
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        'assets/icons/Arrows ALogout 2.png')),
                               ),
                               SizedBox(width: 6),
                               CustomText(

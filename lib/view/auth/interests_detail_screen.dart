@@ -6,6 +6,8 @@ import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
 import 'package:live_app/view/auth/notification_screen.dart';
 
+import '../../services/notification_service.dart';
+
 class InterestsDetailScreen extends StatefulWidget {
   final String? country;
   final String? gender;
@@ -84,8 +86,11 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
       String userId = FirebaseAuth.instance.currentUser!.uid;
 
       // **Update Firestore document**
+        NotificationService notificationService = NotificationService();
+        String? deviceToken = await notificationService.getDeviceToken();
       await RegistrationEntity.doc(userId: userId).update({
-        'detailedInterests': selectedDetailedInterests.toList(), // ✅ New field
+        'detailedInterests': selectedDetailedInterests.toList(),
+        'fcmToken': deviceToken, // ✅ New field
       });
 
       Get.snackbar("Success", "interests_updated".tr);

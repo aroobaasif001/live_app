@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:live_app/entities/product_entity.dart';
+import 'package:live_app/services/notification_service.dart';
+import 'package:live_app/services/send_notification_service.dart';
 import 'package:live_app/utils/colors.dart';
 import 'dart:io';
 import '../../custom_widgets/custom_text.dart';
@@ -86,6 +89,28 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
     // Save product to Firestore
     await FirebaseService.saveProduct(newProduct);
+// Create a Firestore doc for the notification
+final notificationDoc = FirebaseFirestore.instance.collection('notifications').doc();
+
+await notificationDoc.set({
+  "id": notificationDoc.id,
+  "title": "✅ Product Added!",
+  "body": "Your product '${title1.trim()}' was successfully listed.",
+  "receiverId": FirebaseAuth.instance.currentUser!.uid,  // 👈 Target the current user
+  "senderId": FirebaseAuth.instance.currentUser!.uid,
+  "timestamp": DateTime.now(),
+  "data": {
+    "screen": "my_products",
+    "productId": newProduct.id,
+  }
+});
+  final userDoc = await FirebaseFirestore.instance
+      .collection("UserEntity")
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .get();
+
+  final fcmToken = userDoc.data()?['fcmToken'] ?? null;
+await SendNotificationService.sendNotificationUsingApi(token: fcmToken, title: 'Product Added', body: 'Your Product is Listed', data: {});
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("product_created".tr)),
