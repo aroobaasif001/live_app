@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:live_app/custom_widgets/custom_textfield.dart';
 import 'package:live_app/view/auth/verification_screen.dart';
 import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 
+import '../../services/notification_service.dart';
 import '../../utils/store_services.dart';
 import 'forget_password_screen.dart';
 
@@ -22,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isLoading = false;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// **🔥 Firebase Login Function**
   Future<void> _loginUser() async {
@@ -37,11 +40,26 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await FirebaseAuth.instance
           .setLanguageCode(Get.locale?.languageCode ?? "en");
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      // await FirebaseAuth.instance.signInWithEmailAndPassword(
+      //   email: _emailController.text.trim(),
+      //   password: _passwordController.text.trim(),
+      // );
+
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
+      String uid = userCredential.user!.uid;
+      NotificationService notificationService = NotificationService();
+      String? deviceToken = await notificationService.getDeviceToken();
+
+      if (deviceToken != null) {
+        await _firestore.collection("UserEntity").doc(uid).set({
+          'fcmToken': deviceToken,
+        }, SetOptions(merge: true));
+      }
       Get.snackbar("Success", "login_successful".tr);
       await StorageService.setLoggedIn(true);
       Get.to(() => BottomNavigationBarWidget());

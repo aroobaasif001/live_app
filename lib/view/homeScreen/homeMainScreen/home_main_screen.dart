@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/services/send_notification_service.dart';
 import 'package:live_app/view/auth/notification_screen.dart';
 import 'package:live_app/view/homeScreen/homeMainScreen/gift_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,17 +69,26 @@ class HomeMainScreen extends StatelessWidget {
                   hintText: 'search'.tr,
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
                 ),
-                textAlignVertical: TextAlignVertical.center, // Vertically center the text
+                textAlignVertical:
+                    TextAlignVertical.center, // Vertically center the text
               ),
             ),
           ),
           const SizedBox(width: 10),
           GestureDetector(
-            onTap: () {
-              Get.to(() => NotificationScreen1());
-            },
-            child: _buildNotificationIcon(notificationCount),
-          ),
+              onTap: () async {
+            //  await SendNotificationService
+            //                   .sendToAllUserEntityTokens(
+            //                    //  token: fcmToken,
+            //                       title: '📢  is Live!',
+            //                       body: 'Join the live stream now.',
+            //                       data: {});
+                
+
+                 Get.to(()=>NotificationScreen1());
+              },
+              child: _buildNotificationIcon(notificationCount)),
+
           const SizedBox(width: 10),
           GestureDetector(
             onTap: () {
@@ -152,11 +162,10 @@ class HomeMainScreen extends StatelessWidget {
                 itemCount: livestreamsData.length,
                 itemBuilder: (context, index) {
                   final data =
-                  livestreamsData[index].data() as Map<String, dynamic>;
-                  final adminName =
-                      data['adminName'] as String? ?? 'Unknown';
-                  final adminImage =
-                      data['adminPhoto'] as String? ?? '';
+
+                      livestreamsData[index].data() as Map<String, dynamic>;
+                  final adminName = data['adminName'] as String? ?? 'Unknown';
+                  final adminImage = data['adminPhoto'] as String? ?? '';
                   final viewsCount = data['viewsCount'] as int? ?? 0;
                   final title = data['title'] as String? ?? '';
                   final description = data['description'] as String? ?? '';
