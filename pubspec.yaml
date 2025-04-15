@@ -65,7 +65,12 @@ dependencies:
   flutter_launcher_icons: any
   path_provider: ^2.1.5
   yookassa_client: ^1.0.5
+  yookassa_payments_flutter: ^1.8.0
   device_preview: ^1.2.0
+  url_launcher: ^6.3.1
+  http: ^1.3.0
+
+
 flutter_icons:
   android: true
   ios: true

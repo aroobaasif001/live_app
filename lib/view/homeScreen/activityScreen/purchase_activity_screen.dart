@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:live_app/entities/product_entity.dart';
 import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
 import '../../../custom_widgets/custom_gradiant_tab_button.dart';
@@ -43,7 +42,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
     );
   }
 
-  // This method returns the StreamBuilder for the selected tab
+  // Returns the content for the selected tab.
   Widget _buildTabContent() {
     switch (selectedCategoryIndex) {
       case 0:
@@ -55,7 +54,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
       case 3:
         return _buildAwaitingShipmentTab();
       default:
-        return Container(); // In case there's an unexpected tab
+        return Container(); // Fallback in case of an unexpected index.
     }
   }
 
@@ -74,7 +73,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
 
         List<ProductEntity> allProducts = snapshot.data!.docs
             .map((doc) =>
-                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+            ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
 
         return _buildProductList(allProducts);
@@ -88,42 +87,33 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
       stream: FirebaseFirestore.instance.collection('products').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child: CircularProgressIndicator()); // Show loading indicator
+          return const Center(child: CircularProgressIndicator());
         }
-
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Center(
               child: Text("no_products_found".tr,
-                  style: TextStyle(color: Colors.black))); // No products found
+                  style: const TextStyle(color: Colors.black)));
         }
 
         List<ProductEntity> awaitingReceiptProducts =
-            snapshot.data!.docs.map((doc) {
+        snapshot.data!.docs.map((doc) {
           final product =
-              ProductEntity.fromJson(doc.data() as Map<String, dynamic>);
-          print('Product ID: ${product.id}, Bidders: ${product.bidders}');
+          ProductEntity.fromJson(doc.data() as Map<String, dynamic>);
           return product;
         }).where((product) {
-          print(
-              'Checking if currentUserId: ${widget.currentUserId} is in bidders...');
-          // Check if bidders map exists and contains currentUserId
+          // Check if the bidders map exists and contains currentUserId.
           final isBidder = product.bidders != null &&
               product.bidders!.containsKey(widget.currentUserId);
-          print('Is currentUserId a bidder? $isBidder');
-          return isBidder; // Only return products where currentUserId is a bidder
+          return isBidder;
         }).toList();
 
         if (awaitingReceiptProducts.isEmpty) {
           return Center(
               child: Text("No awaiting receipt products found.",
-                  style: TextStyle(
-                      color: Colors
-                          .black))); // Display message when no products match
+                  style: const TextStyle(color: Colors.black)));
         }
 
-        return _buildProductList(
-            awaitingReceiptProducts); // Call to method to display filtered products
+        return _buildProductList(awaitingReceiptProducts);
       },
     );
   }
@@ -133,61 +123,49 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
           .collection('UserEntity')
-          .doc(widget.currentUserId) // Fetch the current user's document
+          .doc(widget.currentUserId)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child: CircularProgressIndicator()); // Show loading spinner
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (!snapshot.hasData || !snapshot.data!.exists) {
-          return Center(
-              child: Text("No user data found"
-                  .tr)); // Handle case if user data doesn't exist
+          return Center(child: Text("No user data found".tr));
         }
 
-        // Fetch the list of product IDs from the auctionedWinProduct array in UserEntity
+        // Fetch the list of product IDs from the auctionedWinProduct array in UserEntity.
         final userData = snapshot.data!.data() as Map<String, dynamic>;
         final List<String> auctionedProductIds =
-            List<String>.from(userData['auctionedWinProduct'] ?? []);
+        List<String>.from(userData['auctionedWinProduct'] ?? []);
 
         if (auctionedProductIds.isEmpty) {
-          return Center(
-              child: Text("No auctioned products found."
-                  .tr)); // Handle case where no products are auctioned
+          return Center(child: Text("No auctioned products found.".tr));
         }
 
-        // Query the products collection for the products whose IDs are in the auctionedProductIds list
+        // Query products whose IDs are in auctionedProductIds.
         return StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('products')
-              .where(FieldPath.documentId,
-                  whereIn:
-                      auctionedProductIds) // Filter products based on auctioned IDs
+              .where(FieldPath.documentId, whereIn: auctionedProductIds)
               .snapshots(),
           builder: (context, productSnapshot) {
             if (productSnapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                  child: CircularProgressIndicator()); // Show loading spinner
+              return const Center(child: CircularProgressIndicator());
             }
-
-            if (!productSnapshot.hasData ||
-                productSnapshot.data!.docs.isEmpty) {
-              return Center(
-                  child: Text("No products found"
-                      .tr)); // Handle case where no products are found
+            if (!productSnapshot.hasData || productSnapshot.data!.docs.isEmpty) {
+              return Center(child: Text("No products found".tr));
             }
 
             List<ProductEntity> onTheWayProducts = productSnapshot.data!.docs
                 .map((doc) =>
-                    ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
                 .where((product) {
-              // Filter out sold and inactive products
+              // Only show active and not sold products.
               return product.isActive == true && product.isSold == false;
             }).toList();
 
-            return _buildProductList(onTheWayProducts); // Display the products
+            return _buildProductList(onTheWayProducts);
           },
         );
       },
@@ -202,14 +180,13 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Center(child: Text("no_products_found".tr));
         }
 
         List<ProductEntity> awaitingShipmentProducts = snapshot.data!.docs
             .map((doc) =>
-                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+            ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
             .where((product) {
           return product.selfDestruct == true && product.isSold == false;
         }).toList();
@@ -219,23 +196,23 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
     );
   }
 
-  // Helper method to build the product list for any tab
+  // Helper method to build the product list for any tab.
   Widget _buildProductList(List<ProductEntity> products) {
     return ListView(
       children: [
         ...products
             .map((product) => GestureDetector(
-                  onTap: () {
-                    Get.to(() => ProductDetailScreen(product: product));
-                  },
-                  child: _buildProductCard(product),
-                ))
+          onTap: () {
+            Get.to(() => ProductDetailScreen(product: product));
+          },
+          child: _buildProductCard(product),
+        ))
             .toList(),
       ],
     );
   }
 
-  // Build the category tabs
+  // Build the category tabs.
   Widget _buildCategoryTabs() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -261,39 +238,30 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
     );
   }
 
-  // Build the product card
+  // Build the product card with title, description, price, and average rating.
   Widget _buildProductCard(ProductEntity product) {
     return Card(
       color: Colors.grey[100],
-      margin: const EdgeInsets.symmetric(vertical: 6,),
+      margin: const EdgeInsets.symmetric(
+        vertical: 6,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 0,
       child: Row(
         children: [
           ClipRRect(
-            // borderRadius: const BorderRadius.only(
-            //     topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
             child: Image.network(
               (product.images != null &&
-                      product.images!.isNotEmpty &&
-                      product.images!.first.isNotEmpty)
+                  product.images!.isNotEmpty &&
+                  product.images!.first.isNotEmpty)
                   ? product.images!.first
                   : '',
               width: 100,
               height: 100,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.broken_image),
+              const Icon(Icons.broken_image),
             ),
-
-            //  Image.network(
-            //   (product.images != null && product.images!.isNotEmpty)
-            //       ? product.images!.first
-            //       : 'https://via.placeholder.com/100',
-            //   width: 100,
-            //   height: 100,
-            //   fit: BoxFit.cover,
-            // ),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -309,6 +277,9 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
                     "${product.price ?? '0'} ₽",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
+                  const SizedBox(height: 4),
+                  // The rating widget is built below.
+                  _buildRatingWidget(product),
                 ],
               ),
             ),
@@ -317,4 +288,45 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
       ),
     );
   }
+
+  // Helper method to build the rating widget for a given product.
+  Widget _buildRatingWidget(ProductEntity product) {
+    // If the product does not have a valid ID then we cannot fetch ratings.
+    if (product.id == null) return Container();
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('products')
+          .doc(product.id)
+          .collection('ratings')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text("Error loading rating");
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading rating...");
+        }
+        final ratingDocs = snapshot.data!.docs;
+        double total = 0.0;
+        int count = ratingDocs.length;
+        for (var doc in ratingDocs) {
+          final data = doc.data() as Map<String, dynamic>;
+          total += (data['rating'] is num ? data['rating'].toDouble() : 0.0);
+        }
+        double averageRating = count > 0 ? total / count : 0.0;
+        return Row(
+          children: [
+            const Icon(Icons.star, color: Colors.amber, size: 16),
+            const SizedBox(width: 4),
+            Text(
+              averageRating.toStringAsFixed(1),
+              style: const TextStyle(fontSize: 14),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
+

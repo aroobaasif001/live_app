@@ -28,7 +28,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
   final List<Widget> screens = [
     HomeMainScreen(),
     SearchScreen(),
-    SizedBox(), // Placeholder for the bottom sheet
+    SizedBox(),
     ActivityScreen(),
     ProfileScreen(),
   ];

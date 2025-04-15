@@ -40,7 +40,7 @@ class ProductEntity {
     this.images,
     this.isActive,
     this.isSold,
-    this.bidders, // Added bidders in the constructor
+    this.bidders,
   });
 
   // Factory constructor to create ProductEntity from Firestore data
