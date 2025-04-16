@@ -18,7 +18,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 
-
 import '../homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import '../profile_views/wallet_screen.dart';
 import 'controller/livestreaming_controller.dart';
@@ -32,7 +31,8 @@ class LiveStreamingScreen extends StatefulWidget {
 
   LiveStreamingScreen({
     required this.channelId,
-    required this.isAdmin, required this.uid,
+    required this.isAdmin,
+    required this.uid,
   });
 
   @override
@@ -57,6 +57,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
   bool isSubscribed = false;
   int subscriberCount = 0;
   String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? "";
+
   void checkSubscriptionStatus() async {
     DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('UserEntity')
@@ -89,6 +90,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
 
     checkSubscriptionStatus(); // Refresh the UI
   }
+
   void monitorDocument() {
     documentStream = FirebaseFirestore.instance
         .collection('livestreams')
@@ -102,14 +104,16 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
       }
     });
   }
+
   Future<void> captureAndStoreSnapshot() async {
     try {
       // Get a temporary directory to store the snapshot locally.
       final directory = await getTemporaryDirectory();
-      final filePath = '${directory.path}/snapshot_${DateTime.now().millisecondsSinceEpoch}.png';
+      final filePath =
+          '${directory.path}/snapshot_${DateTime.now().millisecondsSinceEpoch}.png';
 
       // Capture the snapshot from Agora's engine (assumes uid 0 for admin's stream).
-      await _controller.agoraEngine?.takeSnapshot(uid: 0  , filePath: filePath);
+      await _controller.agoraEngine?.takeSnapshot(uid: 0, filePath: filePath);
 
       print("Snapshot requested at $filePath");
 
@@ -133,7 +137,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
       final storageRef = FirebaseStorage.instance
           .ref()
           .child('live_screenshots')
-          .child('${widget.channelId}_${DateTime.now().millisecondsSinceEpoch}.png');
+          .child(
+              '${widget.channelId}_${DateTime.now().millisecondsSinceEpoch}.png');
 
       await storageRef.putFile(snapshotFile);
       final downloadUrl = await storageRef.getDownloadURL();
@@ -149,7 +154,6 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
       print("Error capturing or uploading snapshot: $e");
     }
   }
-
 
   void redirectToHomePage() {
     // Navigate to the homepage
@@ -260,15 +264,16 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
         .dispose(); // Dispose of the controller to prevent memory leaks
     super.dispose();
   }
-  Timer? snapshotTimer;
 
+  Timer? snapshotTimer;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkUserDetails();
       monitorDocument();
-      _controller.initializeAgora(widget.channelId, widget.uid, widget.isAdmin, adminUid ?? 0);
+      _controller.initializeAgora(
+          widget.channelId, widget.uid, widget.isAdmin, adminUid ?? 0);
       initializeFirestore(widget.channelId);
     });
     checkSubscriptionStatus(); // Refresh the UI
@@ -282,7 +287,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
     }
     captureAndStoreSnapshot();
 
-  //  WakelockPlus.enable();
+    //  WakelockPlus.enable();
     ever(_controller.comments, (_) {
       // Scroll to the bottom when a new comment is added
       Future.delayed(Duration(milliseconds: 100), () {
@@ -358,7 +363,6 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
         'adminName': data?['adminName'] ?? 'Unknown',
         'adminFirebaseId': data?['adminFirebaseId'] ?? 'Unknown',
         'adminPhoto': data?['adminPhoto'] ??
-
             'https://via.placeholder.com/150', // Default image
       };
     } else {
@@ -378,7 +382,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
           await _controller.leaveStream();
           _controller.deleteLiveStream(widget.channelId);
         } else {
-          await _controller.leaveStreamUser(widget.channelId, widget.uid.toString());
+          await _controller.leaveStreamUser(
+              widget.channelId, widget.uid.toString());
         }
         Get.offAll(() => BottomNavigationBarWidget());
         return false;
@@ -391,43 +396,36 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
               Positioned.fill(
                 child: _controller.isJoined.value
                     ? Stack(
-                  children: [
-                    // Center(child: Text(adminUid.toString())),
+                        children: [
+                          // Center(child: Text(adminUid.toString())),
 
-                    (widget.isAdmin)
-                        ? AgoraVideoView(
-                      controller: VideoViewController(
-                        rtcEngine: _controller.agoraEngine!,
-                        canvas: const VideoCanvas(uid: 0),
-                      ),
-                    )
-                        : AgoraVideoView(
-                      controller: VideoViewController.remote(
-                        rtcEngine: _controller.agoraEngine!,
-                        canvas: VideoCanvas(
-                            uid:
-                            adminUid), // Replace with remote user UID
-                        connection: RtcConnection(
-                            channelId: widget.channelId),
-                      ),
-                    )
-                  ],
-                )
+                          (widget.isAdmin)
+                              ? AgoraVideoView(
+                                  controller: VideoViewController(
+                                    rtcEngine: _controller.agoraEngine!,
+                                    canvas: const VideoCanvas(uid: 0),
+                                  ),
+                                )
+                              : AgoraVideoView(
+                                  controller: VideoViewController.remote(
+                                    rtcEngine: _controller.agoraEngine!,
+                                    canvas: VideoCanvas(
+                                        uid:
+                                            adminUid), // Replace with remote user UID
+                                    connection: RtcConnection(
+                                        channelId: widget.channelId),
+                                  ),
+                                )
+                        ],
+                      )
                     : const Center(),
               ),
 
               // Top Streamer Info
               if (widget.isAdmin || cohostUid == widget.uid)
-
                 Positioned(
-                  right: MediaQuery
-                      .of(context)
-                      .size
-                      .width * 0.015,
-                  bottom: MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.2,
+                  right: MediaQuery.of(context).size.width * 0.015,
+                  bottom: MediaQuery.of(context).size.height * 0.2,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -457,8 +455,8 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                       GestureDetector(
                         onTap: () {
                           // WidgetsBinding.instance.addPostFrameCallback((_) {
-                          showUserProductsBottomSheet(context, widget.channelId);
-
+                          showUserProductsBottomSheet(
+                              context, widget.channelId);
 
                           // });
                         },
@@ -472,10 +470,10 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                               height: 60,
                             ),
                             const SizedBox(height: 5),
-                             Text(
+                            Text(
                               'Shop'.tr,
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 12),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
                             ),
                           ],
                         ),
@@ -506,10 +504,10 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                               height: 60,
                             ),
                             const SizedBox(height: 5),
-                             Text(
+                            Text(
                               'Boost'.tr,
                               style:
-                              TextStyle(color: Colors.white, fontSize: 12),
+                                  TextStyle(color: Colors.white, fontSize: 12),
                             ),
                           ],
                         ),
@@ -535,11 +533,11 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                       //     ],
                       //   ),
                       // ),
-                   //   const SizedBox(height: 20),
+                      //   const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () {
                           // Handle 'Wallet' tap
-                          Get.to(()=>WalletScreen());
+                          Get.to(() => WalletScreen());
                         },
                         child: Column(
                           children: [
@@ -549,32 +547,25 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
                               height: 60,
                             ),
                             const SizedBox(height: 5),
-                             Text(
+                            Text(
                               'Wallet'.tr,
                               style:
-                              TextStyle(color: Colors.white, fontSize: 12),
+                                  TextStyle(color: Colors.white, fontSize: 12),
                             ),
                           ],
                         ),
                       ),
-SizedBox(height: 50,)
+                      SizedBox(
+                        height: 50,
+                      )
                     ],
                   ),
                 ),
 
               Positioned(
-                top: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.02,
-                left: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.02,
-                right: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.02,
+                top: MediaQuery.of(context).size.height * 0.02,
+                left: MediaQuery.of(context).size.width * 0.02,
+                right: MediaQuery.of(context).size.width * 0.02,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -585,28 +576,28 @@ SizedBox(height: 50,)
                             ConnectionState.waiting) {
                           return const SizedBox.shrink();
                         } else if (snapshot.hasError || !snapshot.hasData) {
-                          return  Text('Error loading admin details'.tr,
+                          return Text('Error loading admin details'.tr,
                               style: TextStyle(color: Colors.red));
                         }
 
                         final adminName = snapshot.data!['adminName']!;
                         final adminPhoto = snapshot.data!['adminPhoto']!;
-                        final adminFirebaseId = snapshot.data!['adminFirebaseId']!;
-
+                        final adminFirebaseId =
+                            snapshot.data!['adminFirebaseId']!;
 
                         return Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            // color: Colors.black.withOpacity(0.6),
-                            //   borderRadius: BorderRadius.circular(30),
-                          ),
+                              // color: Colors.black.withOpacity(0.6),
+                              //   borderRadius: BorderRadius.circular(30),
+                              ),
                           child: Row(
                             children: [
                               GestureDetector(
-                                onTap : (){
-                                  Get.to(()=>UserProfile(userId: adminFirebaseId));
-
+                                onTap: () {
+                                  Get.to(() =>
+                                      UserProfile(userId: adminFirebaseId));
                                 },
                                 child: CircleAvatar(
                                   backgroundImage: NetworkImage(adminPhoto),
@@ -638,7 +629,9 @@ SizedBox(height: 50,)
                                               fontSize: 18)),
                                       const SizedBox(width: 6),
                                       GestureDetector(
-                                        onTap : (){toggleSubscription();},
+                                        onTap: () {
+                                          toggleSubscription();
+                                        },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 6, vertical: 2),
@@ -646,21 +639,21 @@ SizedBox(height: 50,)
                                             // Replace 'color' with a gradient
                                             gradient: const LinearGradient(
                                               colors: [
-                                                Color(
-                                                    0xFF3A8EF2),
+                                                Color(0xFF3A8EF2),
                                                 // Starting color (blueish)
-                                                Color(
-                                                    0xFFD53F8C),
+                                                Color(0xFFD53F8C),
                                                 // Ending color (pink/purpleish)
                                               ],
                                               begin: Alignment.centerLeft,
                                               end: Alignment.centerRight,
                                             ),
                                             borderRadius:
-                                            BorderRadius.circular(15),
+                                                BorderRadius.circular(15),
                                           ),
-                                          child:  Text(
-                                                                isSubscribed ? "Unsubscribe" : "Subscribe",
+                                          child: Text(
+                                            isSubscribed
+                                                ? "Unsubscribe"
+                                                : "Subscribe",
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 14,
@@ -707,7 +700,7 @@ SizedBox(height: 50,)
                                   }
 
                                   final data = snapshot.data?.data()
-                                  as Map<String, dynamic>?;
+                                      as Map<String, dynamic>?;
                                   final viewsCount = data?['viewsCount'] ?? 0;
 
                                   return Text(
@@ -750,91 +743,91 @@ SizedBox(height: 50,)
               Positioned(
                 bottom: Get.height * .01,
                 left: 10,
-                right:  Get.width * .18,
+                right: Get.width * .18,
                 child: Obx(() {
                   return Column(
-crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       Container(
                         height: 220,
-                       // padding:  EdgeInsets.only(right:),
+                        // padding:  EdgeInsets.only(right:),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: _controller.comments.isNotEmpty
                             ? ListView.builder(
-                          controller:
-                          _scrollController, // Attach the scroll controller
-                          itemCount: _controller.comments.length,
-                          itemBuilder: (context, index) {
-                            final comment = _controller.comments[index];
-                            return Container(
-                              decoration: BoxDecoration(
-                                  color:
-                                  (comment['message'].contains('Set Bid')
-                                      ? Colors.purple
-                                      : Colors.transparent)),
-                              child: Padding(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 8),
-                                child: Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
-                                  children: [
-                                    // Profile Picture
-                                    CircleAvatar(
-                                      backgroundImage:
-                                      NetworkImage(comment['photo']),
-                                      radius: 22,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    // Comment Bubble
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          comment['user'],
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
+                                controller:
+                                    _scrollController, // Attach the scroll controller
+                                itemCount: _controller.comments.length,
+                                itemBuilder: (context, index) {
+                                  final comment = _controller.comments[index];
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 2),
+                                    child: Container(
+                                      decoration: BoxDecoration(),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 4),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            // Profile Picture
+                                            CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                  comment['photo']),
+                                              radius: 22,
+                                            ),
+                                            const SizedBox(width: 10),
+                                            // Comment Bubble
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  comment['user'],
+                                                  style: TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  comment['message'],
+                                                  style: TextStyle(
+                                                    fontSize: 18.r,
+                                                    fontWeight: (comment[
+                                                                'message']
+                                                            .contains('Set Bid')
+                                                        ? FontWeight.bold
+                                                        : FontWeight.normal),
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          comment['message'],
-                                          style: TextStyle(
-                                            fontSize: 18.r,
-                                            fontWeight: (comment['message']
-                                                .contains('Set Bid')
-                                                ? FontWeight.bold
-                                                : FontWeight.normal),
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        )
+                                  );
+                                },
+                              )
                             : const Center(),
                       ),
                       ChatInputField(
                         chatController: _controller.chatController,
                         focusNode: _focusNode,
                         onSend: (message) {
-                          _controller.sendMessage(name, photo, widget.channelId);
+                          _controller.sendMessage(
+                              name, photo, widget.channelId);
                         },
                       ),
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: CurrentProductContainer(
-
                           channelId: widget.channelId,
                           name: name,
                           photo: photo,
@@ -845,7 +838,6 @@ crossAxisAlignment: CrossAxisAlignment.start,
                   );
                 }),
               ),
-
 
               // Bottom Controls
               // Positioned(
@@ -868,7 +860,6 @@ crossAxisAlignment: CrossAxisAlignment.start,
               //     photo: photo,
               //   ),
               // )
-
             ],
           );
         }),
@@ -876,91 +867,85 @@ crossAxisAlignment: CrossAxisAlignment.start,
     );
   }
 
-
-  Future<bool> _showExitConfirmationDialog(BuildContext context, bool isAdmin) async {
+  Future<bool> _showExitConfirmationDialog(
+      BuildContext context, bool isAdmin) async {
     return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius:
-            BorderRadius.circular(10), // Adjusted border radius
-          ),
-          backgroundColor:
-          HexColor('#2C2D2A'),
-          child: Padding(
-            padding: const EdgeInsets.only(
-                top: 40,
-                left: 20,
-                right: 20,
-                bottom: 40),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Do you want to end Live video?'.tr,
-
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                    Colors.blue, // Button color to match the image
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(15), // Match button style
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(10), // Adjusted border radius
+              ),
+              backgroundColor: HexColor('#2C2D2A'),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 40, left: 20, right: 20, bottom: 40),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Do you want to end Live video?'.tr,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 60, vertical: 10), // Adjust padding
-                  ),
-                  onPressed: () async {
-                    heartbeatTimer
-                        ?.cancel(); // Cancel the timer when the widget is disposed
-                    await _controller.leaveStream();
-                    if (isAdmin) {
-                      _controller.deleteLiveStream(widget.channelId);
-                    } else {
-                      _controller.leaveStreamUser(
-                          widget.channelId, widget.uid.toString());
-                    }
-                  },
-                  child: Text(
-                    'Yes'.tr, // Button text
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18, // Adjust font size
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Colors.blue, // Button color to match the image
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(15), // Match button style
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 60, vertical: 10), // Adjust padding
+                      ),
+                      onPressed: () async {
+                        heartbeatTimer
+                            ?.cancel(); // Cancel the timer when the widget is disposed
+                        await _controller.leaveStream();
+                        if (isAdmin) {
+                          _controller.deleteLiveStream(widget.channelId);
+                        } else {
+                          _controller.leaveStreamUser(
+                              widget.channelId, widget.uid.toString());
+                        }
+                      },
+                      child: Text(
+                        'Yes'.tr, // Button text
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18, // Adjust font size
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text(
-                    'No'.tr, // Button text
-                    style: TextStyle(
-                      color: Colors.white, // Match text color
-                      fontSize: 18, // Adjust font size
+                    const SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text(
+                        'No'.tr, // Button text
+                        style: TextStyle(
+                          color: Colors.white, // Match text color
+                          fontSize: 18, // Adjust font size
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        );
-      },
-    ) ??
+              ),
+            );
+          },
+        ) ??
         false;
   }
-
 
   void shareLiveStream(String channelId) {
     // Use a web-based URL instead of a custom scheme
@@ -972,7 +957,6 @@ crossAxisAlignment: CrossAxisAlignment.start,
       subject: 'Live Stream Invitation',
     );
   }
-
 
   void startHeartbeat() {
     heartbeatTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
@@ -993,6 +977,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
       }
     });
   }
+
   Future<bool> requestCameraAndMicrophonePermissions() async {
     // Request camera permission
     var cameraStatus = await Permission.camera.request();
@@ -1006,9 +991,10 @@ crossAxisAlignment: CrossAxisAlignment.start,
       return false;
     }
   }
+
   Future<void> _unsubscribeUser(String userId, String currentUserId) async {
-    DocumentReference userDoc = FirebaseFirestore.instance.collection(
-        'UserEntity').doc(userId);
+    DocumentReference userDoc =
+        FirebaseFirestore.instance.collection('UserEntity').doc(userId);
 
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -1016,8 +1002,8 @@ crossAxisAlignment: CrossAxisAlignment.start,
 
         if (!snapshot.exists) return;
 
-        Map<String, dynamic>? userData = snapshot.data() as Map<String,
-            dynamic>?;
+        Map<String, dynamic>? userData =
+            snapshot.data() as Map<String, dynamic>?;
 
         List<dynamic> subscribersList = userData?['subscribers'] != null
             ? List<dynamic>.from(userData?['subscribers'])
@@ -1043,8 +1029,8 @@ crossAxisAlignment: CrossAxisAlignment.start,
 
   /// **Function to handle subscription logic**
   Future<void> _subscribeUser(String userId, String currentUserId) async {
-    DocumentReference userDoc = FirebaseFirestore.instance.collection(
-        'UserEntity').doc(userId);
+    DocumentReference userDoc =
+        FirebaseFirestore.instance.collection('UserEntity').doc(userId);
 
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -1052,8 +1038,8 @@ crossAxisAlignment: CrossAxisAlignment.start,
 
         if (!snapshot.exists) return;
 
-        Map<String, dynamic>? userData = snapshot.data() as Map<String,
-            dynamic>?;
+        Map<String, dynamic>? userData =
+            snapshot.data() as Map<String, dynamic>?;
 
         List<dynamic> subscribersList = userData?['subscribers'] != null
             ? List<dynamic>.from(userData?['subscribers'])
@@ -1076,7 +1062,4 @@ crossAxisAlignment: CrossAxisAlignment.start,
           colorText: Colors.white);
     }
   }
-
 }
-
-

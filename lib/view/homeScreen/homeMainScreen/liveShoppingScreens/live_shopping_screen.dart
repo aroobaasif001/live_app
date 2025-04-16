@@ -48,9 +48,8 @@ class LiveShoppingScreen extends StatelessWidget {
                                 "icon": 'assets/icons/reward.png',
                                 "text": "Reward",
                                 "onTap": () {
-                                   Get.back();
+                                  Get.back();
                                   showSendRewardBottomSheet(context);
-                                 
                                 }
                               },
                               {
@@ -293,7 +292,12 @@ class LiveShoppingScreen extends StatelessWidget {
                   children: [
                     Text("Delivery & Payment",
                         style: TextStyle(color: Colors.white70, fontSize: 12)),
-                         CustomText(text: '1000',fontFamily: 'Gilroy-Bold',fontSize: 18,color: Colors.white,)
+                    CustomText(
+                      text: '1000',
+                      fontFamily: 'Gilroy-Bold',
+                      fontSize: 18,
+                      color: Colors.white,
+                    )
                   ],
                 ),
                 SizedBox(height: 10),
