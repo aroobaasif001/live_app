@@ -284,6 +284,7 @@ class _WalletScreenState extends State<WalletScreen>
 
   void _showWithdrawBottomSheet() {
     showModalBottomSheet(
+      backgroundColor: Colors.white,
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -329,9 +330,19 @@ class _WalletScreenState extends State<WalletScreen>
                 ),
                 child: Row(
                   children: [
-                    Image.asset("assets/icons/iPhone 13 mini - 47.png",height: 50,),
-                    SizedBox(width: 10,),
+                    Image.asset(
+                      "assets/icons/iPhone 13 mini - 47.png",
+                      height: 50,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Text("MIR **2882"),
+                    Spacer(),
+                    Icon(
+                      Icons.keyboard_arrow_down_outlined,
+                      size: 22,
+                    ),
                   ],
                 ),
               ),
@@ -553,7 +564,10 @@ class _WalletScreenState extends State<WalletScreen>
               const SizedBox(height: 16),
 
               // Success Icon
-              Image.asset("assets/icons/success icon.png",height: 60,),
+              Image.asset(
+                "assets/icons/success icon.png",
+                height: 60,
+              ),
               const SizedBox(height: 16),
 
               // Amount Withdrawn
@@ -574,14 +588,14 @@ class _WalletScreenState extends State<WalletScreen>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ).createShader(bounds),
-                child:  Text(
+                child: Text(
                   "Will appear on your\naccount soon!",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.white, // Overridden by the gradient mask
                   ),
-                  textAlign:TextAlign.center ,
+                  textAlign: TextAlign.center,
                 ),
               ),
 
