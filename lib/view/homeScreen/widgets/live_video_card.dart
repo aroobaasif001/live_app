@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
+import 'package:live_app/utils/colors.dart';
 import '../../../custom_widgets/custom_text.dart';
 
 class LiveVideoCard extends StatelessWidget {
@@ -66,8 +67,11 @@ class LiveVideoCard extends StatelessWidget {
         ),
         // Live video container.
         CustomContainer(
-          height: MediaQuery.of(context).size.height * 0.2,
+          height: MediaQuery.of(context).size.height * 0.3,
           width: double.infinity,
+          border: Border.all(color: purpleColor1,
+          width: 4
+          ),
           borderRadius: BorderRadius.circular(10),
           image: DecorationImage(
             image: NetworkImage(imageUrl),
@@ -135,7 +139,7 @@ class LiveVideoCard extends StatelessWidget {
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xff2a2a2a),
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],

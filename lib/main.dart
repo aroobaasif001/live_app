@@ -161,6 +161,206 @@
 //   }
 // }
 
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:get/get.dart';
+// import 'package:live_app/services/notification_service.dart';
+// import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
+// import 'package:live_app/view/auth/socials_login_screen.dart';
+// import 'package:live_app/view/market/tabs/payment_screen.dart';
+// import 'firebase_options.dart';
+// import 'translate/translations_app.dart';
+// import 'utils/store_services.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_app_check/firebase_app_check.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:device_preview/device_preview.dart';
+// import 'package:live_app/translate/controller/translations_controller.dart';
+
+// @pragma('vm:entry-point')
+// Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
+//   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+// }
+
+// Future<void> main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
+
+//   bool isLoggedIn = await StorageService.isLoggedIn();
+//   try {
+//     await Firebase.initializeApp(
+//       options: DefaultFirebaseOptions.currentPlatform,
+//     );
+
+//     await FirebaseAppCheck.instance.activate(
+//       androidProvider: AndroidProvider.debug,
+//       appleProvider: AppleProvider.deviceCheck,
+//       webProvider: ReCaptchaV3Provider('PASTE_YOUR_RECAPTCHA_SITE_KEY_HERE'),
+//     );
+
+//     debugPrint("Firebase initialized successfully.");
+//   } catch (e) {
+//     debugPrint("Firebase Initialization Error: $e");
+//   }
+
+//   Get.put(TranslationsController());
+
+//   runApp(DevicePreview(
+//     enabled: !kReleaseMode,
+//     builder: (context) => MyApp(isLoggedIn: isLoggedIn),
+//   ));
+// }
+
+// class MyApp extends StatelessWidget {
+//   final bool? isLoggedIn;
+
+//   const MyApp({super.key, this.isLoggedIn});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ScreenUtilInit(
+//       designSize: const Size(430, 900),
+//       minTextAdapt: true,
+//       splitScreenMode: true,
+//       builder: (_, child) {
+//         return GetMaterialApp(
+//           debugShowCheckedModeBanner: false,
+//           title: 'Live App',
+
+//           home: FutureBuilder(
+//             future: _checkIfUserIsBlocked(),
+//             builder: (context, snapshot) {
+//               if (snapshot.connectionState == ConnectionState.waiting) {
+//                 return Center(child: CircularProgressIndicator());
+//               } else if (snapshot.hasError) {
+//                 return SocialsLoginScreen(); // Handle any error scenario
+//               } else if (snapshot.hasData && snapshot.data == true) {
+//                 return BlockedScreen(); // If blocked, navigate to BlockedScreen
+//               } else {
+//                 return (isLoggedIn ?? false)
+//                     ? BottomNavigationBarWidget()
+//                     : SocialsLoginScreen();
+//               }
+//             },
+//           ),
+          
+
+//           translations: TranslationsApp(),
+//           locale: Get.deviceLocale ?? const Locale('en'),
+//           fallbackLocale: const Locale('en'),
+//         );
+//       },
+//     );
+//   }
+// }
+
+// class StartupWrapper extends StatefulWidget {
+//   final bool isLoggedIn;
+//   const StartupWrapper({super.key, required this.isLoggedIn});
+
+//   @override
+//   State<StartupWrapper> createState() => _StartupWrapperState();
+// }
+
+// class _StartupWrapperState extends State<StartupWrapper> {
+//   late Future<bool> _isBlocked;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _isBlocked = _checkIfUserIsBlocked();
+//     NotificationService().requestNotificationPermission();
+//     NotificationService().firebaseInit(context);
+//     NotificationService().setupInteractMessage(context);
+//   }
+
+//   Future<bool> _checkIfUserIsBlocked() async {
+//     if (widget.isLoggedIn) {
+//       try {
+//         final userDoc = await FirebaseFirestore.instance
+//             .collection('UserEntity')
+//             .doc(FirebaseAuth.instance.currentUser!.uid)
+//             .get();
+
+//         if (userDoc.exists) {
+//           final userData = userDoc.data();
+//           return userData?['isBlocked'] ?? false;
+//         }
+//       } catch (e) {
+//         debugPrint("Error checking user blocked status: $e");
+//       }
+//     }
+//     return false;
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return FutureBuilder<bool>(
+//       future: _isBlocked,
+//       builder: (context, snapshot) {
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return const Center(child: CircularProgressIndicator());
+//         } else if (snapshot.hasError) {
+//           return  SocialsLoginScreen();
+//         } else if (snapshot.data == true) {
+//           return const BlockedScreen();
+//         } else {
+//           return widget.isLoggedIn
+//               ?  BottomNavigationBarWidget()
+//               :  SocialsLoginScreen();
+//         }
+//       },
+//     );
+//   }
+// }
+
+// class BlockedScreen extends StatelessWidget {
+//   const BlockedScreen({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Blocked'),
+//         centerTitle: true,
+//         backgroundColor: Colors.red,
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             const Icon(Icons.block, size: 80, color: Colors.red),
+//             const SizedBox(height: 20),
+//             const Text(
+//               'Your account has been blocked by the admin.',
+//               style: TextStyle(fontSize: 20, color: Colors.red),
+//               textAlign: TextAlign.center,
+//             ),
+//             const SizedBox(height: 10),
+//             const Text(
+//               'Please contact support for more details.',
+//               style: TextStyle(fontSize: 16, color: Colors.grey),
+//               textAlign: TextAlign.center,
+//             ),
+//             const SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () => SystemNavigator.pop(),
+//               child: const Text('Exit'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -170,7 +370,7 @@ import 'package:get/get.dart';
 import 'package:live_app/services/notification_service.dart';
 import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
-import 'package:live_app/view/market/tabs/payment_screen.dart';
+import 'package:live_app/view/profile_views/statistic_screen.dart';
 import 'firebase_options.dart';
 import 'translate/translations_app.dart';
 import 'utils/store_services.dart';
@@ -191,6 +391,7 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
 
   bool isLoggedIn = await StorageService.isLoggedIn();
+
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -230,25 +431,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Live App',
-
-          home: FutureBuilder(
-            future: _checkIfUserIsBlocked(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return SocialsLoginScreen(); // Handle any error scenario
-              } else if (snapshot.hasData && snapshot.data == true) {
-                return BlockedScreen(); // If blocked, navigate to BlockedScreen
-              } else {
-                return (isLoggedIn ?? false)
-                    ? BottomNavigationBarWidget()
-                    : SocialsLoginScreen();
-              }
-            },
-          ),
-          
-
+          home: StartupWrapper(isLoggedIn: isLoggedIn ?? false),
           translations: TranslationsApp(),
           locale: Get.deviceLocale ?? const Locale('en'),
           fallbackLocale: const Locale('en'),

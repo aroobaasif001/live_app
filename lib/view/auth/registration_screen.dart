@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/custom_widgets/custom_textfield.dart';
+import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/auth/delivery_address_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -308,6 +309,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   SizedBox(height: 20),
                   DropdownButtonFormField<String>(
+                    
                     value: gender,
                     decoration: InputDecoration(
                       hintText: 'Select Gender',
@@ -315,7 +317,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
-                      fillColor: Colors.white,
+                      fillColor: Colors.grey[100],
                       filled: true,
                     ),
                     items: ['Male', 'Female', 'Other']
@@ -335,7 +337,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
-                      fillColor: Colors.white,
+                      fillColor: Colors.grey[100],
                       filled: true,
                     ),
                     items: ['Russia', 'USA', 'India']
@@ -347,26 +349,82 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     onChanged: (value) => setState(() => country = value),
                   ),
                   SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: isAgreedToTerms,
-                        onChanged: (value) =>
-                            setState(() => isAgreedToTerms = value!),
-                      ),
-                      Expanded(child: CustomText(text: 'Agree to terms')),
-                    ],
+
+                      Row(
+              children: [
+                buildGradientCheckbox(isAgreedToTerms, () {
+                  setState(() => isAgreedToTerms = !isAgreedToTerms);
+                }),
+                Expanded(
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(text: 'I agree to the '),
+                        TextSpan(
+                          text: 'Terms of Service',
+                          style: TextStyle(
+                           // decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            fontFamily: 'Gilroy-Medium'
+                          ),
+                        ),
+                        TextSpan(text: ' and confirm I have read the ',style:TextStyle(
+                           // decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            fontFamily: 'Gilroy-Medium'
+                          ), ),
+                        TextSpan(
+                          text: 'Privacy Policy',
+                          style: TextStyle(
+                            fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                            fontFamily: 'Gilroy-Medium'
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: isAbove18,
-                        onChanged: (value) =>
-                            setState(() => isAbove18 = value!),
-                      ),
-                      Expanded(child: CustomText(text: 'Confirm age')),
-                    ],
-                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                buildGradientCheckbox(isAbove18, () {
+                  setState(() => isAbove18 = !isAbove18);
+                }),
+                Expanded(
+                  child: Text('I confirm that I am over 18 years of age',style: TextStyle(
+                           // decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            fontFamily: 'Gilroy-Medium'
+                          ),),
+                ),
+              ],
+            ),
+                  // Row(
+                  //   children: [
+                  //     Checkbox(
+                  //       value: isAgreedToTerms,
+                  //       onChanged: (value) =>
+                  //           setState(() => isAgreedToTerms = value!),
+                  //     ),
+                  //     Expanded(child: CustomText(text: 'Agree to terms')),
+                  //   ],
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     Checkbox(
+                  //       value: isAbove18,
+                  //       onChanged: (value) =>
+                  //           setState(() => isAbove18 = value!),
+                  //     ),
+                  //     Expanded(child: CustomText(text: 'Confirm age')),
+                  //   ],
+                  // ),
                   SizedBox(height: 20),
                   CustomGradientButton(
                     text: 'Continue',
@@ -377,6 +435,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+
+ 
+
+    Widget buildGradientCheckbox(bool isSelected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 22,
+        height: 22,
+        margin: const EdgeInsets.only(right: 12),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white, // Outer ring is white
+        ),
+        child: isSelected
+            ? Center(
+                child: Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [blueLiteColor, purpleLiteColor,deepPurpleColor],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                ),
+              )
+            : null,
       ),
     );
   }

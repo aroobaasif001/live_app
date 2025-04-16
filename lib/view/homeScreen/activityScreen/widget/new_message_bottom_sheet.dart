@@ -234,12 +234,12 @@ Widget buildUserItem(BuildContext context, RegistrationEntity user) {
       fontSize: 12,
       color: textColor,
     ),
-    trailing: CustomText(
-      text: "4 d.",
-      fontWeight: FontWeight.w500,
-      fontFamily: 'Gilroy-Bold',
-      fontSize: 16,
-      color: textColor,
-    ),
+    // trailing: CustomText(
+    //   text: "4 d.",
+    //   fontWeight: FontWeight.w500,
+    //   fontFamily: 'Gilroy-Bold',
+    //   fontSize: 16,
+    //   color: textColor,
+    // ),
   );
 }

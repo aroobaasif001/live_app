@@ -24,7 +24,7 @@ class MessagesList extends StatelessWidget {
     }
 
     return Scaffold(
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('UserEntity').snapshots(),
         builder: (context, userSnapshot) {
@@ -110,40 +110,45 @@ class MessagesList extends StatelessWidget {
   }
 
   Widget buildUserItem(BuildContext context, RegistrationEntity user) {
-    return ListTile(
-      leading: Image.network(
-        user.image ?? applegImage,
-        height: 40,
-        width: 40,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Image.asset(applegImage, height: 40, width: 40),
-      ),
-      title: CustomText(
-        text: user.firstName ?? '',
-        fontWeight: FontWeight.w500,
-        fontFamily: 'Gilroy-Bold',
-        fontSize: 16,
-      ),
-      subtitle: CustomText(
-        text: "Tap to chat".tr,
-        fontWeight: FontWeight.w400,
-        fontFamily: 'Gilroy-Bold',
-        fontSize: 16,
-        color: Colors.grey,
-      ),
-      trailing: CustomText(
-        text: "4 d.",
-        fontWeight: FontWeight.w500,
-        fontFamily: 'Gilroy-Bold',
-        fontSize: 16,
-        color: Colors.grey,
-      ),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ChatScreen(receiver: user)),
-        );
-      },
+    return Column(
+      children: [
+        ListTile(
+          leading: Image.network(
+            user.image ?? applegImage,
+            height: 40,
+            width: 40,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Image.asset(applegImage, height: 40, width: 40),
+          ),
+          title: CustomText(
+            text: user.firstName ?? '',
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Gilroy-Bold',
+            fontSize: 16,
+          ),
+          subtitle: CustomText(
+            text: "Tap to chat".tr,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Gilroy-Bold',
+            fontSize: 16,
+            color: Colors.grey,
+          ),
+          trailing: CustomText(
+            text: "4 d.",
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Gilroy-Bold',
+            fontSize: 16,
+            color: Colors.grey,
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ChatScreen(receiver: user)),
+            );
+          },
+        ),
+        Divider(color: Color(0xffe2e2e2),),
+      ],
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:live_app/entities/product_entity.dart';
 import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
 import '../../../custom_widgets/custom_gradiant_tab_button.dart';
+import '../../../utils/images_path.dart';
 
 class PurchaseActivityScreen extends StatefulWidget {
   final String currentUserId;
@@ -238,56 +239,150 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
     );
   }
 
-  // Build the product card with title, description, price, and average rating.
-  Widget _buildProductCard(ProductEntity product) {
-    return Card(
-      color: Colors.grey[100],
-      margin: const EdgeInsets.symmetric(
-        vertical: 6,
-      ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 0,
-      child: Row(
-        children: [
-          ClipRRect(
-            child: Image.network(
-              (product.images != null &&
-                  product.images!.isNotEmpty &&
-                  product.images!.first.isNotEmpty)
-                  ? product.images!.first
-                  : '',
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-              const Icon(Icons.broken_image),
-            ),
+Widget _buildProductCard(ProductEntity product, {
+  String status = '',
+  bool isActive=true,
+  Color statusColor = Colors.purple,
+  int messageCount = 3,
+}) {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.1),
+          blurRadius: 6,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        Stack(
+          children: [
+        ClipRRect(
+  borderRadius: const BorderRadius.only(
+    topLeft: Radius.circular(12),
+    bottomLeft: Radius.circular(12),
+  ),
+  child: (product.images != null &&
+          product.images!.isNotEmpty &&
+          product.images!.first.isNotEmpty)
+      ? Image.network(
+          product.images!.first,
+          width: 140,
+          height: 140,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => Image.asset(
+            watchVerticalImage,
+            width: 140,
+            height: 140,
+            fit: BoxFit.cover,
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(product.title ?? "No title",
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Text(product.description ?? "No description"),
-                  Text(
-                    "${product.price ?? '0'} ₽",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 4),
-                  // The rating widget is built below.
-                  _buildRatingWidget(product),
-                ],
+        )
+      : Image.asset(
+          watchVerticalImage,
+          width: 140,
+          height: 140,
+          fit: BoxFit.cover,
+        ),
+),
+
+
+            // 🟢 Notification bubble (top-right corner)
+            Positioned(
+              top: 6,
+              right: 6,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    Image.asset('assets/images/Bookmark.png',height: 16,width: 16,),
+                  
+                    const SizedBox(width: 4),
+                    Text(
+                      '$messageCount',
+                      style: const TextStyle(fontSize: 12, color: Colors.black),
+                    ),
+                  ],
+                ),
               ),
             ),
+
+            // 🟣 Status label (bottom-left corner)
+            if (status.isNotEmpty)
+              Positioned(
+                bottom: 8,
+                left: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: statusColor,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text(
+                    status,
+                    style: const TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.storefront, size: 16, color: Colors.grey),
+                    const SizedBox(width: 4),
+                    Text(
+                      product.streamer ?? 'company_name',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    _buildRatingWidget(product),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  product.title ?? 'Product name',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  product.description ?? 'Description',
+                  style: const TextStyle(fontSize: 13, color: Colors.grey),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "${product.price ?? '0'} ₽",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
+
+
 
   // Helper method to build the rating widget for a given product.
   Widget _buildRatingWidget(ProductEntity product) {

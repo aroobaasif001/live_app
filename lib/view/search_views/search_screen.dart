@@ -36,31 +36,36 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 15),
+            
               // Search Bar
-              Container(
-                //height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: TextField(
-                  onTap: () {
-                    // Opens "SearchByApplication" screen
-                    Get.to(() => const SearchByProduct());
-                  },
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'search'.tr,
-                    prefixIcon: Icon(Icons.search, color: Colors.grey),
-                  ),
-                  textAlignVertical: TextAlignVertical.center, // Vertically center the text
-                ),
-              ),
-              const SizedBox(height: 12),
+              // Container(
+              //   //height: 40,
+              //   decoration: BoxDecoration(
+              //     color: Colors.white,
+              //     borderRadius: BorderRadius.circular(12),
+              //   ),
+              //   padding: const EdgeInsets.symmetric(horizontal: 12),
+              //   child: TextField(
+              //     onTap: () {
+              //       // Opens "SearchByApplication" screen
+              //       Get.to(() => const SearchByProduct());
+              //     },
+              //     decoration: InputDecoration(
+              //       border: InputBorder.none,
+              //       hintText: 'Search by application'.tr,
+              //       hintStyle: TextStyle(
+              //         fontWeight: FontWeight.w500,
+              //         fontFamily: 'Gilroy-Medium',
+              //       color: Colors.grey,
 
-              const SizedBox(height: 12),
+              //       ),
+              //       prefixIcon: Icon(Icons.search, color: Colors.grey),
+              //     ),
+              //     textAlignVertical:
+              //         TextAlignVertical.center, // Vertically center the text
+              //   ),
+              // ),
+          
               Expanded(
                 child: CategoriesTab(),
               ),
@@ -70,11 +75,5 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
-
-
-
 }
-
-
-
 
