@@ -1,5 +1,3 @@
-// live_video_card.dart
-
 import 'package:flutter/material.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/utils/colors.dart';
@@ -27,8 +25,6 @@ class LiveVideoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determine the URL to use. Use liveImage if it's not empty;
-    // otherwise, fallback to adminImage; if that is also empty, use a default network image.
     final String imageUrl = liveImage.isNotEmpty
         ? liveImage
         : adminImage.isNotEmpty
@@ -38,14 +34,12 @@ class LiveVideoCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Top row with admin avatar and name.
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
               CircleAvatar(
                 radius: 15,
-                // For admin avatar, if adminImage is empty, you may use an asset placeholder.
                 backgroundImage: adminImage.isNotEmpty
                     ? NetworkImage(adminImage)
                     : const AssetImage('assets/icons/apple1.png')
@@ -65,7 +59,6 @@ class LiveVideoCard extends StatelessWidget {
             ],
           ),
         ),
-        // Live video container.
         CustomContainer(
           height: MediaQuery.of(context).size.height * 0.3,
           width: double.infinity,
@@ -102,7 +95,6 @@ class LiveVideoCard extends StatelessWidget {
             ),
           ),
         ),
-        // Title and description area wrapped in Expanded.
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(8.0),

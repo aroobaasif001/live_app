@@ -258,65 +258,7 @@
 //   }
 // }
 
-// class StartupWrapper extends StatefulWidget {
-//   final bool isLoggedIn;
-//   const StartupWrapper({super.key, required this.isLoggedIn});
 
-//   @override
-//   State<StartupWrapper> createState() => _StartupWrapperState();
-// }
-
-// class _StartupWrapperState extends State<StartupWrapper> {
-//   late Future<bool> _isBlocked;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _isBlocked = _checkIfUserIsBlocked();
-//     NotificationService().requestNotificationPermission();
-//     NotificationService().firebaseInit(context);
-//     NotificationService().setupInteractMessage(context);
-//   }
-
-//   Future<bool> _checkIfUserIsBlocked() async {
-//     if (widget.isLoggedIn) {
-//       try {
-//         final userDoc = await FirebaseFirestore.instance
-//             .collection('UserEntity')
-//             .doc(FirebaseAuth.instance.currentUser!.uid)
-//             .get();
-
-//         if (userDoc.exists) {
-//           final userData = userDoc.data();
-//           return userData?['isBlocked'] ?? false;
-//         }
-//       } catch (e) {
-//         debugPrint("Error checking user blocked status: $e");
-//       }
-//     }
-//     return false;
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder<bool>(
-//       future: _isBlocked,
-//       builder: (context, snapshot) {
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return const Center(child: CircularProgressIndicator());
-//         } else if (snapshot.hasError) {
-//           return  SocialsLoginScreen();
-//         } else if (snapshot.data == true) {
-//           return const BlockedScreen();
-//         } else {
-//           return widget.isLoggedIn
-//               ?  BottomNavigationBarWidget()
-//               :  SocialsLoginScreen();
-//         }
-//       },
-//     );
-//   }
-// }
 
 // class BlockedScreen extends StatelessWidget {
 //   const BlockedScreen({super.key});
@@ -363,7 +305,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -381,15 +322,8 @@ import 'package:flutter/foundation.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:live_app/translate/controller/translations_controller.dart';
 
-@pragma('vm:entry-point')
-Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-}
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
-
   bool isLoggedIn = await StorageService.isLoggedIn();
 
   try {
@@ -403,9 +337,9 @@ Future<void> main() async {
       webProvider: ReCaptchaV3Provider('PASTE_YOUR_RECAPTCHA_SITE_KEY_HERE'),
     );
 
-    debugPrint("Firebase initialized successfully.");
+    debugPrint("  Firebase initialized successfully.");
   } catch (e) {
-    debugPrint("Firebase Initialization Error: $e");
+    debugPrint("  Firebase Initialization Error: $e");
   }
 
   Get.put(TranslationsController());
@@ -439,8 +373,74 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+
+  Future<bool> _checkIfUserIsBlocked() async {
+    if (isLoggedIn == true) {
+      try {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('UserEntity')
+            .doc(FirebaseAuth
+                .instance.currentUser!.uid) // Get the current user's UID
+            .get();
+
+        if (userDoc.exists) {
+          final userData = userDoc.data();
+          bool isBlocked = userData?['isBlocked'] ?? false;
+          return isBlocked;
+        }
+      } catch (e) {
+        debugPrint("Error checking user blocked status: $e");
+      }
+    }
+    return false; // Default to not blocked if no data or error occurs
+  }
 }
 
+// Blocked Screen: If the user is blocked, they will be shown this screen
+class BlockedScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Blocked'),
+        centerTitle: true,
+        backgroundColor: Colors.red,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.block,
+              size: 80,
+              color: Colors.red,
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Your account has been blocked by the admin.',
+              style: TextStyle(fontSize: 20, color: Colors.red),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Please contact support for more details.',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Close the app or navigate elsewhere
+                SystemNavigator.pop();
+              },
+              child: Text('Exit'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 class StartupWrapper extends StatefulWidget {
   final bool isLoggedIn;
   const StartupWrapper({super.key, required this.isLoggedIn});
@@ -490,53 +490,13 @@ class _StartupWrapperState extends State<StartupWrapper> {
         } else if (snapshot.hasError) {
           return  SocialsLoginScreen();
         } else if (snapshot.data == true) {
-          return const BlockedScreen();
+          return  BlockedScreen();
         } else {
           return widget.isLoggedIn
               ?  BottomNavigationBarWidget()
               :  SocialsLoginScreen();
         }
       },
-    );
-  }
-}
-
-class BlockedScreen extends StatelessWidget {
-  const BlockedScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Blocked'),
-        centerTitle: true,
-        backgroundColor: Colors.red,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.block, size: 80, color: Colors.red),
-            const SizedBox(height: 20),
-            const Text(
-              'Your account has been blocked by the admin.',
-              style: TextStyle(fontSize: 20, color: Colors.red),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Please contact support for more details.',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => SystemNavigator.pop(),
-              child: const Text('Exit'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -11,7 +11,7 @@ class GiftScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('No Gift Found')
+            Text('No Giftd Found')
           ],
         ),
       ),

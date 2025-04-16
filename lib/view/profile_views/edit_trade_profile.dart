@@ -206,7 +206,7 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -244,7 +244,6 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
           : SingleChildScrollView(
         child: Column(
           children: [
-            // Cover image (or placeholder) with profile avatar positioned over it.
             Stack(
               children: [
                 _buildCoverImage(),
@@ -259,16 +258,18 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
               ],
             ),
             const SizedBox(height: 16),
-            // Personal details container (UI remains as before)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
-                  CustomText(
-                    text: "personal_details".tr,
-                    fontFamily: "Gilroy-Bold",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: CustomText(
+                      text: "personal_details".tr,
+                      fontFamily: "Gilroy-Bold",
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   EditProfileTextField(
