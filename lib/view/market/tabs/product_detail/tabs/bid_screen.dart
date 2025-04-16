@@ -103,9 +103,11 @@ class _BidScreenState extends State<BidScreen> {
 
   void _showSuccessDialog(BuildContext context) {
     showDialog(
+
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor:Colors.white ,
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           content: Column(

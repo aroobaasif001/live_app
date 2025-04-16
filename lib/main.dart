@@ -70,7 +70,8 @@ class MyApp extends StatelessWidget {
                 return BlockedScreen(); // If blocked, navigate to BlockedScreen
               } else {
                 return (isLoggedIn ?? false)
-                    ? BottomNavigationBarWidget()
+                    // ? BottomNavigationBarWidget()
+              ? BidScreen()
                     : SocialsLoginScreen();
               }
             },

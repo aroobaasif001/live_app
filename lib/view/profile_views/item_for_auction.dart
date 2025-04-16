@@ -24,7 +24,7 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SafeArea(
@@ -133,7 +133,7 @@ class _ItemAuctionScreenState extends State<ItemAuctionScreen> {
         ),
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         elevation: 0,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
