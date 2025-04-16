@@ -41,9 +41,11 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
           buildCustomSwitchTile('streams_from_subscriptions'.tr, streamsFromSubscriptions, (val) {
             setState(() => streamsFromSubscriptions = val);
           }),
+          Divider(),
           buildCustomSwitchTile('streams_i_saved'.tr, streamsISaved, (val) {
             setState(() => streamsISaved = val);
           }),
+          Divider(),
           buildCustomSwitchTile('recommended_streams'.tr, recommendedStreams, (val) {
             setState(() => recommendedStreams = val);
           }),

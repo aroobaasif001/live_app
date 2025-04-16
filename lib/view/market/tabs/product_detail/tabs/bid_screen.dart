@@ -131,11 +131,11 @@ class _BidScreenState extends State<BidScreen> {
               SizedBox(height: 10),
               CustomText(
                 text: 'Bid 1000 ₽',
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
               GradientText('Successfully Placed',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                   colors: [blueLiteColor, purpleLiteColor, deepPurpleColor])
             ],
           ),

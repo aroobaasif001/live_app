@@ -8,12 +8,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../livestreaming/controller/livestreaming_controller.dart';
 
-void showBetBottomSheet(BuildContext context, double minimumBid , String name , String photo , String channelId , String prodId , ) {
+void showBetBottomSheet(
+  BuildContext context,
+  double minimumBid,
+  String name,
+  String photo,
+  String channelId,
+  String prodId,
+) {
   final TextEditingController bidController = TextEditingController();
   double bidAmount = 0;
 
   // Assign default values to avoid non-nullable error
-
 
   final LiveStreamController _controller = Get.put(LiveStreamController());
 
@@ -35,28 +41,51 @@ void showBetBottomSheet(BuildContext context, double minimumBid , String name , 
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CustomText(text: 'Place your bet', fontSize: 24,
-              fontWeight: FontWeight.w800,fontFamily: 'SF Pro Rounded',),
-
+            CustomText(
+              text: 'Place your bet',
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              fontFamily: 'SF Pro Rounded',
+            ),
             SizedBox(height: 10),
-            CustomText(text: 'You enter the maximum bet for participation (1 BOX) in the GREAT STREAM GAME 35.000 ₽ NINTENDO SWITCH, PLAYSTATION, XBOX) SWAP THE STACK. If you enter a maximum bid, we will automatically bid for you, up to that amount, when this auction goes live.', fontSize: 12,
-              fontWeight: FontWeight.w400,fontFamily: 'Gilroy-Bold',
+            CustomText(
+              text:
+                  'You enter the maximum bet for participation (1 BOX) in the GREAT STREAM GAME 35.000 ₽ NINTENDO SWITCH, PLAYSTATION, XBOX) SWAP THE STACK. If you enter a maximum bid, we will automatically bid for you, up to that amount, when this auction goes live.',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              fontFamily: 'Gilroy-Bold',
               color: Color(0xff2A2A2A),
-              textAlign: TextAlign.center,),
-
-            SizedBox(height: 10),
-            CustomText(text: 'Someone else will win at the moment for 100 ₽', fontSize: 12,
               textAlign: TextAlign.center,
-              fontWeight: FontWeight.w500,fontFamily: 'Gilroy-Bold',),
-
+            ),
+            SizedBox(height: 10),
+            CustomText(
+              text: 'Someone else will win at the moment for 100 ₽',
+              fontSize: 12,
+              textAlign: TextAlign.center,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Gilroy-Bold',
+            ),
             SizedBox(height: 10),
             Align(
               alignment: Alignment.centerLeft,
-              child: CustomText(text: 'Maximum bet', fontSize: 12,
+              child: CustomText(
+                text: 'Maximum bet',
+                fontSize: 12,
                 textAlign: TextAlign.center,
-                fontWeight: FontWeight.w500,fontFamily: 'Gilroy-Bold',),
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Gilroy-Bold',
+              ),
             ),
-
+            Align(
+              alignment: Alignment.centerLeft,
+              child: CustomText(
+                text: 'Enter a bit of at least 200 ₽',
+                fontSize: 12,
+                textAlign: TextAlign.center,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Gilroy-Bold',
+              ),
+            ),
             SizedBox(height: 5),
             TextField(
               controller: bidController,
@@ -66,7 +95,8 @@ void showBetBottomSheet(BuildContext context, double minimumBid , String name , 
                 hintText: "Enter a bet of at least $minimumBid ₽",
               ),
               onChanged: (value) {
-                bidAmount = double.tryParse(value) ?? 0.0; // Ensure it's a valid double or 0
+                bidAmount = double.tryParse(value) ??
+                    0.0; // Ensure it's a valid double or 0
               },
               onSubmitted: (value) {
                 // Handle logic when user finishes entering the bid
@@ -80,7 +110,6 @@ void showBetBottomSheet(BuildContext context, double minimumBid , String name , 
               },
             ),
             SizedBox(height: 15),
-
             CustomGradientButton(
               text: 'Place a bid',
               onPressed: () async {
@@ -93,7 +122,14 @@ void showBetBottomSheet(BuildContext context, double minimumBid , String name , 
                   );
                 } else {
                   // Get user information
-                  _controller.sendBidMessage(name, photo, channelId , 'Set Bid of $bidAmount' , bidAmount, prodId, FirebaseAuth.instance.currentUser!.uid); // Send the data
+                  _controller.sendBidMessage(
+                      name,
+                      photo,
+                      channelId,
+                      'Set Bid of $bidAmount',
+                      bidAmount,
+                      prodId,
+                      FirebaseAuth.instance.currentUser!.uid); // Send the data
 
                   Get.back();
                 }
@@ -101,7 +137,8 @@ void showBetBottomSheet(BuildContext context, double minimumBid , String name , 
             ),
             SizedBox(height: 10),
             CustomText(
-              text: 'Bids are final. You can increase them at any time, but you cannot decrease or cancel them.',
+              text:
+                  'Bids are final. You can increase them at any time, but you cannot decrease or cancel them.',
               fontSize: 12,
               textAlign: TextAlign.center,
               fontWeight: FontWeight.w500,
@@ -121,4 +158,3 @@ void showBetBottomSheet(BuildContext context, double minimumBid , String name , 
     },
   );
 }
-

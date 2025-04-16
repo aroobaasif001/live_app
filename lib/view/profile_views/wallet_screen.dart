@@ -7,7 +7,8 @@ class WalletScreen extends StatefulWidget {
   State<WalletScreen> createState() => _WalletScreenState();
 }
 
-class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderStateMixin {
+class _WalletScreenState extends State<WalletScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
 
@@ -92,10 +93,10 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
             borderRadius: BorderRadius.circular(12),
             gradient: isSelected
                 ? const LinearGradient(
-              colors: [Colors.blue, Colors.purpleAccent],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )
+                    colors: [Colors.blue, Colors.purpleAccent],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
                 : null,
             color: isSelected ? null : Colors.transparent,
           ),
@@ -141,12 +142,12 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
           const SizedBox(height: 16),
 
           _buildBalanceCard(
-            icon: Icons.account_balance_wallet_outlined,
+            iconImage: "assets/icons/withdraw icon.png",
             text: "100,000 ₽ available for withdrawal",
           ),
           const SizedBox(height: 8),
           _buildBalanceCard(
-            icon: Icons.access_time,
+            iconImage: "assets/icons/clock icon.png",
             text: "0 ₽ will be available soon",
           ),
           const SizedBox(height: 24),
@@ -194,7 +195,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
           shadowColor: Colors.transparent,
         ).copyWith(
           backgroundColor: MaterialStateProperty.resolveWith(
-                (states) => Colors.transparent,
+            (states) => Colors.transparent,
           ),
           elevation: MaterialStateProperty.resolveWith((states) => 0),
         ),
@@ -224,7 +225,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildBalanceCard({required IconData icon, required String text}) {
+  Widget _buildBalanceCard({required String iconImage, required String text}) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -234,7 +235,10 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.black54, size: 20),
+          Image.asset(
+            iconImage,
+            height: 20,
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
@@ -265,7 +269,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
               color: Colors.black,
             ),
           ),
-          const Text(
+          Text(
             "Output to MIR **2882",
             style: TextStyle(
               fontSize: 14,
@@ -277,7 +281,6 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
       ),
     );
   }
-
 
   void _showWithdrawBottomSheet() {
     showModalBottomSheet(
@@ -324,7 +327,13 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text("MIR **2882"),
+                child: Row(
+                  children: [
+                    Image.asset("assets/icons/iPhone 13 mini - 47.png",height: 50,),
+                    SizedBox(width: 10,),
+                    Text("MIR **2882"),
+                  ],
+                ),
               ),
 
               const SizedBox(height: 16),
@@ -340,9 +349,10 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                 decoration: InputDecoration(
                   hintText: "Enter an amount up to 100,000 ₽",
                   filled: true,
-                  fillColor: Colors.grey[100],
+                  fillColor: Colors.grey.shade300,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
@@ -370,7 +380,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                     shadowColor: Colors.transparent,
                   ).copyWith(
                     backgroundColor: MaterialStateProperty.resolveWith(
-                          (states) => Colors.transparent,
+                      (states) => Colors.transparent,
                     ),
                     elevation: MaterialStateProperty.resolveWith((states) => 0),
                   ),
@@ -543,15 +553,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
               const SizedBox(height: 16),
 
               // Success Icon
-              const CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.greenAccent,
-                child: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
+              Image.asset("assets/icons/success icon.png",height: 60,),
               const SizedBox(height: 16),
 
               // Amount Withdrawn
@@ -567,19 +569,19 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
 
               // Gradient Text (Pending Confirmation)
               ShaderMask(
-                shaderCallback: (bounds) =>
-                    const LinearGradient(
-                      colors: [Colors.blue, Colors.purpleAccent],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ).createShader(bounds),
-                child: const Text(
-                  "Will appear on your account soon!",
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [Colors.blue, Colors.purpleAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ).createShader(bounds),
+                child:  Text(
+                  "Will appear on your\naccount soon!",
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.white, // Overridden by the gradient mask
                   ),
+                  textAlign:TextAlign.center ,
                 ),
               ),
 
@@ -587,7 +589,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
 
               // Close Button with Gradient Background
               Container(
-                height: 70,
+                height: 80,
                 margin: const EdgeInsets.all(16),
                 child: ElevatedButton(
                   onPressed: () {
@@ -601,9 +603,8 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
                   ).copyWith(
-                    backgroundColor:
-                    MaterialStateProperty.resolveWith((states) =>
-                    Colors.transparent),
+                    backgroundColor: MaterialStateProperty.resolveWith(
+                        (states) => Colors.transparent),
                     elevation: MaterialStateProperty.resolveWith((states) => 0),
                   ),
                   child: Ink(
@@ -619,7 +620,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                       alignment: Alignment.center,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: const Text(
-                        "Ok",
+                        "Okay",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -745,7 +746,6 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
     //   );
     // }
 
-
     /// **📌 Withdraw Bottom Sheet**
     // void _showWithdrawBottomSheet() {
     //   showModalBottomSheet(
@@ -857,10 +857,8 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
     //     },
     //   );
     // }
-
   }
 }
-
 
 ///
 

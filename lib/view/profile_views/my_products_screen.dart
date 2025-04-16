@@ -30,9 +30,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey.shade100,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.grey.shade100,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
@@ -89,25 +89,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
 
               const SizedBox(height: 12),
 
-              // Search Bar
-              // Container(
-              //   height: 40,
-              //   decoration: BoxDecoration(
-              //     color: Colors.grey[200],
-              //     borderRadius: BorderRadius.circular(12),
-              //   ),
-              //   padding: const EdgeInsets.symmetric(horizontal: 12),
-              //   child: TextField(
-              //     decoration: InputDecoration(
-              //       border: InputBorder.none,
-              //       hintText: "search".tr,
-              //       prefixIcon: Icon(Icons.search, color: Colors.grey),
-              //     ),
-              //   ),
-              // ),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -133,10 +117,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                             },
                           )
                         : null,
-
                   ),
-                  textAlignVertical: TextAlignVertical.center, // Vertically center the text
-
+                  textAlignVertical:
+                      TextAlignVertical.center, // Vertically center the text
                 ),
               ),
 
@@ -163,11 +146,15 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
           child: Container(
             decoration: BoxDecoration(
               gradient: primaryGradientColor,
-              borderRadius: BorderRadius.circular(10),
+              shape: BoxShape.circle,
             ),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: const Icon(Icons.add, size: 28, color: Colors.white),
+              child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white,width: 2),
+                      shape: BoxShape.circle),
+                  child: Icon(Icons.add, size: 28, color: Colors.white)),
             ),
           ),
           tooltip: "create_product".tr,
@@ -232,11 +219,13 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         // Convert each doc into a ProductEntity
         List<ProductEntity> products = snapshot.data!.docs
             .map((doc) =>
-            ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
 
         // **Filter by current user ID**
-        products = products.where((p) => p.id == FirebaseAuth.instance.currentUser!.uid).toList();
+        products = products
+            .where((p) => p.id == FirebaseAuth.instance.currentUser!.uid)
+            .toList();
 
         // **Filter logic**
         if (filter == "Fix") {
@@ -255,8 +244,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         if (_searchQuery.isNotEmpty) {
           products = products
               .where((p) =>
-          (p.title?.toLowerCase().contains(_searchQuery) ?? false) ||
-              (p.description?.toLowerCase().contains(_searchQuery) ?? false))
+                  (p.title?.toLowerCase().contains(_searchQuery) ?? false) ||
+                  (p.description?.toLowerCase().contains(_searchQuery) ??
+                      false))
               .toList();
         }
 
@@ -268,19 +258,15 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
           itemCount: products.length,
           itemBuilder: (context, index) {
             return GestureDetector(
-                onTap: (){
-
+                onTap: () {
                   Get.to(() => ProductDetailScreen(product: products[index]));
-
                 },
-
                 child: buildProductItem(products[index]));
           },
         );
       },
     );
   }
-
 
   Widget buildProductItem(ProductEntity product) {
     return Padding(
@@ -309,22 +295,50 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
               Positioned(
                 top: 6,
                 left: 6,
-                child: CustomContainer(
-                  height: 20,
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  borderRadius: BorderRadius.circular(6),
-                  gradient: const LinearGradient(
-                    colors: [Colors.blue, Colors.pinkAccent],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  child: CustomText(
-                    text: product.saleType == "Auction"
-                        ? "auction".tr
-                        : "buy_now".tr,
-                    fontSize: 10,
+                child: Row(
+                  children: [
+                    CustomContainer(
+                      height: 20,
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      borderRadius: BorderRadius.circular(6),
+                      gradient: primaryGradientColor,
+                      child: CustomText(
+                        text: product.saleType == "Auction"
+                            ? "auction".tr
+                            : "buy_now".tr,
+                        fontSize: 10,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 6,
+                right: 6,
+                child: Container(
+                  height: 25,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/icons/Bell.png",
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        CustomText(text: "1"),
+                      ],
+                    ),
                   ),
                 ),
               ),

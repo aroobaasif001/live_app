@@ -5,8 +5,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:live_app/entities/notification_entity.dart';
-import 'package:live_app/services/send_notification_service.dart';
 import 'package:live_app/utils/colors.dart';
 import '../../../custom_widgets/custom_text.dart';
 import '../../../entities/message_model.dart';
@@ -57,87 +55,25 @@ bool _isSendingImage = false;
     }
   }
 
-  // void _sendMessage() {
-  //   String text = _messageController.text.trim();
-  //   if (text.isEmpty) return;
+  void _sendMessage() {
+    String text = _messageController.text.trim();
+    if (text.isEmpty) return;
 
-  //   MessageModel message = MessageModel(
-  //     senderId: currentUser!.uid,
-  //     receiverId: widget.receiver.regId!,
-  //     text: text,
-  //     imageUrl: null,
-  //     timestamp: Timestamp.now(),
-  //   );
-
-  //   FirebaseFirestore.instance.collection('messages').add({
-  //     ...message.toJson(),
-  //     "participants": [currentUser!.uid, widget.receiver.regId],
-  //   });
-
-  //   _messageController.clear();
-  // }
-
-
-
-  void _sendMessage() async {
-  String text = _messageController.text.trim();
-  if (text.isEmpty) return;
-
-  MessageModel message = MessageModel(
-    senderId: currentUser!.uid,
-    receiverId: widget.receiver.regId!,
-    text: text,
-    imageUrl: null,
-    timestamp: Timestamp.now(),
-  );
-
-  // 1. Save message
-  await FirebaseFirestore.instance.collection('messages').add({
-    ...message.toJson(),
-    "participants": [currentUser!.uid, widget.receiver.regId],
-  });
-
-  // 2. Save notification to Firestore
-  final userDoc = await FirebaseFirestore.instance
-    .collection('UserEntity')
-    .doc(currentUser!.uid)
-    .get();
-
-final userName = userDoc.data()?['firstName'] ?? 'Someone';
-  final notificationDoc = FirebaseFirestore.instance.collection('notifications').doc();
-  final notification = NotificationEntity(
-    id: notificationDoc.id,
-    title: "New message",
-    body: text,
-    receiverId: widget.receiver.regId!,
-    senderId: currentUser!.uid,
-    timestamp: DateTime.now(),
-    data: {
-      "screen": "chat",
-      "senderId": currentUser!.uid,
-    },
-  );
-  await notificationDoc.set(notification.toMap());
-
-  // 3. Fetch receiver's token and send push notification
-  final receiverDoc = await FirebaseFirestore.instance
-      .collection('UserEntity')
-      .doc(widget.receiver.regId)
-      .get();
-
-  final fcmToken = receiverDoc.data()?['fcmToken'];
-  if (fcmToken != null && fcmToken.toString().isNotEmpty) {
-    await SendNotificationService.sendNotificationUsingApi(
-      token: fcmToken,
-      title: notification.title,
-      body: notification.body,
-      data: notification.data,
+    MessageModel message = MessageModel(
+      senderId: currentUser!.uid,
+      receiverId: widget.receiver.regId!,
+      text: text,
+      imageUrl: null,
+      timestamp: Timestamp.now(),
     );
+
+    FirebaseFirestore.instance.collection('messages').add({
+      ...message.toJson(),
+      "participants": [currentUser!.uid, widget.receiver.regId],
+    });
+
+    _messageController.clear();
   }
-
-  _messageController.clear();
-}
-
 Future<void> _sendImageMessage() async {
   if (_selectedImage == null) return;
 
@@ -146,7 +82,6 @@ Future<void> _sendImageMessage() async {
   });
 
   try {
-    // Upload image to Firebase Storage
     String fileName =
         "${currentUser!.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
     Reference storageRef =
@@ -156,7 +91,6 @@ Future<void> _sendImageMessage() async {
     TaskSnapshot taskSnapshot = await uploadTask;
     String imageUrl = await taskSnapshot.ref.getDownloadURL();
 
-    // Save message to Firestore
     MessageModel message = MessageModel(
       senderId: currentUser!.uid,
       receiverId: widget.receiver.regId!,
@@ -169,39 +103,6 @@ Future<void> _sendImageMessage() async {
       ...message.toJson(),
       "participants": [currentUser!.uid, widget.receiver.regId],
     });
-
-    // Save notification to Firestore
-    final notificationDoc = FirebaseFirestore.instance.collection('notifications').doc();
-    final notification = NotificationEntity(
-      id: notificationDoc.id,
-      title: "Image",
-      body: "Image You Recieved",
-      receiverId: widget.receiver.regId!,
-      senderId: currentUser!.uid,
-      timestamp: DateTime.now(),
-      data: {
-        "screen": "chat",
-        "senderId": currentUser!.uid,
-        "imageUrl": imageUrl,
-      },
-    );
-    await notificationDoc.set(notification.toMap());
-
-    // Send notification to receiver
-    final receiverDoc = await FirebaseFirestore.instance
-        .collection('UserEntity')
-        .doc(widget.receiver.regId)
-        .get();
-
-    final fcmToken = receiverDoc.data()?['fcmToken'];
-    if (fcmToken != null && fcmToken.toString().isNotEmpty) {
-      await SendNotificationService.sendNotificationUsingApi(
-        token: fcmToken,
-        title: notification.title,
-        body: notification.body,
-        data: notification.data ?? {},
-      );
-    }
 
     setState(() {
       _selectedImage = null;
@@ -218,52 +119,35 @@ Future<void> _sendImageMessage() async {
   }
 }
 
-// Future<void> _sendImageMessage() async {
-//   if (_selectedImage == null) return;
+  // Future<void> _sendImageMessage() async {
+  //   if (_selectedImage == null) return;
 
-//   setState(() {
-//     _isSendingImage = true;
-//   });
+  //   String fileName =
+  //       "${currentUser!.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
+  //   Reference storageRef =
+  //       FirebaseStorage.instance.ref().child("chat_images/$fileName");
 
-//   try {
-//     String fileName =
-//         "${currentUser!.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
-//     Reference storageRef =
-//         FirebaseStorage.instance.ref().child("chat_images/$fileName");
+  //   UploadTask uploadTask = storageRef.putFile(_selectedImage!);
+  //   TaskSnapshot taskSnapshot = await uploadTask;
+  //   String imageUrl = await taskSnapshot.ref.getDownloadURL();
 
-//     UploadTask uploadTask = storageRef.putFile(_selectedImage!);
-//     TaskSnapshot taskSnapshot = await uploadTask;
-//     String imageUrl = await taskSnapshot.ref.getDownloadURL();
+  //   MessageModel message = MessageModel(
+  //     senderId: currentUser!.uid,
+  //     receiverId: widget.receiver.regId!,
+  //     text: "",
+  //     imageUrl: imageUrl,
+  //     timestamp: Timestamp.now(),
+  //   );
 
-//     MessageModel message = MessageModel(
-//       senderId: currentUser!.uid,
-//       receiverId: widget.receiver.regId!,
-//       text: "",
-//       imageUrl: imageUrl,
-//       timestamp: Timestamp.now(),
-//     );
+  //   FirebaseFirestore.instance.collection('messages').add({
+  //     ...message.toJson(),
+  //     "participants": [currentUser!.uid, widget.receiver.regId],
+  //   });
 
-//     await FirebaseFirestore.instance.collection('messages').add({
-//       ...message.toJson(),
-//       "participants": [currentUser!.uid, widget.receiver.regId],
-//     });
-
-//     setState(() {
-//       _selectedImage = null;
-//       _isSendingImage = false;
-//     });
-//   } catch (e) {
-//     print("Image upload error: $e");
-//     setState(() {
-//       _isSendingImage = false;
-//     });
-//     ScaffoldMessenger.of(context).showSnackBar(
-//       SnackBar(content: Text('Failed to send image')),
-//     );
-//   }
-// }
-
-  
+  //   setState(() {
+  //     _selectedImage = null;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -283,7 +167,11 @@ Future<void> _sendImageMessage() async {
                 text: widget.receiver.firstName ?? "", color: Colors.black),
           ],
         ),
-
+        // actions: [
+        //   IconButton(
+        //       icon: Icon(Icons.more_horiz, color: Colors.black),
+        //       onPressed: () {}),
+        // ],
       ),
       body: Column(
         children: [
@@ -304,9 +192,47 @@ Future<void> _sendImageMessage() async {
         ],
       ),
     );
-  } 
+  }
 final ScrollController _scrollController = ScrollController();
 
+  // Widget _buildMessagesList() {
+  //   return StreamBuilder<QuerySnapshot>(
+  //     stream: FirebaseFirestore.instance
+  //         .collection('messages')
+  //         .where('participants', arrayContains: currentUser!.uid)
+  //         .orderBy('timestamp',descending: true)
+  //         .snapshots(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return Center(child: CircularProgressIndicator());
+  //       }
+
+  //       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+  //         return Center(child: Text("No messages yet"));
+  //       }
+
+  //       List<MessageModel> messages = snapshot.data!.docs
+  //           .map((doc) =>
+  //               MessageModel.fromJson(doc.data() as Map<String, dynamic>))
+  //           .where((msg) =>
+  //               (msg.senderId == currentUser!.uid &&
+  //                   msg.receiverId == widget.receiver.regId) ||
+  //               (msg.senderId == widget.receiver.regId &&
+  //                   msg.receiverId == currentUser!.uid))
+  //           .toList();
+
+  //       return ListView.builder(
+  //        // reverse: true,
+  //        controller: _scrollController,
+  //         padding: EdgeInsets.all(16),
+  //         itemCount: messages.length,
+  //         itemBuilder: (context, index) {
+  //           return buildMessageItem(messages[index]);
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _buildMessagesList() {
   return StreamBuilder<QuerySnapshot>(

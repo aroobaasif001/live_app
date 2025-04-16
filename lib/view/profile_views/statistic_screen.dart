@@ -72,13 +72,13 @@ class _StatisticsScreenState extends State<StatisticsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text(
           'Statistics',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey.shade100,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
         bottom: TabBar(
@@ -113,7 +113,6 @@ class _StatisticsScreenState extends State<StatisticsScreen>
       padding: const EdgeInsets.all(16.0),
       child: ListView(
         children: [
-          // First card with Seller Analytics, date range, and "Change" button
           _buildCard(
             title: 'Seller Analytics',
             subtitle: dateRangeText,
@@ -268,12 +267,43 @@ class _StatisticsScreenState extends State<StatisticsScreen>
                   ],
                 ),
               ),
+              // PopupMenuButton<String>(
+              //   color: Colors.white,
+              //   onSelected: (String value) {
+              //     // Handle selection if needed
+              //   },
+              //   itemBuilder: (BuildContext context) {
+              //     return [
+              //       'Current Avg. Order Cost',
+              //       'Buyer Shares',
+              //       'Number of Buyers',
+              //       'Customer Recommendations',
+              //       'Subscribed',
+              //       'Number of Views',
+              //       'Max Viewers',
+              //       'Broadcast Time'
+              //     ].map(
+              //           (String choice) => PopupMenuItem<String>(
+              //         value: choice,
+              //         child: Text(choice),
+              //       ),
+              //     ).toList();
+              //   },
+              //   child: const Row(
+              //     children: [
+              //       Text('More', style: TextStyle(fontSize: 14)),
+              //       Icon(Icons.keyboard_arrow_down),
+              //     ],
+              //   ),
+              // ),
               PopupMenuButton<String>(
+                color: Colors.white,
                 onSelected: (String value) {
                   // Handle selection if needed
                 },
                 itemBuilder: (BuildContext context) {
-                  return [
+                  // Define the menu choices
+                  final List<String> choices = [
                     'Current Avg. Order Cost',
                     'Buyer Shares',
                     'Number of Buyers',
@@ -282,12 +312,25 @@ class _StatisticsScreenState extends State<StatisticsScreen>
                     'Number of Views',
                     'Max Viewers',
                     'Broadcast Time'
-                  ].map(
-                        (String choice) => PopupMenuItem<String>(
-                      value: choice,
-                      child: Text(choice),
-                    ),
-                  ).toList();
+                  ];
+
+                  // Build the list of PopupMenuEntry items
+                  List<PopupMenuEntry<String>> menuItems = [];
+
+                  for (int i = 0; i < choices.length; i++) {
+                    // Add the menu item
+                    menuItems.add(
+                      PopupMenuItem<String>(
+                        value: choices[i],
+                        child: Text(choices[i]),
+                      ),
+                    );
+
+                    if (i < choices.length - 1) {
+                      menuItems.add(const PopupMenuDivider());
+                    }
+                  }
+                  return menuItems;
                 },
                 child: const Row(
                   children: [
@@ -295,7 +338,8 @@ class _StatisticsScreenState extends State<StatisticsScreen>
                     Icon(Icons.keyboard_arrow_down),
                   ],
                 ),
-              ),
+              )
+
             ],
           ),
           const SizedBox(height: 16),
@@ -375,23 +419,26 @@ class _StatisticsScreenState extends State<StatisticsScreen>
             ),
           ],
         ),
-        child: ListTile(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
-            ],
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Info icon
-              Tooltip(
-                message: info ?? '',
-                child: const Icon(Icons.info_outline, color: Colors.blueAccent),
-              ),
-            ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: ListTile(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Info icon
+                Tooltip(
+                  message: info ?? '',
+                  child: const Icon(Icons.info_outline, color: Colors.blueAccent),
+                ),
+              ],
+            ),
           ),
         ),
       ),
