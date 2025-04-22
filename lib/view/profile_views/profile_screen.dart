@@ -11,6 +11,8 @@ import 'package:live_app/custom_widgets/custom_profile_background_scaffold.dart'
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
 import 'package:live_app/services/send_notification_service.dart';
+import 'package:live_app/termAndCondition/privacy_policy.dart';
+import 'package:live_app/termAndCondition/terms_and_condition.dart';
 import 'package:live_app/translate/controller/translations_controller.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/auth/delivery_address_screen.dart';
@@ -65,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> settingsOptions = [
       {
-        "icon": 'assets/icons/Card.png',
+        "icon": 'assets/icons/card.png',
         "title": "payment_delivery".tr,
         "onTap": () => Get.to(() => PaymentScreen()),
       },
@@ -265,12 +267,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       {
         "icon": 'assets/icons/Info Circle.png',
         "title": "privacy_policy".tr,
-        "screen": () => Get.to(() => SettingsScreen())
+        "screen": () => Get.to(() => PrivacyPolicy())
       },
       {
         "icon": 'assets/icons/File.png',
         "title": "terms_conditions".tr,
-        "screen": () => Get.to(() => SettingsScreen())
+        "screen": () => Get.to(() => TermsAndCondition())
       },
     ];
     final TranslationsController translationController =
