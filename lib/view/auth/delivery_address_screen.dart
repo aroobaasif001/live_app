@@ -134,7 +134,9 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                            isRequired: true,
                           controller: _countryController,
                           hintText: 'country'.tr,
+                          readOnly: true,
                           validator: (value) =>
+
                               value!.isEmpty ? 'enter_country'.tr : null,
                         ),
                         SizedBox(height: 20),
@@ -154,51 +156,115 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                               value!.isEmpty ? 'enter_street'.tr : null,
                         ),
                         SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CustomTextField(
-                                hintText: 'house'.tr,
-                                controller: _houseController,
-                                validator: (value) =>
-                                    value!.isEmpty ? 'required'.tr : null,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: CustomTextField(
-                                hintText: 'apartment'.tr,
-                                controller: _apartmentController,
-                                 validator: (value) =>
-                                    value!.isEmpty ? 'required'.tr : null,
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: CustomTextField(
+                        //         hintText: 'house'.tr,
+                        //         controller: _houseController,
+                        //         validator: (value) =>
+                        //             value!.isEmpty ? 'required'.tr : null,
+                        //       ),
+                        //     ),
+                        //     SizedBox(width: 10),
+                        //     Expanded(
+                        //       child: CustomTextField(
+                        //         hintText: 'apartment'.tr,
+                        //         controller: _apartmentController,
+                        //          validator: (value) =>
+                        //             value!.isEmpty ? 'required'.tr : null,
                            
                               
-                              ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // SizedBox(height: 20),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: CustomTextField(
+                        //         hintText: 'entrance'.tr,
+                        //         controller: _entranceController,
+                        //           validator: (value) =>
+                        //             value!.isEmpty ? 'enter_index'.tr : null,
+                        //       ),
+                        //     ),
+                        //     SizedBox(width: 10),
+                        //     Expanded(
+                        //       child: CustomTextField(
+                        //         hintText: 'index'.tr,
+                        //         controller: _indexController,
+                        //         validator: (value) =>
+                        //             value!.isEmpty ? 'enter_index'.tr : null,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+
+Row(
+  crossAxisAlignment: CrossAxisAlignment.start, // 👈 ensures alignment at top
+  children: [
+    Expanded(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 8), // consistent spacing
+        child: CustomTextField(
+          isRequired: true,
+          hintText: 'house'.tr,
+          controller: _houseController,
+          validator: (value) =>
+              value!.isEmpty ? 'enter_house'.tr : null,
+        ),
+      ),
+    ),
+    SizedBox(width: 10),
+    Expanded(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 8),
+        child: CustomTextField(
+          isRequired: true,
+          hintText: 'apartment'.tr,
+          controller: _apartmentController,
+          // validator: (value) =>
+          //     value!.isEmpty ? 'enter_apartment'.tr : null,
+        ),
+      ),
                             ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CustomTextField(
-                                hintText: 'entrance'.tr,
-                                controller: _entranceController,
-                                  validator: (value) =>
-                                    value!.isEmpty ? 'enter_index'.tr : null,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: CustomTextField(
-                                hintText: 'index'.tr,
-                                controller: _indexController,
-                                validator: (value) =>
-                                    value!.isEmpty ? 'enter_index'.tr : null,
-                              ),
-                            ),
-                          ],
-                        ),
+  ],
+),
+
+SizedBox(height: 20),
+Row(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Expanded(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 8),
+        child: CustomTextField(
+          isRequired: true,
+          hintText: 'entrance'.tr,
+          controller: _entranceController,
+          // validator: (value) =>
+          //     value!.isEmpty ? 'enter_entrance'.tr : null,
+        ),
+      ),
+    ),
+    SizedBox(width: 10),
+    Expanded(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 8),
+        child: CustomTextField(
+          isRequired: true,
+          hintText: 'index'.tr,
+          controller: _indexController,
+          validator: (value) =>
+              value!.isEmpty ? 'enter_index'.tr : null,
+        ),
+      ),
+    ),
+  ],
+),
+
                         SizedBox(height: 20),
                         // Center(
                         //   child: TextButton.icon(

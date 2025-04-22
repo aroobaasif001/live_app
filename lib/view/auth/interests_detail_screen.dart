@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
+import 'package:live_app/services/notification_service.dart';
 import 'package:live_app/view/auth/notification_screen.dart';
 
 class InterestsDetailScreen extends StatefulWidget {
@@ -84,14 +85,15 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
       String userId = FirebaseAuth.instance.currentUser!.uid;
 
       // **Update Firestore document**
+      NotificationService notificationService = NotificationService();
+      String? deviceToken = await notificationService.getDeviceToken();
       await RegistrationEntity.doc(userId: userId).update({
-        'detailedInterests': selectedDetailedInterests.toList(), // ✅ New field
+        'detailedInterests': selectedDetailedInterests.toList(),
+        'fcmToken': deviceToken, // ✅ New field
       });
 
       Get.snackbar("Success", "interests_updated".tr);
-      Get.offAll(()=>NotificationScreen());
-
-
+      Get.offAll(() => NotificationScreen());
     } catch (e) {
       Get.snackbar("Error", "${'update_failed'.tr} $e");
     }
@@ -103,14 +105,17 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
 
   /// **🚀 Skip and move forward without saving interests**
   void _skipAndContinue() {
-    Get.offAll(()=>NotificationScreen());
+    Get.offAll(() => NotificationScreen());
   }
 
   // Add a method to get the base category key
   String getBaseCategoryKey(String translatedCategory) {
-    if (translatedCategory == 'Обувь' || translatedCategory == 'Shoes') return 'shoes';
-    if (translatedCategory == 'Электроника' || translatedCategory == 'Electronics') return 'electronics';
-    if (translatedCategory == 'Красота' || translatedCategory == 'Beauty') return 'beauty';
+    if (translatedCategory == 'Обувь' || translatedCategory == 'Shoes')
+      return 'shoes';
+    if (translatedCategory == 'Электроника' ||
+        translatedCategory == 'Electronics') return 'electronics';
+    if (translatedCategory == 'Красота' || translatedCategory == 'Beauty')
+      return 'beauty';
     return translatedCategory;
   }
 
@@ -162,63 +167,68 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
               SizedBox(height: 20),
               Expanded(
                 child: ListView(
-                  children: widget.interests!
-                      .where((category) {
-                        String baseCategory = getBaseCategoryKey(category);
-                        return detailedInterestOptions.containsKey(baseCategory.tr);
-                      })
-                      .map((category) {
-                        String baseCategory = getBaseCategoryKey(category);
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomText(
-                              text: category,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            SizedBox(height: 10),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: detailedInterestOptions[baseCategory.tr]!
-                                  .map((item) {
-                                    final isSelected = selectedDetailedInterests.contains(item);
-                                    return ChoiceChip(
-                                      side: BorderSide(
-                                        color: Colors.white
-                                      ),
-                                      label: CustomText(
-                                        text: item.tr, // Translate the item text
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'SFProRounded',
-                                      ),
-                                      selected: isSelected,
-                                      onSelected: (selected) {
-                                        setState(() {
-                                          if (selected) {
-                                            selectedDetailedInterests.add(item);
-                                          } else {
-                                            selectedDetailedInterests.remove(item);
-                                          }
-                                        });
-                                      },
-                                      selectedColor: Colors.blueAccent.withOpacity(0.2),
-                                      backgroundColor: Color(0xff000000).withOpacity(0.03),
-                                    );
-                                  }).toList(),
-                            ),
-                            SizedBox(height: 20),
-                          ],
-                        );
-                      }).toList(),
+                  children: widget.interests!.where((category) {
+                    String baseCategory = getBaseCategoryKey(category);
+                    return detailedInterestOptions.containsKey(baseCategory.tr);
+                  }).map((category) {
+                    String baseCategory = getBaseCategoryKey(category);
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: category,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        SizedBox(height: 10),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: detailedInterestOptions[baseCategory.tr]!
+                              .map((item) {
+                            final isSelected =
+                                selectedDetailedInterests.contains(item);
+                            return ChoiceChip(
+                              side: BorderSide(color: Colors.white),
+                              label: CustomText(
+                                text: item.tr, // Translate the item text
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'SFProRounded',
+                              ),
+                              selected: isSelected,
+                              onSelected: (selected) {
+                                setState(() {
+                                  if (selected) {
+                                    selectedDetailedInterests.add(item);
+                                  } else {
+                                    selectedDetailedInterests.remove(item);
+                                  }
+                                });
+                              },
+                              selectedColor: Colors.blueAccent.withOpacity(0.2),
+                              backgroundColor:
+                                  Color(0xff000000).withOpacity(0.03),
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(height: 20),
+                      ],
+                    );
+                  }).toList(),
                 ),
               ),
+              // CustomGradientButton(
+              //   text: isLoading ? "updating".tr : "continue".tr,
+              //   onPressed: isLoading ? null : _updateUserInterests, // ✅ Save only if items are selected
+              // ),
               CustomGradientButton(
                 text: isLoading ? "updating".tr : "continue".tr,
-                onPressed: isLoading ? null : _updateUserInterests, // ✅ Save only if items are selected
+                onPressed: (selectedDetailedInterests.isEmpty || isLoading)
+                    ? null
+                    : _updateUserInterests, // 👈 disable when empty or loading
               ),
+
               SizedBox(height: 20),
             ],
           ),
@@ -227,4 +237,3 @@ class _InterestsDetailScreenState extends State<InterestsDetailScreen> {
     );
   }
 }
-

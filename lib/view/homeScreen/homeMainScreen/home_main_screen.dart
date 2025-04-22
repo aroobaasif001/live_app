@@ -10,11 +10,25 @@ import '../widgets/live_video_card.dart';
 import '../widgets/category_tab.dart';
 import 'notification_screen1.dart';
 
-class HomeMainScreen extends StatelessWidget {
-  final int notificationCount = 2;
-  final List<String> liveVideos = List.generate(6, (index) => "Live $index");
+class HomeMainScreen extends StatefulWidget {
 
   HomeMainScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeMainScreen> createState() => _HomeMainScreenState();
+}
+
+class _HomeMainScreenState extends State<HomeMainScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+    @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+  final int notificationCount = 2;
+
+  final List<String> liveVideos = List.generate(6, (index) => "Live $index");
 
   @override
   Widget build(BuildContext context) {
@@ -46,25 +60,26 @@ class HomeMainScreen extends StatelessWidget {
       padding: const EdgeInsets.all(12.0),
       child: Row(
         children: [
-          Expanded(
+         Expanded(
             child: Container(
-              //height: 40,
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(12),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: TextField(
-                onTap: () {
-                  // Opens "SearchByApplication" screen
-                  Get.to(() => const SearchByProduct());
+                controller: _searchController,
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value.toLowerCase().trim();
+                  });
                 },
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'search'.tr,
-                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
                 ),
-                textAlignVertical: TextAlignVertical.center, // Vertically center the text
+                textAlignVertical: TextAlignVertical.center,
               ),
             ),
           ),
@@ -116,7 +131,8 @@ class HomeMainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLiveVideos(BuildContext context) {
+
+Widget _buildLiveVideos(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('livestreams').snapshots(),
       builder: (context, snapshot) {
@@ -130,13 +146,26 @@ class HomeMainScreen extends StatelessWidget {
           return Center(child: Text('no_livestreams'.tr));
         }
 
-        final livestreamsData = snapshot.data!.docs;
+        final allData = snapshot.data!.docs;
+        final filtered = _searchQuery.isEmpty
+            ? allData
+            : allData.where((doc) {
+                final data = doc.data() as Map<String, dynamic>;
+                final title = data['title']?.toString().toLowerCase() ?? '';
+                final admin = data['adminName']?.toString().toLowerCase() ?? '';
+                return title.contains(_searchQuery) ||
+                    admin.contains(_searchQuery);
+              }).toList();
+
+        if (filtered.isEmpty) {
+          return Center(child: Text('no_matching_results'.tr));
+        }
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: LayoutBuilder(
             builder: (context, constraints) {
-              double screenWidth = constraints.maxWidth;
+              final screenWidth = constraints.maxWidth;
               return GridView.builder(
                 physics: const BouncingScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -145,33 +174,21 @@ class HomeMainScreen extends StatelessWidget {
                   mainAxisSpacing: 10,
                   mainAxisExtent: 360,
                 ),
-                itemCount: livestreamsData.length,
+                itemCount: filtered.length,
                 itemBuilder: (context, index) {
-                  final data =
-                  livestreamsData[index].data() as Map<String, dynamic>;
-                  final adminName =
-                      data['adminName'] as String? ?? 'Unknown';
-                  final adminImage =
-                      data['adminPhoto'] as String? ?? '';
-                  final viewsCount = data['viewsCount'] as int? ?? 0;
-                  final title = data['title'] as String? ?? '';
-                  final description = data['description'] as String? ?? '';
-                  final channelName = data['channelId'] as String? ?? '';
-                  final liveImage = data['liveImage'] as String? ?? '';
-                  final category = data['category'] ?? '';
-
+                  final data = filtered[index].data() as Map<String, dynamic>;
                   return GestureDetector(
                     onTap: () {
-                      joinLiveStreamingWithPrefs(channelName);
+                      joinLiveStreamingWithPrefs(data['channelId'] ?? '');
                     },
                     child: LiveVideoCard(
-                      adminName: adminName,
-                      adminImage: adminImage,
-                      viewsCount: viewsCount,
-                      title: title,
-                      description: description,
-                      liveImage: liveImage,
-                      category: category,
+                      adminName: data['adminName'] ?? '',
+                      adminImage: data['adminPhoto'] ?? '',
+                      viewsCount: data['viewsCount'] ?? 0,
+                      title: data['title'] ?? '',
+                      description: data['description'] ?? '',
+                      liveImage: data['liveImage'] ?? '',
+                      category: data['category'] ?? '',
                     ),
                   );
                 },
@@ -182,6 +199,73 @@ class HomeMainScreen extends StatelessWidget {
       },
     );
   }
+
+  // Widget _buildLiveVideos(BuildContext context) {
+  //   return StreamBuilder<QuerySnapshot>(
+  //     stream: FirebaseFirestore.instance.collection('livestreams').snapshots(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return const Center(child: CircularProgressIndicator());
+  //       }
+  //       if (snapshot.hasError) {
+  //         return Center(child: Text('Error: ${snapshot.error}'));
+  //       }
+  //       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+  //         return Center(child: Text('no_livestreams'.tr));
+  //       }
+
+  //       final livestreamsData = snapshot.data!.docs;
+
+  //       return Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 10),
+  //         child: LayoutBuilder(
+  //           builder: (context, constraints) {
+  //             double screenWidth = constraints.maxWidth;
+  //             return GridView.builder(
+  //               physics: const BouncingScrollPhysics(),
+  //               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //                 crossAxisCount: screenWidth > 600 ? 3 : 2,
+  //                 crossAxisSpacing: 10,
+  //                 mainAxisSpacing: 10,
+  //                 mainAxisExtent: 360,
+  //               ),
+  //               itemCount: livestreamsData.length,
+  //               itemBuilder: (context, index) {
+  //                 final data =
+  //                 livestreamsData[index].data() as Map<String, dynamic>;
+  //                 final adminName =
+  //                     data['adminName'] as String? ?? 'Unknown';
+  //                 final adminImage =
+  //                     data['adminPhoto'] as String? ?? '';
+  //                 final viewsCount = data['viewsCount'] as int? ?? 0;
+  //                 final title = data['title'] as String? ?? '';
+  //                 final description = data['description'] as String? ?? '';
+  //                 final channelName = data['channelId'] as String? ?? '';
+  //                 final liveImage = data['liveImage'] as String? ?? '';
+  //                 final category = data['category'] ?? '';
+
+  //                 return GestureDetector(
+  //                   onTap: () {
+  //                     joinLiveStreamingWithPrefs(channelName);
+  //                   },
+  //                   child: LiveVideoCard(
+  //                     adminName: adminName,
+  //                     adminImage: adminImage,
+  //                     viewsCount: viewsCount,
+  //                     title: title,
+  //                     description: description,
+  //                     liveImage: liveImage,
+  //                     category: category,
+  //                   ),
+  //                 );
+  //               },
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Future<void> joinLiveStreamingWithPrefs(String channelId) async {
     try {

@@ -10,19 +10,24 @@ import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_profile_background_scaffold.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
+import 'package:live_app/services/send_notification_service.dart';
 import 'package:live_app/translate/controller/translations_controller.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/auth/delivery_address_screen.dart';
 import 'package:live_app/view/auth/notification_screen.dart';
 import 'package:live_app/view/auth/socials_login_screen.dart';
+import 'package:live_app/view/homeScreen/paymentMethodScreen/reward_screen.dart';
 import 'package:live_app/view/market/tabs/payment_screen.dart';
 import 'package:live_app/view/profile_views/my_rewards_screen.dart';
 import 'package:live_app/view/profile_views/settings_screen.dart';
+import 'package:live_app/view/profile_views/sold_products_screen.dart';
 import 'package:live_app/view/profile_views/trade_profile_screen.dart';
 import '../../utils/icons_path.dart';
 import '../../utils/images_path.dart';
 import '../../utils/store_services.dart';
+import '../livestreaming/live_preview.dart';
 import '../livestreaming/live_streaming.dart';
+import '../livestreaming/livestreamingview_screen.dart';
 import 'notifications_settings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -38,8 +43,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? ChannelId;
   final TextEditingController _titleController = TextEditingController();
 
-  Stream<DocumentSnapshot<RegistrationEntity>> getCurrentUserData =
-      RegistrationEntity.doc(userId: FirebaseAuth.instance.currentUser!.uid)
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getCurrentUserData =
+      FirebaseFirestore.instance
+          .collection('UserEntity')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
           .snapshots();
 
   @override
@@ -57,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> settingsOptions = [
       {
-        "icon": 'assets/images/wallet icon.png',
+        "icon": 'assets/icons/Card.png',
         "title": "payment_delivery".tr,
         "screen": PaymentScreen()
       },
@@ -116,6 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ];
     final TranslationsController translationController =
         Get.find<TranslationsController>();
+
     return CustomProfileBackgroundScaffold(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -195,8 +203,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               CustomText(
                                 fontFamily: "SF Pro Rounded",
-                                text:
-                                    snapshot.data!.data()!.firstName.toString(),
+                                text: (snapshot.data!.data()?['firstName'] ?? 'User').toString(),
+                                 // snapshot.data!.data()!.firstName.toString(),
                                 fontWeight: FontWeight.w800,
                                 fontSize: 20,
                               ),
@@ -225,6 +233,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       GestureDetector(
                         onTap: () async {
+                          final userData = snapshot.data!.data()!;
+                          final userName = userData['firstName'] ?? 'User';
+                          final fcmToken = userData['fcmToken'] ?? '';
+
+                          await SendNotificationService
+                              .sendToAllUserEntityTokens(
+                               //  token: fcmToken,
+                                  title: '📢 $userName is Live!',
+                                  body: 'Join the live stream now.',
+
+                                  
+                                  data: {});
                           String title = _titleController.text.trim();
 
                           if (title.isEmpty) {
@@ -236,8 +256,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           try {
                             final liveStreamData = {
                               "title": title,
-                              "adminName":
-                                  snapshot.data!.data()!.firstName.toString(),
+                              "adminName":userName,
+                                  //snapshot.data!.data()!.firstName.toString(),
                               "adminPhoto":
                                   'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D',
                               "adminUid": uid,
@@ -540,40 +560,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           )),
                         ),
                       ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Center(
-                          child: CustomText(
-                        text: "v25.3.5(11)",
-                        fontWeight: FontWeight.w600,
-                      )),
-                      Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(width: 1, color: Colors.black),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Center(
-                                child: CustomText(
-                                  fontSize: 10,
-                                  text: "c",
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ),
-                          CustomText(
-                            text: " 2023 Whatnot, lnc.",
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ],
-                      )),
                       SizedBox(
                         height: 16,
                       ),

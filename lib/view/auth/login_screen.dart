@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/custom_widgets/custom_textfield.dart';
+import 'package:live_app/services/notification_service.dart';
 import 'package:live_app/view/auth/verification_screen.dart';
 import 'package:live_app/view/homeScreen/bottomNaviagtionBar/bottom_nav_bar.dart';
 
@@ -22,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isLoading = false;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// **🔥 Firebase Login Function**
   Future<void> _loginUser() async {
@@ -37,11 +40,24 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await FirebaseAuth.instance
           .setLanguageCode(Get.locale?.languageCode ?? "en");
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      // await FirebaseAuth.instance.signInWithEmailAndPassword(
+      //   email: _emailController.text.trim(),
+      //   password: _passwordController.text.trim(),
+      // );
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      String uid = userCredential.user!.uid;
+      NotificationService notificationService = NotificationService();
+      String? deviceToken = await notificationService.getDeviceToken();
 
+      if (deviceToken != null) {
+        await _firestore.collection("UserEntity").doc(uid).set({
+          'fcmToken': deviceToken,
+        }, SetOptions(merge: true));
+      }
       Get.snackbar("Success", "login_successful".tr);
       await StorageService.setLoggedIn(true);
       Get.to(() => BottomNavigationBarWidget());
@@ -102,7 +118,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
+                autovalidateMode: AutovalidateMode
+                    .onUserInteraction, // 👈 shows error on input
+                onChanged: (_) => setState(() {}), // 👈 updates on each change
               ),
+
+              // CustomTextField(
+              //   hintText: 'email'.tr,
+              //   controller: _emailController,
+              //   validator: (value) {
+              //     if (value == null || value.isEmpty) {
+              //       return 'enter_email'.tr;
+              //     }
+              //     if (!RegExp(
+              //             r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+              //         .hasMatch(value)) {
+              //       return 'invalid_email'.tr;
+              //     }
+              //     return null;
+              //   },
+              // ),
               SizedBox(height: 20),
               CustomTextField(
                 suffixIcon: IconButton(

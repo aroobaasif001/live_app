@@ -11,223 +11,7 @@ import '../custom_widgets/custom_text.dart';
 import '../utils/colors.dart';
 import '../utils/images_path.dart';
 
-// class CategoriesTab extends StatefulWidget {
-//   @override
-//   _CategoriesTabState createState() => _CategoriesTabState();
-// }
 
-// class _CategoriesTabState extends State<CategoriesTab> {
-//   List<String> categories = [];
-//   List<String> filteredCategories = [];
-//   int selectedTabIndex = 0;
-
-//   @override
-//   void dispose() {
-//     // Restore normal rotation when leaving the screen
-//     SystemChrome.setPreferredOrientations([
-//       DeviceOrientation.portraitUp,
-//       DeviceOrientation.portraitDown,
-//       DeviceOrientation.landscapeLeft,
-//       DeviceOrientation.landscapeRight,
-//     ]);
-
-//     super.dispose();
-//   }
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     fetchCategories();
-//     SystemChrome.setPreferredOrientations([
-//       DeviceOrientation.portraitUp,
-//     ]);
-//   }
-
-//   Future<void> fetchCategories() async {
-//     try {
-//       var userDoc = await FirebaseFirestore.instance
-//           .collection("UserEntity")
-//           .doc(FirebaseAuth
-//               .instance.currentUser!.uid) // Use dynamic user ID here
-//           .get();
-
-//       if (userDoc.exists) {
-//         var interests = userDoc.data()?['interests'] ?? [];
-//         if (interests is List) {
-//           setState(() {
-//             categories = List<String>.from(interests);
-//             applyFilter(0); // Default filter (Recommended)
-//           });
-//         }
-//       }
-//     } catch (e) {
-//       print("Error fetching interests: $e");
-//     }
-//   }
-
-//   void applyFilter(int index) {
-//     setState(() {
-//       selectedTabIndex = index;
-//       if (index == 0) {
-//         // Recommended: Pick random items (for now)
-//         filteredCategories = categories..shuffle();
-//       } else if (index == 1) {
-//         // Popular: Simulate popularity filter
-//         filteredCategories = categories..shuffle();
-//       } else {
-//         // A-Z: Sort alphabetically
-//         filteredCategories = List.from(categories)..sort();
-//       }
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return _buildCategoriesTab();
-//   }
-
-//   Widget _buildCategoriesTab() {
-//     return SingleChildScrollView(
-//       physics: const BouncingScrollPhysics(),
-//       child: DefaultTabController(
-//         length: 3,
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             CustomText(
-//               text: "search_by_category".tr,
-//               fontSize: 18,
-//               fontWeight: FontWeight.w800,
-//             ),
-//             const SizedBox(height: 8),
-//             ButtonsTabBar(
-//               unselectedBackgroundColor: Colors.white,
-//               borderWidth: 0,
-//               unselectedBorderColor: Colors.transparent,
-//               borderColor: Colors.transparent,
-//               contentPadding: const EdgeInsets.symmetric(
-//                 horizontal: 16,
-//                 vertical: 10,
-//               ),
-//               labelStyle: const TextStyle(
-//                 color: Colors.white,
-//                 fontWeight: FontWeight.bold,
-//                 fontSize: 14,
-//               ),
-//               unselectedLabelStyle: const TextStyle(
-//                 color: Colors.black,
-//                 fontWeight: FontWeight.bold,
-//                 fontSize: 14,
-//               ),
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(12),
-//                 gradient: primaryGradientColor,
-//               ),
-//               tabs: [
-//                 Tab(text: "recommended".tr),
-//                 Tab(text: "popular".tr),
-//                 Tab(text: "a_z".tr),
-//               ],
-//               onTap: applyFilter, // Apply filter on tab change
-//             ),
-//             SizedBox(
-//               height: 500,
-//               child: _buildCategoryList(),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildCategoryList() {
-//     return filteredCategories.isEmpty
-//         ? const Center(
-//             child: CircularProgressIndicator()) // Show loading indicator
-//         : ListView.builder(
-//             physics: const NeverScrollableScrollPhysics(),
-//             shrinkWrap: true,
-//             itemCount: filteredCategories.length,
-//             itemBuilder: (context, index) {
-//               return GestureDetector(
-//                 onTap: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                       builder: (context) =>
-//                           ProductsPage(category: filteredCategories[index]),
-//                     ),
-//                   );
-//                 },
-//                 child: Padding(
-//                   padding: const EdgeInsets.symmetric(vertical: 5),
-//                   child: Container(
-//                     height: 95,
-//                     decoration: BoxDecoration(
-//                       borderRadius: BorderRadius.circular(10),
-//                       gradient: primaryGradientColor,
-//                     ),
-//                     child: Row(
-//                       children: [
-//                         Expanded(
-//                           child: Row(
-//                             children: [
-//                               Image.asset(
-//                                 watchVerticalImage,
-//                                 fit: BoxFit.cover,
-//                               ),
-//                               const SizedBox(width: 10),
-//                               Column(
-//                                 mainAxisAlignment: MainAxisAlignment.center,
-//                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                 children: [
-//                                   CustomText(
-//                                     text: filteredCategories[index],
-//                                     fontSize: 18,
-//                                     fontWeight: FontWeight.w400,
-//                                     color: const Color(0xffFFFFFF),
-//                                   ),
-//                                   SizedBox(height: 10),
-//                                   Row(
-//                                     children: [
-//                                       Image.asset(
-//                                         'assets/images/wave.png',
-//                                         height: 20,
-//                                       ),
-//                                       SizedBox(
-//                                         width: 40,
-//                                       ),
-//                                       CustomText(
-//                                         text: '1.3k',
-//                                         fontSize: 18,
-//                                         fontWeight: FontWeight.w400,
-//                                         color: const Color(0xffFFFFFF),
-//                                       ),
-//                                     ],
-//                                   )
-//                                 ],
-//                               ),
-//                               const Spacer(),
-//                               const Padding(
-//                                 padding: EdgeInsets.only(right: 10),
-//                                 child: Icon(
-//                                   Icons.arrow_forward_ios_outlined,
-//                                   color: Colors.white,
-//                                   size: 15,
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               );
-//             },
-//           );
-//   }
-// }
 
 class CategoriesTab extends StatefulWidget {
   @override
@@ -290,223 +74,76 @@ class _CategoriesTabState extends State<CategoriesTab> {
     }
   }
 
-  void applyFilter(int index) {
-    setState(() {
-      selectedTabIndex = index;
+  // void applyFilter(int index) {
+  //   setState(() {
+  //     selectedTabIndex = index;
 
-      if (index == 0) {
-        filteredCategories = List.from(categories)..shuffle();
-      } else if (index == 1) {
-        filteredCategories = List.from(categories)..shuffle();
-      } else {
-        filteredCategories = List.from(categories)..sort();
-      }
+  //     if (index == 0) {
+  //       filteredCategories = List.from(categories)..shuffle();
+  //     } else if (index == 1) {
+  //       filteredCategories = List.from(categories)..shuffle();
+  //     } else {
+  //       filteredCategories = List.from(categories)..sort();
+  //     }
 
-      _filterSearch(_searchController.text); // Re-apply search after filtering
-    });
-  }
-
-void _filterSearch(String query) {
-  if (query.isEmpty) {
-    setState(() {
-      filteredCategories = List.from(categories);
-    });
-    return;
-  }
-
-  final lowercaseQuery = query.toLowerCase();
+  //     _filterSearch(_searchController.text); // Re-apply search after filtering
+  //   });
+  // }
+void applyFilter(int index) {
   setState(() {
-    filteredCategories = categories.where((category) {
-      return category.toLowerCase().contains(lowercaseQuery);
-    }).toList();
+    selectedTabIndex = index;
+
+    if (index == 0) {
+      // 🟢 Recommended: Shuffle (random order)
+      filteredCategories = List.from(categories)..shuffle();
+    } else if (index == 1) {
+      // 🔴 Popular: Reverse order (simulate most viewed)
+      filteredCategories = List.from(categories.reversed);
+    } else {
+      // 🔵 A-Z: Alphabetical sort
+      filteredCategories = List.from(categories)..sort((a, b) => a.compareTo(b));
+    }
+
+    // 🔁 Apply search filter again to current list
+    _filterSearch(_searchController.text);
   });
 }
 
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return _buildCategoriesTab();
-  // }
+void _filterSearch(String query) {
+  final lowerQuery = query.toLowerCase();
 
-  // Widget _buildCategoriesTab() {
-  //   return SingleChildScrollView(
-  //     physics: const BouncingScrollPhysics(),
-  //     child: DefaultTabController(
-  //       length: 3,
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           const SizedBox(height: 8),
-  //           // Search Field
-  //           Container(
-  //             decoration: BoxDecoration(
-  //               color: Colors.white,
-  //               borderRadius: BorderRadius.circular(12),
-  //             ),
-  //             margin: const EdgeInsets.symmetric(vertical: 10),
-  //             padding: const EdgeInsets.symmetric(horizontal: 12),
-  //             child: TextField(
-  //               controller: _searchController,
-  //               onChanged: _filterSearch,
-  //               decoration: InputDecoration(
-  //                 border: InputBorder.none,
-  //                 hintText: 'Search category',
-  //                 hintStyle: const TextStyle(
-  //                   fontWeight: FontWeight.w500,
-  //                   fontFamily: 'Gilroy-Medium',
-  //                   color: Colors.grey,
-  //                 ),
-  //                 prefixIcon: const Icon(Icons.search, color: Colors.grey),
-  //               ),
-  //             ),
-  //           ),
+  List<String> baseList;
+  if (selectedTabIndex == 0) {
+    baseList = List.from(categories)..shuffle();
+  } else if (selectedTabIndex == 1) {
+    baseList = List.from(categories.reversed);
+  } else {
+    baseList = List.from(categories)..sort();
+  }
 
-  //           CustomText(
-  //             text: "search_by_category".tr,
-  //             fontSize: 18,
-  //             fontWeight: FontWeight.w800,
-  //           ),
-  //           const SizedBox(height: 8),
-  //           ButtonsTabBar(
-  //             unselectedBackgroundColor: Colors.white,
-  //             borderWidth: 0,
-  //             unselectedBorderColor: Colors.transparent,
-  //             borderColor: Colors.transparent,
-  //             contentPadding:
-  //                 const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-  //             labelStyle: const TextStyle(
-  //               color: Colors.white,
-  //               fontWeight: FontWeight.bold,
-  //               fontSize: 14,
-  //             ),
-  //             unselectedLabelStyle: const TextStyle(
-  //               color: Colors.black,
-  //               fontWeight: FontWeight.bold,
-  //               fontSize: 14,
-  //             ),
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(12),
-  //               gradient: primaryGradientColor,
-  //             ),
-  //             tabs: [
-  //               Tab(text: "recommended".tr),
-  //               Tab(text: "popular".tr),
-  //               Tab(text: "a_z".tr),
-  //             ],
-  //             onTap: applyFilter,
-  //           ),
-  //           SizedBox(
-  //             height: 500,
-  //             child: _buildCategoryList(),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+  setState(() {
+    filteredCategories = baseList.where((cat) => cat.toLowerCase().contains(lowerQuery)).toList();
+  });
+}
 
-  // Widget _buildCategoryList() {
-  //   return filteredCategories.isEmpty
-  //       ? const Center(child: CircularProgressIndicator())
-  //       : ListView.builder(
-  //           physics: const NeverScrollableScrollPhysics(),
-  //           shrinkWrap: true,
-  //           itemCount: filteredCategories.length,
-  //           itemBuilder: (context, index) {
-  //             final category = filteredCategories[index];
-  //             final imageUrl = categoryImages[category];
+// void _filterSearch(String query) {
+//   if (query.isEmpty) {
+//     setState(() {
+//       filteredCategories = List.from(categories);
+//     });
+//     return;
+//   }
 
-  //             return GestureDetector(
-  //               onTap: () {
-  //                 Navigator.push(
-  //                   context,
-  //                   MaterialPageRoute(
-  //                     builder: (context) => ProductsPage(category: category),
-  //                   ),
-  //                 );
-  //               },
-  //               child: Padding(
-  //                 padding: const EdgeInsets.symmetric(vertical: 5),
-  //                 child: Container(
-  //                   height: 95,
-  //                   decoration: BoxDecoration(
-  //                     borderRadius: BorderRadius.circular(10),
-  //                     gradient: primaryGradientColor,
-  //                   ),
-  //                   child: Row(
-  //                     children: [
-  //                       Expanded(
-  //                         child: Row(
-  //                           children: [
-  //                             // Product image or fallback
-  //                             ClipRRect(
-  //                               borderRadius: const BorderRadius.only(
-  //                                 topLeft: Radius.circular(10),
-  //                                 bottomLeft: Radius.circular(10),
-  //                               ),
-  //                               child: imageUrl != null
-  //                                   ? Image.network(
-  //                                       imageUrl,
-  //                                       width: 100,
-  //                                       height: 95,
-  //                                       fit: BoxFit.cover,
-  //                                     )
-  //                                   : Image.asset(
-  //                                       watchVerticalImage,
-  //                                       width: 100,
-  //                                       height: 95,
-  //                                       fit: BoxFit.cover,
-  //                                     ),
-  //                             ),
-  //                             const SizedBox(width: 10),
-  //                             Column(
-  //                               mainAxisAlignment: MainAxisAlignment.center,
-  //                               crossAxisAlignment: CrossAxisAlignment.start,
-  //                               children: [
-  //                                 CustomText(
-  //                                   text: category,
-  //                                   fontSize: 18,
-  //                                   fontWeight: FontWeight.w400,
-  //                                   color: const Color(0xffFFFFFF),
-  //                                 ),
-  //                                 const SizedBox(height: 10),
-  //                                 Row(
-  //                                   children: [
-  //                                     Image.asset(
-  //                                       'assets/images/wave.png',
-  //                                       height: 20,
-  //                                     ),
-  //                                     const SizedBox(width: 40),
-  //                                     const CustomText(
-  //                                       text: '1.3k',
-  //                                       fontSize: 18,
-  //                                       fontWeight: FontWeight.w400,
-  //                                       color: Color(0xffFFFFFF),
-  //                                     ),
-  //                                   ],
-  //                                 )
-  //                               ],
-  //                             ),
-  //                             const Spacer(),
-  //                             const Padding(
-  //                               padding: EdgeInsets.only(right: 10),
-  //                               child: Icon(
-  //                                 Icons.arrow_forward_ios_outlined,
-  //                                 color: Colors.white,
-  //                                 size: 15,
-  //                               ),
-  //                             ),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ),
-  //             );
-  //           },
-  //         );
-  // }
+//   final lowercaseQuery = query.toLowerCase();
+//   setState(() {
+//     filteredCategories = categories.where((category) {
+//       return category.toLowerCase().contains(lowercaseQuery);
+//     }).toList();
+//   });
+// }
+
+
   @override
 Widget build(BuildContext context) {
   return DefaultTabController(

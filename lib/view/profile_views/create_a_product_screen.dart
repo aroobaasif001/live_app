@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,7 +61,42 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
   String title1 = '';
   String? titleError;
+  // Future<void> _saveProduct() async {
+  //   // Upload images
+  //   List<String> imageUrls = await FirebaseService.uploadImages(selectedImages);
+
+  //   // Create the product object
+  //   ProductEntity newProduct = ProductEntity(
+  //     id: FirebaseAuth.instance.currentUser!.uid,
+  //     category: selectedCategory ?? "unknown".tr,
+  //     title: title,
+  //     description: description,
+  //     // Convert quantity to string
+  //     quantity: quantity.toString(),
+  //     saleType: isAuction ? "Auction" : "Buy Now",
+  //     startingBid: startingBid,
+  //     price: price,
+  //     selfDestruct: selfDestruct,
+  //     isActive: true,
+  //     isSold: false,
+  //     liveOnly: liveOnly,
+  //     streamer: selectedStreamer,
+  //     delivery: selectedDelivery,
+  //     images: imageUrls,
+  //   );
+
+  //   // Save product to Firestore
+  //   await FirebaseService.saveProduct(newProduct);
+
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(content: Text("product_created".tr)),
+  //   );
+
+  //   Navigator.pop(context);
+  // }
+
   Future<void> _saveProduct() async {
+  try {
     // Upload images
     List<String> imageUrls = await FirebaseService.uploadImages(selectedImages);
 
@@ -68,13 +104,12 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     ProductEntity newProduct = ProductEntity(
       id: FirebaseAuth.instance.currentUser!.uid,
       category: selectedCategory ?? "unknown".tr,
-      title: title,
-      description: description,
-      // Convert quantity to string
+      title: title1.trim(), // ← Use the validated title
+      description: description.trim(),
       quantity: quantity.toString(),
       saleType: isAuction ? "Auction" : "Buy Now",
-      startingBid: startingBid,
-      price: price,
+      startingBid: isAuction ? startingBid : null,
+      price: !isAuction ? price : null,
       selfDestruct: selfDestruct,
       isActive: true,
       isSold: false,
@@ -84,7 +119,6 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       images: imageUrls,
     );
 
-    // Save product to Firestore
     await FirebaseService.saveProduct(newProduct);
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -92,7 +126,15 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     );
 
     Navigator.pop(context);
+  } catch (e, stack) {
+    print("🔥 Error saving product: $e");
+    print(stack);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Failed to create product: $e")),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -427,42 +469,74 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                 ),
               ),
 
+              // const SizedBox(height: 16),
+
+              // /// Starting Bid or Price
+              // if (isAuction)
+              //   TextField(
+              //     decoration: InputDecoration(
+              //       border: InputBorder.none,
+              //       enabledBorder: InputBorder.none,
+              //       focusedBorder: InputBorder.none,
+              //       labelText: "starting_bid".tr,
+              //       hintText: '100₽',
+              //     ),
+              //     keyboardType: TextInputType.number,
+              //     onChanged: (val) {
+              //       setState(() {
+              //         startingBid = val;
+              //       });
+              //     },
+              //   ),
+
+              // if (!isAuction)
+              //   TextField(
+              //     decoration: InputDecoration(
+              //       border: InputBorder.none,
+              //       enabledBorder: InputBorder.none,
+              //       focusedBorder: InputBorder.none,
+              //       labelText: "price".tr,
+              //       hintText: '100₽',
+              //     ),
+              //     keyboardType: TextInputType.number,
+              //     onChanged: (val) {
+              //       setState(() {
+              //         price = val;
+              //       });
+              //     },
+              //   ),
               const SizedBox(height: 16),
 
-              /// Starting Bid or Price
-              if (isAuction)
-                TextField(
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    labelText: "starting_bid".tr,
-                    hintText: '100₽',
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (val) {
-                    setState(() {
-                      startingBid = val;
-                    });
-                  },
-                ),
+Text(
+  isAuction ? "starting_bid".tr : "price".tr,
+  style: const TextStyle(fontWeight: FontWeight.bold),
+),
 
-              if (!isAuction)
-                TextField(
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    labelText: "price".tr,
-                    hintText: '100₽',
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (val) {
-                    setState(() {
-                      price = val;
-                    });
-                  },
-                ),
+const SizedBox(height: 6),
+
+TextField(
+  decoration: InputDecoration(
+    filled: true,
+    fillColor: Colors.grey[200], // Pale background
+    hintText: isAuction ? '100₽' : '999₽',
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide.none,
+    ),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+  ),
+  keyboardType: TextInputType.number,
+  onChanged: (val) {
+    setState(() {
+      if (isAuction) {
+        startingBid = val;
+      } else {
+        price = val;
+      }
+    });
+  },
+),
+
 
               const SizedBox(height: 16),
 

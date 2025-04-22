@@ -22,13 +22,22 @@ class CustomGradientButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+       final bool isDisabled = onPressed == null;
     return Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
-        gradient:  LinearGradient(
-          colors: [blueLiteColor, purpleLiteColor,deepPurpleColor],
-        ),
+           gradient: isDisabled
+            ? LinearGradient(
+                colors: [
+                  Colors.grey.shade400,
+                  Colors.grey.shade500,
+                ],
+              )
+            : LinearGradient(
+                colors: [blueLiteColor, purpleLiteColor, deepPurpleColor],
+              ),
+        
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Material(

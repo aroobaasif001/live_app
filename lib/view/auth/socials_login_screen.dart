@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,6 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:live_app/custom_widgets/custom_background_scaffold.dart';
 import 'package:live_app/custom_widgets/custom_icon_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
+import 'package:live_app/termAndCondition/privacy_policy.dart';
+import 'package:live_app/termAndCondition/terms_and_condition.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/utils/icons_path.dart';
 import 'package:live_app/utils/images_path.dart';
@@ -151,6 +154,10 @@ class SocialsLoginScreen extends StatelessWidget {
     style: TextStyle(fontSize: 16.0), // Base style
     children: [
       TextSpan(
+        recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                Get.to(() => TermsAndCondition());
+              },
         text: 'Terms of Service ',
         style: TextStyle(
           fontSize: 14,
@@ -165,7 +172,10 @@ class SocialsLoginScreen extends StatelessWidget {
         style: TextStyle(color: Colors.black,fontSize: 14),
       ),
       TextSpan(
-        
+       recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                Get.to(() => PrivacyPolicy());
+              },
         text: ' Privacy Policy.',
         style: TextStyle(
                fontSize: 14,

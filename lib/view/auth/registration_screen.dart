@@ -81,9 +81,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         "Error",
         "Please fix the errors in the form.",
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: Colors.white, // 👈 Softer background
+        colorText: Colors.red, // 👈 Red text for warning
+        icon: const Icon(Icons.error_outline, color: Colors.red), // 👈 Red icon
+        margin: const EdgeInsets.all(10),
+        borderRadius: 8,
+        duration: const Duration(seconds: 3),
       );
+
       return;
     }
 
@@ -92,9 +97,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         "Error",
         "You must agree to the terms and confirm your age.",
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: Colors.white,
+        colorText: Colors.red,
+        icon: const Icon(Icons.warning_amber_outlined, color: Colors.red),
+        margin: const EdgeInsets.all(10),
+        borderRadius: 8,
+        duration: const Duration(seconds: 3),
       );
+
       return;
     }
 
@@ -202,12 +212,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         : null,
                   ),
                   SizedBox(height: 15),
+                  // CustomTextField(
+                  //   isRequired: true,
+                  //   hintText: 'Email',
+                  //   controller: _emailController,
+                  //   validator: _validateEmail,
+                  // ),
                   CustomTextField(
                     isRequired: true,
                     hintText: 'Email',
                     controller: _emailController,
                     validator: _validateEmail,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    onChanged: (_) => setState(() {}),
                   ),
+
                   SizedBox(height: 15),
                   if (!widget.isSignUpWithGoogle)
                     if (!widget.isSignUpWithGoogle)
@@ -309,7 +328,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   SizedBox(height: 20),
                   DropdownButtonFormField<String>(
-                    
                     value: gender,
                     decoration: InputDecoration(
                       hintText: 'Select Gender',
@@ -350,61 +368,63 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   SizedBox(height: 20),
 
-                      Row(
-              children: [
-                buildGradientCheckbox(isAgreedToTerms, () {
-                  setState(() => isAgreedToTerms = !isAgreedToTerms);
-                }),
-                Expanded(
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(text: 'I agree to the '),
-                        TextSpan(
-                          text: 'Terms of Service',
-                          style: TextStyle(
-                           // decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            fontFamily: 'Gilroy-Medium'
+                  Row(
+                    children: [
+                      buildGradientCheckbox(isAgreedToTerms, () {
+                        setState(() => isAgreedToTerms = !isAgreedToTerms);
+                      }),
+                      Expanded(
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(text: 'I agree to the '),
+                              TextSpan(
+                                text: 'Terms of Service',
+                                style: TextStyle(
+                                    // decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                    fontFamily: 'Gilroy-Medium'),
+                              ),
+                              TextSpan(
+                                text: ' and confirm I have read the ',
+                                style: TextStyle(
+                                    // decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                    fontFamily: 'Gilroy-Medium'),
+                              ),
+                              TextSpan(
+                                text: 'Privacy Policy',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Gilroy-Medium'),
+                              ),
+                            ],
                           ),
                         ),
-                        TextSpan(text: ' and confirm I have read the ',style:TextStyle(
-                           // decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            fontFamily: 'Gilroy-Medium'
-                          ), ),
-                        TextSpan(
-                          text: 'Privacy Policy',
-                          style: TextStyle(
-                            fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                            fontFamily: 'Gilroy-Medium'
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Row(
-              children: [
-                buildGradientCheckbox(isAbove18, () {
-                  setState(() => isAbove18 = !isAbove18);
-                }),
-                Expanded(
-                  child: Text('I confirm that I am over 18 years of age',style: TextStyle(
-                           // decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            fontFamily: 'Gilroy-Medium'
-                          ),),
-                ),
-              ],
-            ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      buildGradientCheckbox(isAbove18, () {
+                        setState(() => isAbove18 = !isAbove18);
+                      }),
+                      Expanded(
+                        child: Text(
+                          'I confirm that I am over 18 years of age',
+                          style: TextStyle(
+                              // decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              fontFamily: 'Gilroy-Medium'),
+                        ),
+                      ),
+                    ],
+                  ),
                   // Row(
                   //   children: [
                   //     Checkbox(
@@ -439,10 +459,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-
- 
-
-    Widget buildGradientCheckbox(bool isSelected, VoidCallback onTap) {
+  Widget buildGradientCheckbox(bool isSelected, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -461,7 +478,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
-                      colors: [blueLiteColor, purpleLiteColor,deepPurpleColor],
+                      colors: [blueLiteColor, purpleLiteColor, deepPurpleColor],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
