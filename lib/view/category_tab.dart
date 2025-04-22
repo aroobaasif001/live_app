@@ -585,12 +585,7 @@ Widget build(BuildContext context) {
 
                     return GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductsPage(category: category),
-                          ),
-                        );
+                        Get.to(()=> ProductsPage(category: category));
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
@@ -672,5 +667,4 @@ Widget build(BuildContext context) {
     ),
   );
 }
-
 }

@@ -110,16 +110,7 @@ class ProductDetailScreen extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor:  Colors.grey.shade200,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Get.back(),
-          ),
-          title: Text(product.title ?? 'Product Details'),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
+        backgroundColor: Colors.grey.shade100,
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,15 +252,10 @@ class ProductDetailScreen extends StatelessWidget {
                           tabController.addListener(() {
                             if (tabController.indexIsChanging &&
                                 tabController.index == 1) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => SellerInformationScreen(
-                                    sellerProfileId: product.id ??
-                                        FirebaseAuth.instance.currentUser!.uid,
-                                  ),
-                                ),
-                              );
+                             Get.to(()=> SellerInformationScreen(
+                               sellerProfileId: product.id ??
+                                   FirebaseAuth.instance.currentUser!.uid,
+                             ),);
                               tabController.index = 0;
                             }
                           });

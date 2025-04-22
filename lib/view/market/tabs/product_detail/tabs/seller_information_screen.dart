@@ -15,11 +15,10 @@ import 'package:live_app/utils/images_path.dart';
 class SellerInformationScreen extends StatefulWidget {
   final String sellerProfileId;
 
-  const SellerInformationScreen({super.key,required this.sellerProfileId});
+  const SellerInformationScreen({super.key, required this.sellerProfileId});
 
   @override
-  State<SellerInformationScreen> createState() =>
-      _SellerInformationScreenState();
+  State<SellerInformationScreen> createState() => _SellerInformationScreenState();
 }
 
 class _SellerInformationScreenState extends State<SellerInformationScreen> {
@@ -27,13 +26,12 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
   Widget build(BuildContext context) {
     // Firestore stream for seller details
     Stream<DocumentSnapshot<RegistrationEntity>> sellerDetailsStream =
-        RegistrationEntity.doc(userId: widget.sellerProfileId.toString())
-            .snapshots();
+        RegistrationEntity.doc(userId: widget.sellerProfileId.toString()).snapshots();
 
     final ReadMoreController controller = Get.put(ReadMoreController());
 
     return Scaffold(
-      backgroundColor: const Color(0xffC9C9C9),
+      backgroundColor: Colors.grey.shade100,
       body: StreamBuilder<DocumentSnapshot<RegistrationEntity>>(
         stream: sellerDetailsStream,
         builder: (context, snapshot) {
@@ -46,9 +44,7 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           // Check if data is null or empty
-          if (!snapshot.hasData ||
-              snapshot.data == null ||
-              snapshot.data!.data() == null) {
+          if (!snapshot.hasData || snapshot.data == null || snapshot.data!.data() == null) {
             return const Center(child: Text('No seller data available'));
           }
 
@@ -121,17 +117,11 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                   label: 'Rating',
                                   iconPath: startIcon),
                               const VerticalDivider(color: conLineColor),
-                              CustomReview(
-                                  value: sellerData.reviews?.toString() ?? '0',
-                                  label: 'Reviews'),
+                              CustomReview(value: sellerData.reviews?.toString() ?? '0', label: 'Reviews'),
                               const VerticalDivider(color: conLineColor),
-                              CustomReview(
-                                  value: sellerData.sold?.toString() ?? '0',
-                                  label: 'Sold'),
+                              CustomReview(value: sellerData.sold?.toString() ?? '0', label: 'Sold'),
                               const VerticalDivider(color: conLineColor),
-                              CustomReview(
-                                  value: sellerData.delivery ?? '+-2d',
-                                  label: 'Delivery'),
+                              CustomReview(value: sellerData.delivery ?? '+-2d', label: 'Delivery'),
                             ],
                           ),
                         ),
@@ -149,9 +139,8 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                 builder: (context, scrollController) {
                   return Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xffC9C9C9),
-                      borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(20)),
+                      color: Colors.grey.shade100,
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black12,
@@ -177,8 +166,7 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                             // Enables drag scrolling
                             children: [
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
                                 child: Column(
                                   children: [
                                     const SizedBox(height: 10),
@@ -194,14 +182,12 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                         borderRadius: BorderRadius.circular(10),
                                         conColor: const Color(0xffE2E2E2),
                                         alignment: Alignment.center,
-                                        child: const CustomText(
-                                            text: 'View Profile'),
+                                        child: const CustomText(text: 'View Profile'),
                                       ),
                                     ),
                                     const SizedBox(height: 20),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         CustomText(
                                           text: 'reviews_about_seller'.tr,
@@ -218,11 +204,8 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                                 fontWeight: FontWeight.bold,
                                               ),
                                               SizedBox(width: 2),
-                                              Icon(
-                                                  Icons
-                                                      .arrow_forward_ios_rounded,
-                                                  size: 15,
-                                                  color: Color(0xff815BFF)),
+                                              Icon(Icons.arrow_forward_ios_rounded,
+                                                  size: 15, color: Color(0xff815BFF)),
                                             ],
                                           ),
                                         ),
@@ -231,205 +214,130 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                     const SizedBox(height: 12),
                                     Obx(
                                       () => SizedBox(
-                                        height: controller.readMore.value
-                                            ? 400
-                                            : 210, // Dynamic height
+                                        height: controller.readMore.value ? 400 : 210, // Dynamic height
                                         child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
                                           shrinkWrap: true,
                                           itemCount: 5,
                                           itemBuilder: (context, index) {
                                             return Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 5,
-                                                      horizontal: 5),
+                                              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                                               child: Container(
                                                 width: 350,
-                                                padding:
-                                                    const EdgeInsets.all(16),
+                                                padding: const EdgeInsets.all(16),
                                                 decoration: BoxDecoration(
                                                   color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
+                                                  borderRadius: BorderRadius.circular(8),
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.1),
+                                                      color: Colors.grey.withOpacity(0.1),
                                                       spreadRadius: 2,
                                                       blurRadius: 5,
-                                                      offset:
-                                                          const Offset(0, 3),
+                                                      offset: const Offset(0, 3),
                                                     ),
                                                   ],
                                                 ),
                                                 child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Row(
                                                       children: [
                                                         CircleAvatar(
-                                                          backgroundImage:
-                                                              const AssetImage(
-                                                                  girlImage),
+                                                          backgroundImage: const AssetImage(girlImage),
                                                           // Replace with actual image path
                                                           radius: 20,
                                                         ),
-                                                        const SizedBox(
-                                                            width: 10),
+                                                        const SizedBox(width: 10),
                                                         const CustomText(
-                                                            text: 'nickname25',
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                            text: 'nickname25', fontWeight: FontWeight.bold),
                                                         const Spacer(),
-                                                        const Icon(
-                                                            Icons.more_horiz,
-                                                            color: Colors.grey),
+                                                        const Icon(Icons.more_horiz, color: Colors.grey),
                                                       ],
                                                     ),
                                                     const SizedBox(height: 10),
                                                     Row(
                                                       children: [
                                                         const CustomText(
-                                                            text: '3.8',
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                            text: '3.8', fontWeight: FontWeight.bold),
                                                         ShaderMask(
-                                                          shaderCallback:
-                                                              (Rect bounds) {
+                                                          shaderCallback: (Rect bounds) {
                                                             return const LinearGradient(
-                                                              colors: [
-                                                                Color(
-                                                                    0xff60C0FF),
-                                                                Color(
-                                                                    0xffE356D7)
-                                                              ],
-                                                              begin: Alignment
-                                                                  .topLeft,
-                                                              end: Alignment
-                                                                  .bottomRight,
-                                                            ).createShader(
-                                                                bounds);
+                                                              colors: [Color(0xff60C0FF), Color(0xffE356D7)],
+                                                              begin: Alignment.topLeft,
+                                                              end: Alignment.bottomRight,
+                                                            ).createShader(bounds);
                                                           },
-                                                          child: const Icon(
-                                                              Icons.star,
-                                                              size: 16,
-                                                              color:
-                                                                  Colors.white),
+                                                          child: const Icon(Icons.star,
+                                                              size: 16, color: Colors.white),
                                                         ),
-                                                        const SizedBox(
-                                                            width: 10),
-                                                        const CustomText(
-                                                            text: '21.01.2025'),
+                                                        const SizedBox(width: 10),
+                                                        const CustomText(text: '21.01.2025'),
                                                       ],
                                                     ),
                                                     const SizedBox(height: 10),
                                                     Obx(
                                                       () => Text(
                                                         'Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit',
-                                                        maxLines: controller
-                                                                .readMore.value
-                                                            ? null
-                                                            : 2,
-                                                        overflow: controller
-                                                                .readMore.value
-                                                            ? TextOverflow
-                                                                .visible
-                                                            : TextOverflow
-                                                                .ellipsis,
+                                                        maxLines: controller.readMore.value ? null : 2,
+                                                        overflow: controller.readMore.value
+                                                            ? TextOverflow.visible
+                                                            : TextOverflow.ellipsis,
                                                       ),
                                                     ),
                                                     const SizedBox(height: 10),
                                                     GestureDetector(
                                                       onTap: () {
-                                                        controller
-                                                            .toggleReadMore();
+                                                        controller.toggleReadMore();
                                                       },
                                                       child: Row(
                                                         children: [
                                                           Obx(
                                                             () => CustomText(
-                                                              text: controller
-                                                                      .readMore
-                                                                      .value
+                                                              text: controller.readMore.value
                                                                   ? 'See less'
                                                                   : 'See more',
-                                                              color: const Color(
-                                                                  0xff815BFF),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                              color: const Color(0xff815BFF),
+                                                              fontWeight: FontWeight.bold,
                                                             ),
                                                           ),
                                                           Obx(
                                                             () => Icon(
-                                                              controller
-                                                                      .readMore
-                                                                      .value
-                                                                  ? Icons
-                                                                      .expand_less
-                                                                  : Icons
-                                                                      .expand_more,
-                                                              color: const Color(
-                                                                  0xff815BFF),
+                                                              controller.readMore.value
+                                                                  ? Icons.expand_less
+                                                                  : Icons.expand_more,
+                                                              color: const Color(0xff815BFF),
                                                             ),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
                                                     const SizedBox(height: 12),
-                                                    if (controller
-                                                        .readMore.value)
+                                                    if (controller.readMore.value)
                                                       Column(
                                                         children: [
-                                                          const SizedBox(
-                                                              height: 12),
+                                                          const SizedBox(height: 12),
                                                           CustomContainer(
                                                             height: 37,
-                                                            conColor: Colors
-                                                                .black
-                                                                .withOpacity(
-                                                                    0.05),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        6),
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        10,
-                                                                    vertical:
-                                                                        5),
+                                                            conColor: Colors.black.withOpacity(0.05),
+                                                            borderRadius: BorderRadius.circular(6),
+                                                            padding: const EdgeInsets.symmetric(
+                                                                horizontal: 10, vertical: 5),
                                                             child: Row(
                                                               mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
+                                                                  MainAxisAlignment.spaceBetween,
                                                               children: const [
                                                                 CustomText(
-                                                                  text:
-                                                                      'Generally',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
+                                                                  text: 'Generally',
+                                                                  fontWeight: FontWeight.w600,
                                                                 ),
                                                                 Row(
                                                                   children: [
                                                                     Icon(
-                                                                      Icons
-                                                                          .star_rounded,
-                                                                      color: Colors
-                                                                          .yellow,
+                                                                      Icons.star_rounded,
+                                                                      color: Colors.yellow,
                                                                     ),
-                                                                    SizedBox(
-                                                                        width:
-                                                                            4),
-                                                                    CustomText(
-                                                                        text:
-                                                                            '4.7')
+                                                                    SizedBox(width: 4),
+                                                                    CustomText(text: '4.7')
                                                                   ],
                                                                 )
                                                               ],
@@ -437,45 +345,26 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                                           ),
                                                           CustomContainer(
                                                             height: 37,
-                                                            conColor:
-                                                                Colors.white,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        6),
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        10,
-                                                                    vertical:
-                                                                        5),
+                                                            conColor: Colors.white,
+                                                            borderRadius: BorderRadius.circular(6),
+                                                            padding: const EdgeInsets.symmetric(
+                                                                horizontal: 10, vertical: 5),
                                                             child: Row(
                                                               mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
+                                                                  MainAxisAlignment.spaceBetween,
                                                               children: const [
                                                                 CustomText(
-                                                                  text:
-                                                                      'Generally',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
+                                                                  text: 'Generally',
+                                                                  fontWeight: FontWeight.w600,
                                                                 ),
                                                                 Row(
                                                                   children: [
                                                                     Icon(
-                                                                      Icons
-                                                                          .star_rounded,
-                                                                      color: Colors
-                                                                          .yellow,
+                                                                      Icons.star_rounded,
+                                                                      color: Colors.yellow,
                                                                     ),
-                                                                    SizedBox(
-                                                                        width:
-                                                                            4),
-                                                                    CustomText(
-                                                                        text:
-                                                                            '4.7')
+                                                                    SizedBox(width: 4),
+                                                                    CustomText(text: '4.7')
                                                                   ],
                                                                 )
                                                               ],
@@ -483,47 +372,26 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                                           ),
                                                           CustomContainer(
                                                             height: 37,
-                                                            conColor: Colors
-                                                                .black
-                                                                .withOpacity(
-                                                                    0.05),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        6),
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        10,
-                                                                    vertical:
-                                                                        5),
+                                                            conColor: Colors.black.withOpacity(0.05),
+                                                            borderRadius: BorderRadius.circular(6),
+                                                            padding: const EdgeInsets.symmetric(
+                                                                horizontal: 10, vertical: 5),
                                                             child: Row(
                                                               mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
+                                                                  MainAxisAlignment.spaceBetween,
                                                               children: const [
                                                                 CustomText(
-                                                                  text:
-                                                                      'Generally',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
+                                                                  text: 'Generally',
+                                                                  fontWeight: FontWeight.w600,
                                                                 ),
                                                                 Row(
                                                                   children: [
                                                                     Icon(
-                                                                      Icons
-                                                                          .star_rounded,
-                                                                      color: Colors
-                                                                          .yellow,
+                                                                      Icons.star_rounded,
+                                                                      color: Colors.yellow,
                                                                     ),
-                                                                    SizedBox(
-                                                                        width:
-                                                                            4),
-                                                                    CustomText(
-                                                                        text:
-                                                                            '4.7')
+                                                                    SizedBox(width: 4),
+                                                                    CustomText(text: '4.7')
                                                                   ],
                                                                 )
                                                               ],
@@ -531,45 +399,26 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                                           ),
                                                           CustomContainer(
                                                             height: 37,
-                                                            conColor:
-                                                                Colors.white,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        6),
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        10,
-                                                                    vertical:
-                                                                        5),
+                                                            conColor: Colors.white,
+                                                            borderRadius: BorderRadius.circular(6),
+                                                            padding: const EdgeInsets.symmetric(
+                                                                horizontal: 10, vertical: 5),
                                                             child: Row(
                                                               mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
+                                                                  MainAxisAlignment.spaceBetween,
                                                               children: const [
                                                                 CustomText(
-                                                                  text:
-                                                                      'Generally',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
+                                                                  text: 'Generally',
+                                                                  fontWeight: FontWeight.w600,
                                                                 ),
                                                                 Row(
                                                                   children: [
                                                                     Icon(
-                                                                      Icons
-                                                                          .star_rounded,
-                                                                      color: Colors
-                                                                          .yellow,
+                                                                      Icons.star_rounded,
+                                                                      color: Colors.yellow,
                                                                     ),
-                                                                    SizedBox(
-                                                                        width:
-                                                                            4),
-                                                                    CustomText(
-                                                                        text:
-                                                                            '4.7')
+                                                                    SizedBox(width: 4),
+                                                                    CustomText(text: '4.7')
                                                                   ],
                                                                 )
                                                               ],
@@ -594,36 +443,28 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                         children: [
                                           CustomContainer(
                                             height: 35,
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 12),
+                                            padding: const EdgeInsets.symmetric(horizontal: 12),
                                             gradient: LinearGradient(colors: [
-                                              const Color(0xff60C0FF)
-                                                  .withOpacity(0.2),
-                                              const Color(0xffE356D7)
-                                                  .withOpacity(0.2),
+                                              const Color(0xff60C0FF).withOpacity(0.2),
+                                              const Color(0xffE356D7).withOpacity(0.2),
                                             ]),
-                                            borderRadius:
-                                                const BorderRadius.only(
+                                            borderRadius: const BorderRadius.only(
                                               topLeft: Radius.circular(8),
                                               topRight: Radius.circular(8),
                                             ),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.1),
+                                                color: Colors.grey.withOpacity(0.1),
                                                 spreadRadius: 2,
                                                 blurRadius: 5,
                                                 offset: const Offset(0, 3),
                                               ),
                                             ],
                                             child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: const [
                                                 CustomText(
-                                                  text:
-                                                      'Purchase from 21.02.25',
+                                                  text: 'Purchase from 21.02.25',
                                                   color: Colors.black,
                                                 ),
                                                 CustomText(text: '1000 ₽'),
@@ -631,31 +472,26 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                             ),
                                           ),
                                           CustomContainer(
-                                            padding: const EdgeInsets.only(
-                                                top: 12, right: 12, left: 12),
+                                            padding: const EdgeInsets.only(top: 12, right: 12, left: 12),
                                             child: Row(
                                               children: [
                                                 CustomContainer(
                                                   width: 56,
                                                   height: 56,
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
+                                                  borderRadius: BorderRadius.circular(8),
                                                   image: const DecorationImage(
-                                                    image:
-                                                        AssetImage(marketImage),
+                                                    image: AssetImage(marketImage),
                                                     fit: BoxFit.fill,
                                                   ),
                                                 ),
                                                 const SizedBox(width: 10),
                                                 Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: const [
                                                     CustomText(
                                                       text: 'Product name',
                                                       fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                     CustomText(
                                                       text: 'Description',
@@ -665,8 +501,7 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                                     CustomText(
                                                       text: '1,000 ₽',
                                                       fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                   ],
                                                 ),
@@ -674,8 +509,7 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                             ),
                                           ),
                                           Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: const [
                                               CustomText(
                                                 text: '3 more items',
@@ -683,18 +517,14 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                                 color: Color(0xff815BFF),
                                               ),
                                               Icon(
-                                                Icons
-                                                    .keyboard_arrow_down_rounded,
+                                                Icons.keyboard_arrow_down_rounded,
                                                 color: Color(0xff815BFF),
                                               )
                                             ],
                                           ),
                                           const Spacer(),
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 12,
-                                                right: 12,
-                                                left: 12),
+                                            padding: const EdgeInsets.only(bottom: 12, right: 12, left: 12),
                                             child: CustomGradientButton(
                                               text: 'Leave feedback',
                                               onPressed: () {},
@@ -718,50 +548,37 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                         itemBuilder: (context, index) {
                                           return Container(
                                             width: 150,
-                                            margin: const EdgeInsets.only(
-                                                right: 10),
+                                            margin: const EdgeInsets.only(right: 10),
                                             child: Column(
                                               children: [
                                                 CustomContainer(
                                                   height: 160,
                                                   width: 160,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  image: const DecorationImage(
-                                                      image: AssetImage(
-                                                          iphoneImage)),
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  image:
+                                                      const DecorationImage(image: AssetImage(iphoneImage)),
                                                   child: Stack(
                                                     children: [
                                                       Positioned(
                                                         top: 10,
                                                         right: 10,
                                                         child: CustomContainer(
-                                                          alignment:
-                                                              Alignment.center,
+                                                          alignment: Alignment.center,
                                                           height: 30,
                                                           width: 47,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      100),
-                                                          conColor:
-                                                              Colors.white,
+                                                          borderRadius: BorderRadius.circular(100),
+                                                          conColor: Colors.white,
                                                           child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
                                                               CustomContainer(
                                                                 height: 16,
                                                                 width: 16,
                                                                 image: const DecorationImage(
-                                                                    image: AssetImage(
-                                                                        saveIcon)),
+                                                                    image: AssetImage(saveIcon)),
                                                               ),
-                                                              const SizedBox(
-                                                                  width: 5),
-                                                              const CustomText(
-                                                                  text: '6')
+                                                              const SizedBox(width: 5),
+                                                              const CustomText(text: '6')
                                                             ],
                                                           ),
                                                         ),
@@ -770,35 +587,24 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                                         bottom: 10,
                                                         left: 10,
                                                         child: CustomContainer(
-                                                          alignment:
-                                                              Alignment.center,
+                                                          alignment: Alignment.center,
                                                           height: 24,
                                                           width: 80,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(6),
+                                                          borderRadius: BorderRadius.circular(6),
                                                           conColor: Colors.red,
                                                           child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
                                                             children: const [
                                                               Icon(
-                                                                CupertinoIcons
-                                                                    .waveform,
-                                                                color: Colors
-                                                                    .white,
+                                                                CupertinoIcons.waveform,
+                                                                color: Colors.white,
                                                               ),
-                                                              SizedBox(
-                                                                  width: 3),
+                                                              SizedBox(width: 3),
                                                               CustomText(
                                                                 text: 'Stream',
                                                                 fontSize: 13,
-                                                                color: Colors
-                                                                    .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
+                                                                color: Colors.white,
+                                                                fontWeight: FontWeight.w600,
                                                               ),
                                                             ],
                                                           ),
@@ -808,12 +614,10 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                                   ),
                                                 ),
                                                 const CustomText(
-                                                  text:
-                                                      'Lorem ipsum dolor sit amet consectetur',
+                                                  text: 'Lorem ipsum dolor sit amet consectetur',
                                                   fontSize: 14,
                                                   maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  overflow: TextOverflow.ellipsis,
                                                 ),
                                                 const CustomText(
                                                   text: '100,000 ₽',
@@ -821,8 +625,7 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                                 const CustomText(
-                                                  text:
-                                                      'Iphone . New . Original',
+                                                  text: 'Iphone . New . Original',
                                                   fontSize: 12,
                                                 ),
                                               ],
@@ -835,18 +638,74 @@ class _SellerInformationScreenState extends State<SellerInformationScreen> {
                                       color: Colors.black.withOpacity(0.05),
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         CustomText(
                                           text: 'created 01/28/25'.tr,
                                           fontSize: 14,
                                           color: Colors.grey,
                                         ),
-                                        CustomText(
-                                          text: 'report_abuse'.tr,
-                                          fontSize: 14,
-                                          color: Colors.red,
+                                        InkWell(
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                TextEditingController reportController = TextEditingController();
+
+                                                return AlertDialog(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(12),
+                                                  ),
+                                                  backgroundColor: Colors.white,
+                                                  title: CustomText(
+                                                    text: 'Report Abuse',
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  content: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      TextFormField(
+                                                        controller: reportController,
+                                                        maxLines: 3,
+                                                        decoration: InputDecoration(
+                                                          hintText: 'Write your report here...',
+                                                          border: OutlineInputBorder(),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 20),
+                                                      ElevatedButton(
+                                                        style: ElevatedButton.styleFrom(
+                                                          backgroundColor: Color(0xffC0241E), // red color
+                                                        ),
+                                                        onPressed: () {
+                                                          String reportText = reportController.text;
+                                                          if (reportText.isNotEmpty) {
+                                                            // Do something like submit to Firebase or backend
+                                                            Navigator.pop(context); // Close dialog
+                                                            Get.snackbar('Report', 'Your report has been submitted.');
+                                                          } else {
+                                                            Get.snackbar('Error', 'Please write something before submitting.');
+                                                          }
+                                                        },
+                                                        child: CustomText(
+                                                          text: 'Submit',
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: CustomText(
+                                            text: 'report_abuse'.tr,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
                                         ),
                                       ],
                                     ),

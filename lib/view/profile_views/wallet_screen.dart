@@ -284,147 +284,131 @@ class _WalletScreenState extends State<WalletScreen>
 
   void _showWithdrawBottomSheet() {
     showModalBottomSheet(
-      backgroundColor: Colors.white,
       context: context,
-      isScrollControlled: true,
+      isScrollControlled: true, // 👈 Keyboard کے ساتھ adjust ہونے کے لیے
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16), // Only top-left corner rounded
-          topRight: Radius.circular(16), // Only top-right corner rounded
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header: Title + Close Button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Withdraw money",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-              const Divider(),
-
-              // Where? Dropdown / selection
-              const Text(
-                "Where?",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom, // 👈 Keyboard-safe bottom padding
+            left: 16,
+            right: 16,
+            top: 16,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Image.asset(
-                      "assets/icons/iPhone 13 mini - 47.png",
-                      height: 50,
+                    const Text(
+                      "Withdraw money",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text("MIR **2882"),
-                    Spacer(),
-                    Icon(
-                      Icons.keyboard_arrow_down_outlined,
-                      size: 22,
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.pop(context),
                     ),
                   ],
                 ),
-              ),
+                const Divider(),
 
-              const SizedBox(height: 16),
-              const Text(
-                "How many",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-
-              // Amount input
-              TextField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: "Enter an amount up to 100,000 ₽",
-                  filled: true,
-                  fillColor: Colors.grey.shade300,
-                  border: OutlineInputBorder(
+                const Text("Where?", style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
+                  ),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        "assets/icons/iPhone 13 mini - 47.png",
+                        height: 50,
+                      ),
+                      const SizedBox(width: 10),
+                      const Text("MIR **2882"),
+                      const Spacer(),
+                      const Icon(Icons.keyboard_arrow_down_outlined, size: 22),
+                    ],
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
+                const Text("How many", style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
 
-              // Continue Button with gradient background
-              Container(
-                height: 70,
-                margin: const EdgeInsets.all(16),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Close current sheet
-                    _showConfirmationBottomSheet(
-                        context); // Show confirmation sheet
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
+                TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: "Enter an amount up to 100,000 ₽",
+                    filled: true,
+                    fillColor: Colors.grey.shade300,
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none,
                     ),
-                    // We make the button background and shadow transparent,
-                    // then create the gradient in the Ink decoration below
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                  ).copyWith(
-                    backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => Colors.transparent,
-                    ),
-                    elevation: MaterialStateProperty.resolveWith((states) => 0),
                   ),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      gradient: const LinearGradient(
-                        colors: [Colors.blue, Colors.purpleAccent],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                ),
+
+                const SizedBox(height: 24),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _showConfirmationBottomSheet(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
                     ),
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: const Text(
-                        "Continue",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        gradient: const LinearGradient(
+                          colors: [Colors.blue, Colors.purpleAccent],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Text(
+                            "Continue",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         );
       },
     );
   }
+
 
   ///
   // void _showWithdrawBottomSheet() {
@@ -549,28 +533,28 @@ class _WalletScreenState extends State<WalletScreen>
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16), // Only top-left corner rounded
-          topRight: Radius.circular(16), // Only top-right corner rounded
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
         ),
       ),
       builder: (context) {
         return Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
-            // Minimize the column’s height so it fits the content.
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 16),
 
-              // Success Icon
+              // ✅ Success Icon
               Image.asset(
                 "assets/icons/success icon.png",
                 height: 60,
               ),
+
               const SizedBox(height: 16),
 
-              // Amount Withdrawn
+              // ✅ Amount
               const Text(
                 "10,000 ₽",
                 style: TextStyle(
@@ -579,298 +563,75 @@ class _WalletScreenState extends State<WalletScreen>
                   color: Colors.black,
                 ),
               ),
+
               const SizedBox(height: 8),
 
-              // Gradient Text (Pending Confirmation)
+              // ✅ Gradient Text (Message)
               ShaderMask(
                 shaderCallback: (bounds) => const LinearGradient(
                   colors: [Colors.blue, Colors.purpleAccent],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ).createShader(bounds),
-                child: Text(
+                child: const Text(
                   "Will appear on your\naccount soon!",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white, // Overridden by the gradient mask
+                    color: Colors.white, // masked by ShaderMask
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
 
-              // Close Button with Gradient Background
-              Container(
-                height: 80,
-                margin: const EdgeInsets.all(16),
+              // ✅ Okay Button
+              SizedBox(
+                width: double.infinity,
+                height: 48,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context); // Close the bottom sheet
+                    Navigator.pop(context); // ✅ close bottom sheet
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                    padding: EdgeInsets.zero,
                     backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                  ).copyWith(
-                    backgroundColor: MaterialStateProperty.resolveWith(
-                        (states) => Colors.transparent),
-                    elevation: MaterialStateProperty.resolveWith((states) => 0),
+                    elevation: 0,
                   ),
                   child: Ink(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                       gradient: const LinearGradient(
                         colors: [Colors.blue, Colors.purpleAccent],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
                       ),
                     ),
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: const Text(
-                        "Okay",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    child: const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Text(
+                          "Okay",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
+
               const SizedBox(height: 16),
             ],
           ),
         );
       },
     );
-    // void _showConfirmationBottomSheet() {
-    //   showModalBottomSheet(
-    //     context: context,
-    //     isScrollControlled: true,
-    //     shape: const RoundedRectangleBorder(
-    //       borderRadius: BorderRadius.only(
-    //         topLeft: Radius.circular(16), // Only top-left corner rounded
-    //         topRight: Radius.circular(16), // Only top-right corner rounded
-    //       ),
-    //     ),
-    //     builder: (context) {
-    //       return Padding(
-    //         padding: const EdgeInsets.all(16),
-    //         child: Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           crossAxisAlignment: CrossAxisAlignment.center,
-    //           children: [
-    //             const SizedBox(height: 16),
-    //
-    //             // Success Icon
-    //             const CircleAvatar(
-    //               radius: 30,
-    //               backgroundColor: Colors.greenAccent,
-    //               child: Icon(Icons.check, color: Colors.white, size: 30),
-    //             ),
-    //             const SizedBox(height: 16),
-    //
-    //             // Amount Withdrawn
-    //             const Text(
-    //               "10,000 ₽",
-    //               style: TextStyle(
-    //                 fontSize: 24,
-    //                 fontWeight: FontWeight.bold,
-    //                 color: Colors.black,
-    //               ),
-    //             ),
-    //             const SizedBox(height: 8),
-    //
-    //             // Gradient Text (Pending Confirmation)
-    //             ShaderMask(
-    //               shaderCallback: (bounds) => const LinearGradient(
-    //                 colors: [Colors.blue, Colors.purpleAccent],
-    //                 begin: Alignment.topLeft,
-    //                 end: Alignment.bottomRight,
-    //               ).createShader(bounds),
-    //               child: const Text(
-    //                 "Will appear on your account soon!",
-    //                 style: TextStyle(
-    //                   fontSize: 16,
-    //                   fontWeight: FontWeight.bold,
-    //                   color: Colors.white, // Masked by gradient
-    //                 ),
-    //               ),
-    //             ),
-    //
-    //             const SizedBox(height: 16),
-    //
-    //             Container(
-    //               height: 70,
-    //               margin: const EdgeInsets.all(16),
-    //               child: ElevatedButton(
-    //                 onPressed: () {
-    //                   Navigator.pop(context);
-    //                 },
-    //                 style: ElevatedButton.styleFrom(
-    //                   padding: const EdgeInsets.symmetric(vertical: 14),
-    //                   shape: RoundedRectangleBorder(
-    //                     borderRadius: BorderRadius.circular(8),
-    //                   ),
-    //                   backgroundColor: Colors.transparent,
-    //                   shadowColor: Colors.transparent,
-    //                 ).copyWith(
-    //                   backgroundColor: MaterialStateProperty.resolveWith(
-    //                         (states) => Colors.transparent,
-    //                   ),
-    //                   elevation: MaterialStateProperty.resolveWith((states) => 0),
-    //                 ),
-    //                 child: Ink(
-    //                   decoration: BoxDecoration(
-    //                     borderRadius: BorderRadius.circular(8),
-    //                     gradient: const LinearGradient(
-    //                       colors: [Colors.blue, Colors.purpleAccent],
-    //                       begin: Alignment.topLeft,
-    //                       end: Alignment.bottomRight,
-    //                     ),
-    //                   ),
-    //                   child: Container(
-    //                     alignment: Alignment.center,
-    //                     padding: const EdgeInsets.symmetric(vertical: 12),
-    //                     child: const Text(
-    //                       "Close",
-    //                       style: TextStyle(
-    //                         fontSize: 16,
-    //                         fontWeight: FontWeight.bold,
-    //                         color: Colors.white,
-    //                       ),
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ),
-    //             ),
-    //             const SizedBox(height: 16),
-    //           ],
-    //         ),
-    //       );
-    //     },
-    //   );
-    // }
-
-    /// **📌 Withdraw Bottom Sheet**
-    // void _showWithdrawBottomSheet() {
-    //   showModalBottomSheet(
-    //     context: context,
-    //     isScrollControlled: true,
-    //     shape: const RoundedRectangleBorder(
-    //       borderRadius: BorderRadius.only(
-    //         topLeft: Radius.circular(16), // Only top-left corner rounded
-    //         topRight: Radius.circular(16), // Only top-right corner rounded
-    //       ),
-    //     ),
-    //     builder: (context) {
-    //       return Padding(
-    //         padding: const EdgeInsets.all(16),
-    //         child: Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             // Header with Title and Close Button
-    //             Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 const Text(
-    //                   "Withdraw money",
-    //                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-    //                 ),
-    //                 IconButton(
-    //                   icon: const Icon(Icons.close),
-    //                   onPressed: () => Navigator.pop(context),
-    //                 ),
-    //               ],
-    //             ),
-    //             const Divider(),
-    //
-    //             // Withdrawal Method (Dropdown)
-    //             const Text("Where?", style: TextStyle(fontWeight: FontWeight.bold)),
-    //             const SizedBox(height: 8),
-    //             Container(
-    //               padding: const EdgeInsets.all(12),
-    //               decoration: BoxDecoration(
-    //                 color: Colors.grey[100],
-    //                 borderRadius: BorderRadius.circular(8),
-    //               ),
-    //               child: const Text("MIR **2882"),
-    //             ),
-    //
-    //             const SizedBox(height: 16),
-    //             const Text("How many", style: TextStyle(fontWeight: FontWeight.bold)),
-    //             const SizedBox(height: 8),
-    //
-    //             // Input Field for Amount
-    //             TextField(
-    //               keyboardType: TextInputType.number,
-    //               decoration: InputDecoration(
-    //                 hintText: "Enter an amount up to 100,000 ₽",
-    //                 filled: true,
-    //                 fillColor: Colors.grey[100],
-    //                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-    //               ),
-    //             ),
-    //
-    //             const SizedBox(height: 16),
-    //             Container(
-    //               height: 70,
-    //               margin: const EdgeInsets.all(16),
-    //               child: ElevatedButton(
-    //                 onPressed: () {
-    //                 },
-    //                 style: ElevatedButton.styleFrom(
-    //                   padding: const EdgeInsets.symmetric(vertical: 14),
-    //                   shape: RoundedRectangleBorder(
-    //                     borderRadius: BorderRadius.circular(8),
-    //                   ),
-    //                   backgroundColor: Colors.transparent,
-    //                   shadowColor: Colors.transparent,
-    //                 ).copyWith(
-    //                   backgroundColor: MaterialStateProperty.resolveWith(
-    //                         (states) => Colors.transparent,
-    //                   ),
-    //                   elevation: MaterialStateProperty.resolveWith((states) => 0),
-    //                 ),
-    //                 child: Ink(
-    //                   decoration: BoxDecoration(
-    //                     borderRadius: BorderRadius.circular(8),
-    //                     gradient: const LinearGradient(
-    //                       colors: [Colors.blue, Colors.purpleAccent],
-    //                       begin: Alignment.topLeft,
-    //                       end: Alignment.bottomRight,
-    //                     ),
-    //                   ),
-    //                   child: Container(
-    //                     alignment: Alignment.center,
-    //                     padding: const EdgeInsets.symmetric(vertical: 12),
-    //                     child: const Text(
-    //                       "Continue",
-    //                       style: TextStyle(
-    //                         fontSize: 16,
-    //                         fontWeight: FontWeight.bold,
-    //                         color: Colors.white,
-    //                       ),
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       );
-    //     },
-    //   );
-    // }
   }
 }
 
