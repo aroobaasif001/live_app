@@ -47,7 +47,19 @@ class AboutTheProductScreen extends StatelessWidget {
           SizedBox(height: 10),
           GestureDetector(
             onTap: () {
-              Get.to(()=> BidScreen());
+              showModalBottomSheet(
+                backgroundColor: Colors.transparent,
+                context: context,
+                scrollControlDisabledMaxHeightRatio: MediaQuery.of(context).size.height * 2,
+                builder: (context) => Container(
+                  height: MediaQuery.of(context).size.height * 0.8, // adjust as needed
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white
+                  ),
+                  child: BidScreen(), // this will show the BidScreen as a popup
+                ),
+              );
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -87,7 +99,68 @@ class AboutTheProductScreen extends StatelessWidget {
             children: [
               CustomText(text: 'created_date'.tr),
               SizedBox(width: 20),
-              CustomText(text: 'report_abuse'.tr,color: Color(0xffC0241E),),
+              InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      TextEditingController reportController = TextEditingController();
+
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        backgroundColor: Colors.white,
+                        title: CustomText(
+                          text: 'Report Abuse',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextFormField(
+                              controller: reportController,
+                              maxLines: 3,
+                              decoration: InputDecoration(
+                                hintText: 'Write your report here...',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xffC0241E), // red color
+                              ),
+                              onPressed: () {
+                                String reportText = reportController.text;
+                                if (reportText.isNotEmpty) {
+                                  // Do something like submit to Firebase or backend
+                                  Navigator.pop(context); // Close dialog
+                                  Get.snackbar('Report', 'Your report has been submitted.');
+                                } else {
+                                  Get.snackbar('Error', 'Please write something before submitting.');
+                                }
+                              },
+                              child: CustomText(
+                                text: 'Submit',
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: CustomText(
+                  text: 'report_abuse'.tr,
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
             ],
           )
         ],

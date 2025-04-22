@@ -177,13 +177,7 @@ class ProductsPage extends StatelessWidget {
               return GestureDetector(
                 onTap: () {
                   ProductEntity productEntity = ProductEntity.fromJson(product);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ProductDetailScreen(product: productEntity),
-                    ),
-                  );
+                  Get.to(()=> ProductDetailScreen(product: productEntity));
                 },
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 10),
@@ -223,6 +217,8 @@ class ProductsPage extends StatelessWidget {
                             children: [
                               Text(
                                 product['title'] ?? 'No title',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -233,7 +229,7 @@ class ProductsPage extends StatelessWidget {
                               Text(
                                 product['description'] ?? 'No description',
                                 style: const TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 12,
                                   color: Colors.white70,
                                 ),
                                 maxLines: 1,

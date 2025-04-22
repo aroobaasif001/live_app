@@ -9,10 +9,12 @@ import 'package:live_app/view/profile_views/create_streem_screen.dart';
 import 'package:live_app/view/profile_views/edit_trade_profile.dart';
 import 'package:live_app/view/profile_views/item_for_auction.dart';
 import 'package:live_app/view/profile_views/statistic_screen.dart';
+import 'package:live_app/view/profile_views/tips_screen.dart';
 import 'package:live_app/view/profile_views/wallet_screen.dart';
 import '../../custom_widgets/custom_review.dart';
 import '../../custom_widgets/custom_text.dart';
 import '../../entities/registration_entity.dart';
+import 'invite_friend_screen.dart';
 import 'my_products_screen.dart';
 
 class TradeProfileScreen extends StatefulWidget {
@@ -257,16 +259,16 @@ class _TradeProfileScreenState extends State<TradeProfileScreen> {
                               VerticalDivider(color: conLineColor),
                               CustomReview(
                                   value:
-                                      userProfile?.reviews?.toString() ?? '0',
+                                      userProfile?.reviews?.toString() ?? '0k',
                                   label: 'Reviews'),
                               VerticalDivider(color: conLineColor),
                               CustomReview(
-                                  value: userProfile?.sold?.toString() ?? '0',
+                                  value: userProfile?.sold?.toString() ?? '0k',
                                   label: 'Sold'),
                               VerticalDivider(color: conLineColor),
                               CustomReview(
                                   value:
-                                      userProfile?.delivery?.toString() ?? '0',
+                                      userProfile?.delivery?.toString() ?? '± 0d',
                                   label: 'Delivery'),
                             ],
                           ),
@@ -323,7 +325,9 @@ class _TradeProfileScreenState extends State<TradeProfileScreen> {
                     child: Column(
                       children: [
                         ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            Get.to(() => InviteFriendScreen());
+                          },
                           leading: Container(
                             height: 45,
                             width: 45,
@@ -368,7 +372,9 @@ class _TradeProfileScreenState extends State<TradeProfileScreen> {
                         SizedBox(
                           height: 8,
                         ),
-                        optionTile("assets/images/tips icon.png", "tips".tr, onTap: () {}),
+                        optionTile("assets/images/tips icon.png", "tips".tr, onTap: () {
+                          Get.to(() => TipsScreen());
+                        }),
                         optionTile("assets/images/delivery icon.png", "delivery".tr,
                             onTap: () {
                           Get.to(() => DeliveryAddressScreen());

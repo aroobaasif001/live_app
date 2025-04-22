@@ -56,18 +56,22 @@ class CustomTable extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                image != null?CustomContainer(
-                  height: 20,
-                  width: 20,
-                  shape: BoxShape.circle,
-                  image: DecorationImage(image: AssetImage(appleGBlackImage)),
-                ):SizedBox(),
-                image != null?SizedBox(width: 5):SizedBox(),
-                CustomText(
-                  text: rightText,
-                  fontSize: 14,
-                  color: image != null? Color(0xff815BFF):null,
-                  fontFamily: 'Gilroy',
+                if (image != null)
+                  CustomContainer(
+                    height: 20,
+                    width: 20,
+                    shape: BoxShape.circle,
+                    image: DecorationImage(image: AssetImage(appleGBlackImage)),
+                  ),
+                if (image != null) const SizedBox(width: 5),
+                Expanded( // <--- this will prevent overflow
+                  child: CustomText(
+                    text: rightText,
+                    fontSize: 14,
+                    color: image != null ? const Color(0xff815BFF) : null,
+                    fontFamily: 'Gilroy',
+                    overflow: TextOverflow.ellipsis, // Optional: ellipsis if text is too long
+                  ),
                 ),
               ],
             ),

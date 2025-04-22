@@ -13,7 +13,12 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
   bool recommendedStreams = true;
   bool newSubscriber = true;
   bool bookmarksFromStreams = true;
+  var isAllSelected = false.obs;
 
+  void toggleSelectAll() {
+    isAllSelected.value = !isAllSelected.value;
+    // aap yahan sab tags ko select ya unselect kar sakte hain
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,16 +66,23 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
           sectionTitle('search_notifications'.tr), // Updated to use translation
           ListTile(
             title: CustomText(
-              text: 'adding_tags_to_chat'.tr, // Updated to use translation
+              text: 'adding_tags_to_chat'.tr,
               fontFamily: "Gilroy-Bold",
+              fontSize: 14,
             ),
-            trailing: CustomText(
-              text: 'all'.tr, // Updated to use translation
-              fontWeight: FontWeight.bold,
-              fontFamily: "Gilroy-Bold",
-            ),
-            onTap: () {},
+            trailing: Obx(() => GestureDetector(
+              onTap: () {
+                toggleSelectAll();
+              },
+              child: CustomText(
+                text: isAllSelected.value ? 'Unselect'.tr : 'all'.tr,
+                fontWeight: FontWeight.bold,
+                fontFamily: "Gilroy-Bold",
+                fontSize: 14,
+              ),
+            )),
           ),
+
           buildCustomSwitchTile('new_subscriber'.tr, newSubscriber, (val) {
             setState(() => newSubscriber = val);
           }),
