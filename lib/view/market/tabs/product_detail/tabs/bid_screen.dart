@@ -84,7 +84,17 @@ class _BidScreenState extends State<BidScreen> {
             CustomGradientButton(
               text: 'Place Bid',
               onPressed: () {
-                _showSuccessDialog(context);
+               final enteredBid = priceController.text.trim();
+  if (enteredBid.isEmpty) {
+    Get.snackbar("Invalid", "Please enter a valid bid amount.",
+        backgroundColor: Colors.red, colorText: Colors.white);
+    return;
+  }
+
+  showDialog(
+    context: context,
+    builder: (context) => _buildSuccessDialog(context, enteredBid),
+  );
               },
             ),
             SizedBox(height: 20),
@@ -163,6 +173,48 @@ class _BidScreenState extends State<BidScreen> {
       ),
     );
   }
+
+Widget _buildSuccessDialog(BuildContext context, String bidAmount) {
+  return AlertDialog(
+    backgroundColor: Colors.white,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Align(
+          alignment: Alignment.topRight,
+          child: GestureDetector(
+            onTap: () => Get.back(),
+            child: Icon(Icons.close_outlined),
+          ),
+        ),
+        CustomContainer(
+          height: 60,
+          width: 60,
+          image: DecorationImage(
+            image: AssetImage(checkWithCircleIcon),
+          ),
+        ),
+        SizedBox(height: 10),
+        CustomText(
+          text: 'Bid $bidAmount ₽',
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+        GradientText(
+          'Successfully Placed',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          colors: [blueLiteColor, purpleLiteColor, deepPurpleColor],
+        ),
+        SizedBox(height: 10),
+        // CustomText(
+        //   text: "We'll send you a notification if you're outbid",
+        //   textAlign: TextAlign.center,
+        // ),
+      ],
+    ),
+  );
+}
 
   void _showSuccessDialog(BuildContext context) {
     showDialog(

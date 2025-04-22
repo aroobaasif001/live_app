@@ -63,67 +63,143 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
   String title1 = '';
   String? titleError;
+  bool isLoading = false;
+
   Future<void> _saveProduct() async {
-    // Upload images
-    List<String> imageUrls = await FirebaseService.uploadImages(selectedImages);
+    if (selectedImages.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please select at least one image.")),
+      );
+      return;
+    }
 
-    // Create the product object
-    ProductEntity newProduct = ProductEntity(
-      id: FirebaseAuth.instance.currentUser!.uid,
-      category: selectedCategory ?? "unknown".tr,
-      title: title,
-      description: description,
-      // Convert quantity to string
-      quantity: quantity.toString(),
-      saleType: isAuction ? "Auction" : "Buy Now",
-      startingBid: startingBid,
-      price: price,
-      selfDestruct: selfDestruct,
-      isActive: true,
-      isSold: false,
-      liveOnly: liveOnly,
-      streamer: selectedStreamer,
-      delivery: selectedDelivery,
-      images: imageUrls,
-    );
+    setState(() => isLoading = true);
 
-    // Save product to Firestore
-    await FirebaseService.saveProduct(newProduct);
-// Create a Firestore doc for the notification
-    final notificationDoc =
-        FirebaseFirestore.instance.collection('notifications').doc();
+    try {
+      List<String> imageUrls =
+          await FirebaseService.uploadImages(selectedImages);
 
-    await notificationDoc.set({
-      "id": notificationDoc.id,
-      "title": "✅ Product Added!",
-      "body": "Your product '${title1.trim()}' was successfully listed.",
-      "receiverId":
-          FirebaseAuth.instance.currentUser!.uid, // 👈 Target the current user
-      "senderId": FirebaseAuth.instance.currentUser!.uid,
-      "timestamp": DateTime.now(),
-      "data": {
-        "screen": "my_products",
-        "productId": newProduct.id,
-      }
-    });
-    final userDoc = await FirebaseFirestore.instance
-        .collection("UserEntity")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
+      ProductEntity newProduct = ProductEntity(
+        id: FirebaseAuth.instance.currentUser!.uid,
+        category: selectedCategory ?? "unknown".tr,
+        title: title,
+        description: description,
+        quantity: quantity.toString(),
+        saleType: isAuction ? "Auction" : "Buy Now",
+        startingBid: startingBid,
+        price: price,
+        selfDestruct: selfDestruct,
+        isActive: true,
+        isSold: false,
+        liveOnly: liveOnly,
+        streamer: selectedStreamer,
+        delivery: selectedDelivery,
+        images: imageUrls,
+      );
 
-    final fcmToken = userDoc.data()?['fcmToken'] ?? null;
-    await SendNotificationService.sendNotificationUsingApi(
+      await FirebaseService.saveProduct(newProduct);
+
+      final notificationDoc =
+          FirebaseFirestore.instance.collection('notifications').doc();
+      await notificationDoc.set({
+        "id": notificationDoc.id,
+        "title": "✅ Product Added!",
+        "body": "Your product '${title1.trim()}' was successfully listed.",
+        "receiverId": FirebaseAuth.instance.currentUser!.uid,
+        "senderId": FirebaseAuth.instance.currentUser!.uid,
+        "timestamp": DateTime.now(),
+        "data": {
+          "screen": "my_products",
+          "productId": newProduct.id,
+        }
+      });
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection("UserEntity")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      final fcmToken = userDoc.data()?['fcmToken'];
+      await SendNotificationService.sendNotificationUsingApi(
         token: fcmToken,
         title: 'Product Added',
         body: 'Your Product is Listed',
-        data: {});
+        data: {},
+      );
+Get.snackbar('Success', 'product_created".tr',colorText: Colors.white,backgroundColor: purpleColor);
+    
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("product_created".tr)),
-    );
-
-    Navigator.pop(context);
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to create product: $e")),
+      );
+    } finally {
+      setState(() => isLoading = false);
+    }
   }
+
+//   Future<void> _saveProduct() async {
+//     // Upload images
+//     List<String> imageUrls = await FirebaseService.uploadImages(selectedImages);
+
+//     // Create the product object
+//     ProductEntity newProduct = ProductEntity(
+//       id: FirebaseAuth.instance.currentUser!.uid,
+//       category: selectedCategory ?? "unknown".tr,
+//       title: title,
+//       description: description,
+//       // Convert quantity to string
+//       quantity: quantity.toString(),
+//       saleType: isAuction ? "Auction" : "Buy Now",
+//       startingBid: startingBid,
+//       price: price,
+//       selfDestruct: selfDestruct,
+//       isActive: true,
+//       isSold: false,
+//       liveOnly: liveOnly,
+//       streamer: selectedStreamer,
+//       delivery: selectedDelivery,
+//       images: imageUrls,
+//     );
+
+//     // Save product to Firestore
+//     await FirebaseService.saveProduct(newProduct);
+// // Create a Firestore doc for the notification
+//     final notificationDoc =
+//         FirebaseFirestore.instance.collection('notifications').doc();
+
+//     await notificationDoc.set({
+//       "id": notificationDoc.id,
+//       "title": "✅ Product Added!",
+//       "body": "Your product '${title1.trim()}' was successfully listed.",
+//       "receiverId":
+//           FirebaseAuth.instance.currentUser!.uid, // 👈 Target the current user
+//       "senderId": FirebaseAuth.instance.currentUser!.uid,
+//       "timestamp": DateTime.now(),
+//       "data": {
+//         "screen": "my_products",
+//         "productId": newProduct.id,
+//       }
+//     });
+//     final userDoc = await FirebaseFirestore.instance
+//         .collection("UserEntity")
+//         .doc(FirebaseAuth.instance.currentUser!.uid)
+//         .get();
+
+//     final fcmToken = userDoc.data()?['fcmToken'] ?? null;
+//     await SendNotificationService.sendNotificationUsingApi(
+//         token: fcmToken,
+//         title: 'Product Added',
+//         body: 'Your Product is Listed',
+//         data: {});
+
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text("product_created".tr)),
+//     );
+
+//     Navigator.pop(context);
+//   }
 
   @override
   Widget build(BuildContext context) {
@@ -638,22 +714,63 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                     ),
                   ),
                   const SizedBox(width: 10),
+                  // Expanded(
+                  //   child: GestureDetector(
+                  //     onTap: _saveProduct,
+                  //     child: Container(
+                  //       padding: const EdgeInsets.symmetric(vertical: 12),
+                  //       decoration: BoxDecoration(
+                  //         gradient: primaryGradientColor,
+                  //         borderRadius: BorderRadius.circular(8),
+                  //       ),
+                  //       alignment: Alignment.center,
+                  //       child: Padding(
+                  //         padding: EdgeInsets.symmetric(horizontal: 40),
+                  //         child: CustomText(
+                  //           text: 'ready'.tr,
+                  //           color: Colors.white,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+
                   Expanded(
-                    child: GestureDetector(
-                      onTap: _saveProduct,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          gradient: primaryGradientColor,
-                          borderRadius: BorderRadius.circular(8),
+                    child: SizedBox(
+                      height: 70,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : _saveProduct,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
                         ),
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 40),
-                          child: CustomText(
-                            text: 'ready'.tr,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            gradient: isLoading ? null : primaryGradientColor,
+                            color: isLoading ? Colors.grey : null,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  )
+                                : CustomText(
+                                    text: 'ready'.tr,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                           ),
                         ),
                       ),

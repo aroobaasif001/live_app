@@ -285,7 +285,7 @@ Row(
                 ),
                 SizedBox(height: 20),
                 CustomGradientButton(
-                  text: 'continue'.tr,
+                  text: 'save'.tr,
                   onPressed: _continueToNextScreen,
                 ),
                 SizedBox(height: 20),
