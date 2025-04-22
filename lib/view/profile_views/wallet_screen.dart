@@ -398,7 +398,7 @@ class _WalletScreenState extends State<WalletScreen>
                         ),
                       ),
                     ),
-                  ),
+                  )
                 ),
                 const SizedBox(height: 24),
               ],
