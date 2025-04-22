@@ -53,7 +53,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   // Keep the field at a single line
                   style: const TextStyle(color: Colors.white),
                   decoration:  InputDecoration(
-                    hintText: 'Message...'.tr,
+                    hintText: 'Message..'.tr,
                     hintStyle: TextStyle(color: Colors.white54),
                     border: InputBorder.none,
                     isDense: true,

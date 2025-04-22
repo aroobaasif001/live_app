@@ -56,7 +56,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     uid = 10000 + Random().nextInt(90000); // Generates a 5-digit number
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    ChannelId = List.generate(5, (index) => chars[Random().nextInt(chars.length)]).join();
+    ChannelId =
+        List.generate(5, (index) => chars[Random().nextInt(chars.length)])
+            .join();
     // TODO: implement initState
     super.initState();
   }
@@ -95,7 +97,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("Change Email", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text("Change Email",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       SizedBox(height: 16),
                       CustomText(text: "You can't change email"),
                       SizedBox(height: 12),
@@ -130,7 +133,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("Change Password", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text("Change Password",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       SizedBox(height: 16),
                       CustomText(
                         text:
@@ -155,7 +159,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               await StorageService.logout();
                               await FirebaseAuth.instance.signOut();
                               Get.back(); // Close dialog
-                              Get.offAll(() => SocialsLoginScreen()); // Navigate to login screen
+                              Get.offAll(() =>
+                                  SocialsLoginScreen()); // Navigate to login screen
                             },
                             child: Text("Logout"),
                           )
@@ -238,9 +243,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         String reportText = reportController.text;
                         if (reportText.isNotEmpty) {
                           Navigator.pop(context);
-                          Get.snackbar('Report', 'Your report has been submitted.');
+                          Get.snackbar(
+                              'Report', 'Your report has been submitted.');
                         } else {
-                          Get.snackbar('Error', 'Please write something before submitting.');
+                          Get.snackbar('Error',
+                              'Please write something before submitting.');
                         }
                       },
                       child: CustomText(
@@ -255,7 +262,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
           );
         }
-
       },
       {
         "icon": 'assets/icons/Archive Check.png',
@@ -343,7 +349,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             width: 65,
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                image: DecorationImage(image: AssetImage(profileImage), fit: BoxFit.fill)),
+                                image: DecorationImage(
+                                    image: AssetImage(profileImage),
+                                    fit: BoxFit.fill)),
                           ),
                           SizedBox(
                             width: 15,
@@ -353,8 +361,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               CustomText(
                                 fontFamily: "SF Pro Rounded",
-                                text: (snapshot.data!.data()?['firstName'] ?? 'User').toString(),
-                                 // snapshot.data!.data()!.firstName.toString(),
+                                text: (snapshot.data!.data()?['firstName'] ??
+                                        'User')
+                                    .toString(),
+                                // snapshot.data!.data()!.firstName.toString(),
                                 fontWeight: FontWeight.w800,
                                 fontSize: 20,
                               ),
@@ -369,7 +379,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 text: "trade_profile".tr,
                                 onPressed: () {
                                   Get.to(() => TradeProfileScreen(
-                                        userId: FirebaseAuth.instance.currentUser!.uid,
+                                        userId: FirebaseAuth
+                                            .instance.currentUser!.uid,
                                       ));
                                 },
                               )
@@ -394,16 +405,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 expand: false,
                                 builder: (_, controller) {
                                   return Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 12),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(16)),
                                     ),
                                     child: ListView(
                                       controller: controller,
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             CustomText(
                                               text: "start_selling_guide".tr,
@@ -412,35 +426,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                             IconButton(
                                               icon: Icon(Icons.close),
-                                              onPressed: () => Navigator.of(context).pop(),
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
                                             ),
                                           ],
                                         ),
                                         Divider(),
                                         CustomText(
-                                          text: "Here's how you can start selling:",
+                                          text:
+                                              "Here's how you can start selling:",
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                         ),
                                         const SizedBox(height: 12),
                                         ListTile(
-                                          leading: Icon(Icons.live_tv_outlined, color: Colors.purple),
+                                          leading: Icon(Icons.live_tv_outlined,
+                                              color: Colors.purple),
                                           title: Text("Start a Live Stream"),
                                           onTap: () async {
+                                            
+                                            final userData =
+                                                snapshot.data!.data()!;
+                                                  final userName =
+                                                userData['firstName'] ?? 'User';
+                                            final fcmToken =
+                                                userData['fcmToken'] ?? '';
+                                            await SendNotificationService
+                                                .sendToAllUserEntityTokens(
+                                                    //  token: fcmToken,
+                                                    title:
+                                                        '📢 $userName is Live!',
+                                                    body:
+                                                        'Join the live stream now.',
+                                                    data: {});
                                             Navigator.of(context).pop();
-                                            String title = _titleController.text.trim();
-final userData = snapshot.data!.data()!;
-                          final userName = userData['firstName'] ?? 'User';
-                          final fcmToken = userData['fcmToken'] ?? '';
+                                            String title =
+                                                _titleController.text.trim();
+                                          
+                                              Get.snackbar(
+                                                "Required",
+                                                "Please select a product to start the stream.",
+                                                backgroundColor: Colors.red,
+                                                colorText: Colors.white,
+                                              );
+                                          
+                                          
 
-                          await SendNotificationService
-                              .sendToAllUserEntityTokens(
-                               //  token: fcmToken,
-                                  title: '📢 $userName is Live!',
-                                  body: 'Join the live stream now.',
-
-                                  
-                                  data: {});
+                                            
                                             if (title.isEmpty) {
                                               // If title is empty, set a default title.
                                               title = 'Live Streaming';
@@ -450,7 +482,9 @@ final userData = snapshot.data!.data()!;
                                             try {
                                               final liveStreamData = {
                                                 "title": title,
-                                                "adminName": snapshot.data!.data()?['firstName'].toString(),
+                                                "adminName": snapshot.data!
+                                                    .data()?['firstName']
+                                                    .toString(),
                                                 "adminPhoto":
                                                     'https://images.unsplash.com/photo-1541516160071-4bb0c5af65ba?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFraW5nJTIwcGhvdG98ZW58MHx8MHx8fDA%3D',
                                                 "adminUid": uid,
@@ -461,7 +495,8 @@ final userData = snapshot.data!.data()!;
                                                 'currentFilter': null,
                                                 'currentmusic_id': null,
                                                 'heartbeat': null,
-                                                "timestamp": FieldValue.serverTimestamp(),
+                                                "timestamp": FieldValue
+                                                    .serverTimestamp(),
                                               };
 
                                               await FirebaseFirestore.instance
@@ -481,7 +516,8 @@ final userData = snapshot.data!.data()!;
                                               Get.snackbar(
                                                 "error".tr,
                                                 "live_stream_error".tr,
-                                                snackPosition: SnackPosition.BOTTOM,
+                                                snackPosition:
+                                                    SnackPosition.BOTTOM,
                                                 backgroundColor: Colors.red,
                                                 colorText: Colors.white,
                                               );
@@ -489,8 +525,10 @@ final userData = snapshot.data!.data()!;
                                           },
                                         ),
                                         ListTile(
-                                          leading: Icon(Icons.add_shopping_cart, color: Colors.blue),
-                                          title: Text("Upload a Product for Sale"),
+                                          leading: Icon(Icons.add_shopping_cart,
+                                              color: Colors.blue),
+                                          title:
+                                              Text("Upload a Product for Sale"),
                                           onTap: () {
                                             Navigator.of(context).pop();
                                             Get.to(() => CreateProductScreen());
@@ -548,11 +586,14 @@ final userData = snapshot.data!.data()!;
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(color: Colors.grey.withOpacity(0.2))),
+                                    border: Border.all(
+                                        color: Colors.grey.withOpacity(0.2))),
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 12),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Image.asset(
                                         userGroupIcon,
@@ -595,11 +636,14 @@ final userData = snapshot.data!.data()!;
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(color: Colors.grey.withOpacity(0.2))),
+                                    border: Border.all(
+                                        color: Colors.grey.withOpacity(0.2))),
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 12),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Image.asset(
                                         crownIcon,
@@ -656,7 +700,8 @@ final userData = snapshot.data!.data()!;
                                     height: 24,
                                     width: 24,
                                     image: DecorationImage(
-                                      image: AssetImage(settingsOptions[index]['icon']),
+                                      image: AssetImage(
+                                          settingsOptions[index]['icon']),
                                     ),
                                   )),
                             ),
@@ -721,7 +766,8 @@ final userData = snapshot.data!.data()!;
                                     height: 24,
                                     width: 24,
                                     image: DecorationImage(
-                                      image: AssetImage(helpAndContact[index]['icon']),
+                                      image: AssetImage(
+                                          helpAndContact[index]['icon']),
                                     ),
                                   )),
                             ),
@@ -768,8 +814,9 @@ final userData = snapshot.data!.data()!;
                               CustomContainer(
                                 height: 18,
                                 width: 18,
-                                image:
-                                    DecorationImage(image: AssetImage('assets/icons/Arrows ALogout 2.png')),
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        'assets/icons/Arrows ALogout 2.png')),
                               ),
                               SizedBox(width: 6),
                               CustomText(
@@ -804,7 +851,9 @@ final userData = snapshot.data!.data()!;
         ),
         child: Container(
           padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), gradient: primaryGradientColor),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              gradient: primaryGradientColor),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -858,7 +907,8 @@ final userData = snapshot.data!.data()!;
                         await StorageService.logout();
                         await FirebaseAuth.instance.signOut();
                         Get.back(); // Close dialog
-                        Get.offAll(() => SocialsLoginScreen()); // Navigate to login screen
+                        Get.offAll(() =>
+                            SocialsLoginScreen()); // Navigate to login screen
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -868,7 +918,8 @@ final userData = snapshot.data!.data()!;
                       ),
                       child: Text(
                         "logout".tr,
-                        style: TextStyle(fontSize: 16, color: Colors.red.shade800),
+                        style:
+                            TextStyle(fontSize: 16, color: Colors.red.shade800),
                       ),
                     ),
                   ),

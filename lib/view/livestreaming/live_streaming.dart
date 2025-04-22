@@ -393,6 +393,7 @@ class _LiveStreamingScreenState extends State<LiveStreamingScreen> {
         body: Obx(() {
           return Stack(
             children: [
+              
               Positioned.fill(
                 child: _controller.isJoined.value
                     ? Stack(

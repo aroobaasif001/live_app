@@ -1,9 +1,11 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:live_app/entities/product_entity.dart';
+import 'package:live_app/services/notification_service.dart';
+import 'package:live_app/services/send_notification_service.dart';
 import 'package:live_app/utils/colors.dart';
 import 'dart:io';
 import '../../custom_widgets/custom_text.dart';
@@ -61,42 +63,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
   String title1 = '';
   String? titleError;
-  // Future<void> _saveProduct() async {
-  //   // Upload images
-  //   List<String> imageUrls = await FirebaseService.uploadImages(selectedImages);
-
-  //   // Create the product object
-  //   ProductEntity newProduct = ProductEntity(
-  //     id: FirebaseAuth.instance.currentUser!.uid,
-  //     category: selectedCategory ?? "unknown".tr,
-  //     title: title,
-  //     description: description,
-  //     // Convert quantity to string
-  //     quantity: quantity.toString(),
-  //     saleType: isAuction ? "Auction" : "Buy Now",
-  //     startingBid: startingBid,
-  //     price: price,
-  //     selfDestruct: selfDestruct,
-  //     isActive: true,
-  //     isSold: false,
-  //     liveOnly: liveOnly,
-  //     streamer: selectedStreamer,
-  //     delivery: selectedDelivery,
-  //     images: imageUrls,
-  //   );
-
-  //   // Save product to Firestore
-  //   await FirebaseService.saveProduct(newProduct);
-
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(content: Text("product_created".tr)),
-  //   );
-
-  //   Navigator.pop(context);
-  // }
-
   Future<void> _saveProduct() async {
-  try {
     // Upload images
     List<String> imageUrls = await FirebaseService.uploadImages(selectedImages);
 
@@ -104,12 +71,13 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     ProductEntity newProduct = ProductEntity(
       id: FirebaseAuth.instance.currentUser!.uid,
       category: selectedCategory ?? "unknown".tr,
-      title: title1.trim(), // ← Use the validated title
-      description: description.trim(),
+      title: title,
+      description: description,
+      // Convert quantity to string
       quantity: quantity.toString(),
       saleType: isAuction ? "Auction" : "Buy Now",
-      startingBid: isAuction ? startingBid : null,
-      price: !isAuction ? price : null,
+      startingBid: startingBid,
+      price: price,
       selfDestruct: selfDestruct,
       isActive: true,
       isSold: false,
@@ -119,22 +87,43 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       images: imageUrls,
     );
 
+    // Save product to Firestore
     await FirebaseService.saveProduct(newProduct);
+// Create a Firestore doc for the notification
+    final notificationDoc =
+        FirebaseFirestore.instance.collection('notifications').doc();
+
+    await notificationDoc.set({
+      "id": notificationDoc.id,
+      "title": "✅ Product Added!",
+      "body": "Your product '${title1.trim()}' was successfully listed.",
+      "receiverId":
+          FirebaseAuth.instance.currentUser!.uid, // 👈 Target the current user
+      "senderId": FirebaseAuth.instance.currentUser!.uid,
+      "timestamp": DateTime.now(),
+      "data": {
+        "screen": "my_products",
+        "productId": newProduct.id,
+      }
+    });
+    final userDoc = await FirebaseFirestore.instance
+        .collection("UserEntity")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    final fcmToken = userDoc.data()?['fcmToken'] ?? null;
+    await SendNotificationService.sendNotificationUsingApi(
+        token: fcmToken,
+        title: 'Product Added',
+        body: 'Your Product is Listed',
+        data: {});
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("product_created".tr)),
     );
 
     Navigator.pop(context);
-  } catch (e, stack) {
-    print("🔥 Error saving product: $e");
-    print(stack);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Failed to create product: $e")),
-    );
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -505,38 +494,39 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
               //       });
               //     },
               //   ),
+
               const SizedBox(height: 16),
 
-Text(
-  isAuction ? "starting_bid".tr : "price".tr,
-  style: const TextStyle(fontWeight: FontWeight.bold),
-),
+              Text(
+                isAuction ? "starting_bid".tr : "price".tr,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
 
-const SizedBox(height: 6),
+              const SizedBox(height: 6),
 
-TextField(
-  decoration: InputDecoration(
-    filled: true,
-    fillColor: Colors.grey[200], // Pale background
-    hintText: isAuction ? '100₽' : '999₽',
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide.none,
-    ),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-  ),
-  keyboardType: TextInputType.number,
-  onChanged: (val) {
-    setState(() {
-      if (isAuction) {
-        startingBid = val;
-      } else {
-        price = val;
-      }
-    });
-  },
-),
-
+              TextField(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey[200], // Pale background
+                  hintText: isAuction ? '100₽' : '999₽',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (val) {
+                  setState(() {
+                    if (isAuction) {
+                      startingBid = val;
+                    } else {
+                      price = val;
+                    }
+                  });
+                },
+              ),
 
               const SizedBox(height: 16),
 
