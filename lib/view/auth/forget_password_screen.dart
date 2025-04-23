@@ -12,36 +12,60 @@ class ForgetPasswordScreen extends StatefulWidget {
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isLoading = false;
 
   Future<void> _resetPassword() async {
-    if (_emailController.text.isEmpty) {
-      Get.snackbar("Error", "Please enter your email");
-      return;
-    }
+    final email = _emailController.text.trim().toLowerCase();
 
-    setState(() {
-      isLoading = true;
-    });
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => isLoading = true);
 
     try {
       await FirebaseAuth.instance.setLanguageCode(Get.locale?.languageCode ?? "en");
-      await FirebaseAuth.instance.sendPasswordResetEmail(
-        email: _emailController.text.trim(),
+
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      setState(() => isLoading = false);
+
+      Get.defaultDialog(
+        title: "Email Sent",
+        middleText: "A password reset link has been sent to $email.",
+        confirm: TextButton(
+          onPressed: () {
+            Get.back(); // Close dialog
+            Get.back(); // Go back to login screen
+          },
+          child: Text("OK"),
+        ),
       );
-      Get.snackbar("Success", "Password reset email sent!");
-      Get.back();
     } on FirebaseAuthException catch (e) {
+      setState(() => isLoading = false);
+
       String errorMessage = "Something went wrong";
       if (e.code == 'user-not-found') {
-        errorMessage = "No user found with that email";
+        errorMessage = "No user found with this email.";
+      } else if (e.code == 'invalid-email') {
+        errorMessage = "Invalid email format.";
       }
-      Get.snackbar("Error", errorMessage);
-    }
 
-    setState(() {
-      isLoading = false;
-    });
+      Get.snackbar(
+        "Error",
+        errorMessage,
+        backgroundColor: Colors.white,
+        colorText: Colors.red,
+        icon: Icon(Icons.error_outline, color: Colors.red),
+      );
+    } catch (e) {
+      setState(() => isLoading = false);
+      Get.snackbar(
+        "Error",
+        "Unexpected error occurred. Please try again.",
+        backgroundColor: Colors.white,
+        colorText: Colors.red,
+      );
+    }
   }
 
   @override
@@ -51,54 +75,53 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Close button
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () => Get.back(),
-                  tooltip: 'close'.tr,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () => Get.back(),
+                    tooltip: 'Close',
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              // Title
-              CustomText(
-                text: 'Reset Password',
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'SFProRounded',
-              ),
-              SizedBox(height: 20),
-
-              // Email field
-              CustomTextField(
-                hintText: 'Enter your email',
-                controller: _emailController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!RegExp(
-                          r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
-                      .hasMatch(value)) {
-                    return 'Enter a valid email';
-                  }
-                  return null;
-                },
-              ),
-
-              SizedBox(height: 20),
-              CustomGradientButton(
-                text: isLoading ? 'Sending...' : 'Send Reset Link',
-                onPressed: isLoading ? null : _resetPassword,
-              ),
-            ],
+                SizedBox(height: 20),
+                CustomText(
+                  text: 'Reset Password',
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'SFProRounded',
+                ),
+                SizedBox(height: 20),
+                CustomTextField(
+                  hintText: 'Email *',
+                  controller: _emailController,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!RegExp(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+                        .hasMatch(value.trim())) {
+                      return 'Enter a valid email';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 30),
+                CustomGradientButton(
+                  text: isLoading ? 'Sending...' : 'Send Reset Link',
+                  onPressed: isLoading ? null : _resetPassword,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+
