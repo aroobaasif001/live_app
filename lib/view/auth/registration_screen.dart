@@ -1,8 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/custom_widgets/custom_textfield.dart';
+import 'package:live_app/termAndCondition/privacy_policy.dart';
+import 'package:live_app/termAndCondition/terms_and_condition.dart';
 import 'package:live_app/utils/colors.dart';
 import 'package:live_app/view/auth/delivery_address_screen.dart';
 
@@ -327,86 +330,201 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  DropdownButtonFormField<String>(
-                    value: gender,
-                    decoration: InputDecoration(
-                      hintText: 'Select Gender',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                      fillColor: Colors.grey[100],
-                      filled: true,
-                    ),
-                    items: ['Male', 'Female', 'Other']
-                        .map((gender) => DropdownMenuItem(
-                              value: gender,
-                              child: Text(gender),
-                            ))
-                        .toList(),
-                    onChanged: (value) => setState(() => gender = value),
-                  ),
-                  SizedBox(height: 20),
-                  DropdownButtonFormField<String>(
-                    value: country,
-                    decoration: InputDecoration(
-                      hintText: 'Select Country',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                      fillColor: Colors.grey[100],
-                      filled: true,
-                    ),
-                    items: ['Russia', 'USA', 'India']
-                        .map((country) => DropdownMenuItem(
-                              value: country,
-                              child: Text(country),
-                            ))
-                        .toList(),
-                    onChanged: (value) => setState(() => country = value),
-                  ),
-                  SizedBox(height: 20),
+                  // DropdownButtonFormField<String>(
+                  //   value: gender,
+                  //   decoration: InputDecoration(
+                  //     hintText: 'Select Gender',
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //       borderSide: BorderSide.none,
+                  //     ),
+                  //     fillColor: Colors.grey[100],
+                  //     filled: true,
+                  //   ),
+                  //   items: ['Male', 'Female', 'Other']
+                  //       .map((gender) => DropdownMenuItem(
+                  //             value: gender,
+                  //             child: Text(gender),
+                  //           ))
+                  //       .toList(),
+                  //   onChanged: (value) => setState(() => gender = value),
+                  // ),
+                  // SizedBox(height: 20),
+                  // DropdownButtonFormField<String>(
+                  //   value: country,
+                  //   decoration: InputDecoration(
+                  //     hintText: 'Select Country',
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //       borderSide: BorderSide.none,
+                  //     ),
+                  //     fillColor: Colors.grey[100],
+                  //     filled: true,
+                  //   ),
+                  //   items: ['Russia', 'USA', 'India']
+                  //       .map((country) => DropdownMenuItem(
+                  //             value: country,
+                  //             child: Text(country),
+                  //           ))
+                  //       .toList(),
+                  //   onChanged: (value) => setState(() => country = value),
+                  // ),
+                  // SizedBox(height: 20),
 
-                  Row(
-                    children: [
-                      buildGradientCheckbox(isAgreedToTerms, () {
-                        setState(() => isAgreedToTerms = !isAgreedToTerms);
-                      }),
-                      Expanded(
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(text: 'I agree to the '),
-                              TextSpan(
-                                text: 'Terms of Service',
-                                style: TextStyle(
-                                    // decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                    fontFamily: 'Gilroy-Medium'),
-                              ),
-                              TextSpan(
-                                text: ' and confirm I have read the ',
-                                style: TextStyle(
-                                    // decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                    fontFamily: 'Gilroy-Medium'),
-                              ),
-                              TextSpan(
-                                text: 'Privacy Policy',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Gilroy-Medium'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     buildGradientCheckbox(isAgreedToTerms, () {
+                  //       setState(() => isAgreedToTerms = !isAgreedToTerms);
+                  //     }),
+                  //     Expanded(
+                  //       child: Text.rich(
+                  //         TextSpan(
+                  //           children: [
+                  //             TextSpan(text: 'I agree to the '),
+                  //             TextSpan(
+                  //               text: 'Terms of Service',
+                  //               style: TextStyle(
+                  //                   // decoration: TextDecoration.underline,
+                  //                   fontWeight: FontWeight.w400,
+                  //                   fontSize: 14,
+                  //                   fontFamily: 'Gilroy-Medium'),
+                  //             ),
+                  //             TextSpan(
+                  //               text: ' and confirm I have read the ',
+                  //               style: TextStyle(
+                  //                   // decoration: TextDecoration.underline,
+                  //                   fontWeight: FontWeight.w400,
+                  //                   fontSize: 14,
+                  //                   fontFamily: 'Gilroy-Medium'),
+                  //             ),
+                  //             TextSpan(
+                  //               text: 'Privacy Policy',
+                  //               style: TextStyle(
+                  //                   fontSize: 14,
+                  //                   fontWeight: FontWeight.w400,
+                  //                   fontFamily: 'Gilroy-Medium'),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                 // ),
+
+                 // GENDER
+// GENDER DROPDOWN with asterisk
+CustomText(
+  text: 'Gender *',
+  fontWeight: FontWeight.w400,
+  fontSize: 14,
+  fontFamily: 'Gilroy-Medium',
+),
+SizedBox(height: 6),
+DropdownButtonFormField<String>(
+  value: gender,
+  decoration: InputDecoration(
+    hintText: 'Select Gender',
+    hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+    filled: true,
+    fillColor: Colors.white,
+    contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide.none,
+    ),
+  ),
+  items: ['Male', 'Female', 'Other']
+      .map((value) => DropdownMenuItem(
+            value: value,
+            child: Text(value, style: TextStyle(fontSize: 14)),
+          ))
+      .toList(),
+  onChanged: (val) => setState(() => gender = val),
+),
+SizedBox(height: 16),
+
+// COUNTRY DROPDOWN with asterisk
+CustomText(
+  text: 'Country *',
+  fontWeight: FontWeight.w400,
+  fontSize: 14,
+  fontFamily: 'Gilroy-Medium',
+),
+SizedBox(height: 6),
+DropdownButtonFormField<String>(
+  value: country,
+  decoration: InputDecoration(
+    hintText: 'Select Country',
+    hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+    filled: true,
+    fillColor: Colors.white,
+    contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide.none,
+    ),
+  ),
+  items: ['Russia', 'USA', 'India']
+      .map((value) => DropdownMenuItem(
+            value: value,
+            child: Text(value, style: TextStyle(fontSize: 14)),
+          ))
+      .toList(),
+  onChanged: (val) => setState(() => country = val),
+),
+SizedBox(height: 20),
+
+// TERMS + PRIVACY POLICY CHECKBOX with links
+Row(
+  children: [
+    buildGradientCheckbox(isAgreedToTerms, () {
+      setState(() => isAgreedToTerms = !isAgreedToTerms);
+    }),
+    Expanded(
+      child: RichText(
+        text: TextSpan(
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+            fontFamily: 'Gilroy-Medium',
+            color: Colors.black87,
+          ),
+          children: [
+            const TextSpan(text: 'I agree to the '),
+            TextSpan(
+              text: 'Terms of Service',
+              style: TextStyle(
+                color: Colors.deepPurple,
+                fontWeight: FontWeight.w500,
+                decoration: TextDecoration.underline,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                    Get.to(()=>TermsAndCondition());
+                },
+            ),
+            const TextSpan(text: ' and confirm I have read the '),
+            TextSpan(
+              text: 'Privacy Policy',
+              style: TextStyle(
+                color: Colors.deepPurple,
+                fontWeight: FontWeight.w500,
+                decoration: TextDecoration.underline,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                   Get.to(()=>PrivacyPolicy());
+                },
+            ),
+          ],
+        ),
+      ),
+    ),
+  ],
+),
+SizedBox(height: 18),
+
+
                   SizedBox(height: 20),
                   Row(
                     children: [

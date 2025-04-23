@@ -74,7 +74,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
 
         List<ProductEntity> allProducts = snapshot.data!.docs
             .map((doc) =>
-            ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
 
         return _buildProductList(allProducts);
@@ -97,9 +97,9 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
         }
 
         List<ProductEntity> awaitingReceiptProducts =
-        snapshot.data!.docs.map((doc) {
+            snapshot.data!.docs.map((doc) {
           final product =
-          ProductEntity.fromJson(doc.data() as Map<String, dynamic>);
+              ProductEntity.fromJson(doc.data() as Map<String, dynamic>);
           return product;
         }).where((product) {
           // Check if the bidders map exists and contains currentUserId.
@@ -138,7 +138,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
         // Fetch the list of product IDs from the auctionedWinProduct array in UserEntity.
         final userData = snapshot.data!.data() as Map<String, dynamic>;
         final List<String> auctionedProductIds =
-        List<String>.from(userData['auctionedWinProduct'] ?? []);
+            List<String>.from(userData['auctionedWinProduct'] ?? []);
 
         if (auctionedProductIds.isEmpty) {
           return Center(child: Text("No auctioned products found.".tr));
@@ -154,13 +154,14 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
             if (productSnapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-            if (!productSnapshot.hasData || productSnapshot.data!.docs.isEmpty) {
+            if (!productSnapshot.hasData ||
+                productSnapshot.data!.docs.isEmpty) {
               return Center(child: Text("No products found".tr));
             }
 
             List<ProductEntity> onTheWayProducts = productSnapshot.data!.docs
                 .map((doc) =>
-                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+                    ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
                 .where((product) {
               // Only show active and not sold products.
               return product.isActive == true && product.isSold == false;
@@ -187,7 +188,7 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
 
         List<ProductEntity> awaitingShipmentProducts = snapshot.data!.docs
             .map((doc) =>
-            ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
+                ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
             .where((product) {
           return product.selfDestruct == true && product.isSold == false;
         }).toList();
@@ -203,11 +204,11 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
       children: [
         ...products
             .map((product) => GestureDetector(
-          onTap: () {
-            Get.to(() => ProductDetailScreen(product: product));
-          },
-          child: _buildProductCard(product),
-        ))
+                  onTap: () {
+                    Get.to(() => ProductDetailScreen(product: product));
+                  },
+                  child: _buildProductCard(product),
+                ))
             .toList(),
       ],
     );
@@ -239,150 +240,157 @@ class _PurchaseActivityScreenState extends State<PurchaseActivityScreen> {
     );
   }
 
-Widget _buildProductCard(ProductEntity product, {
-  String status = '',
-  bool isActive=true,
-  Color statusColor = Colors.purple,
-  int messageCount = 3,
-}) {
-  return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          blurRadius: 6,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Row(
-      children: [
-        Stack(
-          children: [
-        ClipRRect(
-  borderRadius: const BorderRadius.only(
-    topLeft: Radius.circular(12),
-    bottomLeft: Radius.circular(12),
-  ),
-  child: (product.images != null &&
-          product.images!.isNotEmpty &&
-          product.images!.first.isNotEmpty)
-      ? Image.network(
-          product.images!.first,
-          width: 140,
-          height: 140,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => Image.asset(
-            watchVerticalImage,
-            width: 140,
-            height: 140,
-            fit: BoxFit.cover,
+  Widget _buildProductCard(
+    ProductEntity product, {
+    String status = '',
+    bool isActive = true,
+    Color statusColor = Colors.purple,
+    int messageCount = 3,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
-        )
-      : Image.asset(
-          watchVerticalImage,
-          width: 140,
-          height: 140,
-          fit: BoxFit.cover,
-        ),
-),
-
-
-            // 🟢 Notification bubble (top-right corner)
-            Positioned(
-              top: 6,
-              right: 6,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+        ],
+      ),
+      child: Row(
+        children: [
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  bottomLeft: Radius.circular(12),
                 ),
-                child: Row(
-                  children: [
-                    Image.asset('assets/images/Bookmark.png',height: 16,width: 16,),
-                  
-                    const SizedBox(width: 4),
-                    Text(
-                      '$messageCount',
-                      style: const TextStyle(fontSize: 12, color: Colors.black),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // 🟣 Status label (bottom-left corner)
-            if (status.isNotEmpty)
-              Positioned(
-                bottom: 8,
-                left: 8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: statusColor,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Text(
-                    status,
-                    style: const TextStyle(color: Colors.red, fontSize: 12),
-                  ),
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.storefront, size: 16, color: Colors.grey),
-                    const SizedBox(width: 4),
-                    Text(
-                      product.streamer ?? 'company_name',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                child: (product.images != null &&
+                        product.images!.isNotEmpty &&
+                        product.images!.first.isNotEmpty)
+                    ? Image.network(
+                        product.images!.first,
+                        width: 140,
+                        height: 140,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset(
+                          watchVerticalImage,
+                          width: 140,
+                          height: 140,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Image.asset(
+                        watchVerticalImage,
+                        width: 140,
+                        height: 140,
+                        fit: BoxFit.cover,
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    _buildRatingWidget(product),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  product.title ?? 'Product name',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  product.description ?? 'Description',
-                  style: const TextStyle(fontSize: 13, color: Colors.grey),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  "${product.price ?? '0'} ₽",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+              ),
+
+              // 🟢 Notification bubble (top-right corner)
+              Positioned(
+                top: 6,
+                right: 6,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/images/Bookmark.png',
+                        height: 16,
+                        width: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '$messageCount',
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.black),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
+
+              // 🟣 Status label (bottom-left corner)
+              if (status.isNotEmpty)
+                Positioned(
+                  bottom: 8,
+                  left: 8,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text(
+                      status,
+                      style: const TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.storefront,
+                          size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        product.streamer ?? 'company_name',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      _buildRatingWidget(product),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    product.title ?? 'Product name',
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    product.description ?? 'Description',
+                    style: const TextStyle(fontSize: 13, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    "${product.price?.isNotEmpty == true ? product.price : product.startingBid ?? '0'} ₽",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
-
+        ],
+      ),
+    );
+  }
 
   // Helper method to build the rating widget for a given product.
   Widget _buildRatingWidget(ProductEntity product) {
@@ -423,5 +431,3 @@ Widget _buildProductCard(ProductEntity product, {
     );
   }
 }
-
-

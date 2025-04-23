@@ -73,6 +73,35 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       return;
     }
 
+    // ✅ Validate title
+    if (title1.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Title is required.")),
+      );
+      return;
+    }
+
+    // ✅ Validate description
+    if (description.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Description is required.")),
+      );
+      return;
+    }
+    // ✅ Validate starting bid or price
+    if (isAuction && (startingBid == null || startingBid!.trim().isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Starting bid is required.")),
+      );
+      return;
+    }
+    if (!isAuction && (price == null || price!.trim().isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Price is required.")),
+      );
+      return;
+    }
+
     setState(() => isLoading = true);
 
     try {
@@ -82,12 +111,14 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       ProductEntity newProduct = ProductEntity(
         id: FirebaseAuth.instance.currentUser!.uid,
         category: selectedCategory ?? "unknown".tr,
-        title: title,
+        title: title1.trim(),
         description: description,
         quantity: quantity.toString(),
         saleType: isAuction ? "Auction" : "Buy Now",
-        startingBid: startingBid,
-        price: price,
+        // startingBid: startingBid,
+        // price: price,
+        startingBid: isAuction ? startingBid : null, // ✅ Only store if Auction
+        price: !isAuction ? price : null,
         selfDestruct: selfDestruct,
         isActive: true,
         isSold: false,
@@ -126,8 +157,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         body: 'Your Product is Listed',
         data: {},
       );
-Get.snackbar('Success', 'product_created".tr',colorText: Colors.white,backgroundColor: purpleColor);
-    
+      Get.snackbar('Success', 'product_created".tr',
+          colorText: Colors.white, backgroundColor: purpleColor);
 
       Navigator.pop(context);
     } catch (e) {
