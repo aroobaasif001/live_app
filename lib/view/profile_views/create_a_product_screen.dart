@@ -1100,7 +1100,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
               child: AbsorbPointer(
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: selectedCategory ?? "Select Category",
+                    hintText: selectedCategory?.tr ?? "Select Category".tr,
                     filled: true,
                     fillColor: Colors.grey[50],
                     border: OutlineInputBorder(

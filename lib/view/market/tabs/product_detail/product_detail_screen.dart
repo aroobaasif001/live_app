@@ -44,6 +44,7 @@ class ProductDetailScreen extends StatelessWidget {
       builder: (_) {
         return StatefulBuilder(builder: (ctx, setState) {
           return AlertDialog(
+            insetPadding: EdgeInsets.zero,
             title: const Text('Rate this product'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
