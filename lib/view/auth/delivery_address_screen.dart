@@ -131,7 +131,6 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                       children: [
                         SizedBox(height: 20),
                         CustomTextField(
-                           isRequired: true,
                           controller: _countryController,
                           hintText: 'country'.tr,
                           readOnly: true,
@@ -141,7 +140,6 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                         ),
                         SizedBox(height: 20),
                         CustomTextField(
-                           isRequired: true,
                           hintText: 'city'.tr,
                           controller: _cityController,
                           validator: (value) =>
@@ -149,7 +147,6 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                         ),
                         SizedBox(height: 20),
                         CustomTextField(
-                           isRequired: true,
                           hintText: 'street'.tr,
                           controller: _streetController,
                           validator: (value) =>
@@ -209,7 +206,6 @@ Row(
       child: Container(
         margin: EdgeInsets.only(bottom: 8), // consistent spacing
         child: CustomTextField(
-          isRequired: true,
           hintText: 'house'.tr,
           controller: _houseController,
           validator: (value) =>
@@ -222,7 +218,6 @@ Row(
       child: Container(
         margin: EdgeInsets.only(bottom: 8),
         child: CustomTextField(
-          isRequired: true,
           hintText: 'apartment'.tr,
           controller: _apartmentController,
           // validator: (value) =>
@@ -241,7 +236,6 @@ Row(
       child: Container(
         margin: EdgeInsets.only(bottom: 8),
         child: CustomTextField(
-          isRequired: true,
           hintText: 'entrance'.tr,
           controller: _entranceController,
           // validator: (value) =>
@@ -254,7 +248,6 @@ Row(
       child: Container(
         margin: EdgeInsets.only(bottom: 8),
         child: CustomTextField(
-          isRequired: true,
           hintText: 'index'.tr,
           controller: _indexController,
           validator: (value) =>

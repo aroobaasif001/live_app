@@ -424,9 +424,8 @@ class LiveStreamController extends GetxController {
           await doc.reference.delete();
         }
       }
-
-      // Delete the document itself
-      await liveStreamDoc.delete();
+      // // Delete the document itself
+      // await liveStreamDoc.delete();
       Get.snackbar(
         "Success".tr,
         "Live stream successfully deleted".tr,

@@ -18,7 +18,7 @@ class FirebaseService {
     }
     return imageUrls;
   }
-    static Future<void> saveProduct(ProductEntity product) async {
+  static Future<void> saveProduct(ProductEntity product) async {
     await ProductEntity.collection().add(product);
   }
 }

@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:live_app/view/homeScreen/homeMainScreen/gift_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../livestreaming/livestreamingview_screen.dart';
-import '../../search_views/search_by_application.dart';
 import '../widgets/live_video_card.dart';
 import '../widgets/category_tab.dart';
 import 'notification_screen1.dart';
@@ -140,7 +139,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
 
   Widget _buildLiveVideos(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('livestreams').snapshots(),
+      stream: FirebaseFirestore.instance.collection('livestreams').where('isBlocked', isEqualTo: false).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -163,7 +162,6 @@ final filtered = _searchQuery.isEmpty && _selectedCategory == null
                (_selectedCategory == null || category == _selectedCategory!.toLowerCase());
       }).toList();
 
-      
         // final filtered = _searchQuery.isEmpty
         //     ? allData
         //     : allData.where((doc) {
@@ -222,9 +220,7 @@ final filtered = _searchQuery.isEmpty && _selectedCategory == null
       final sharedPreferences = await SharedPreferences.getInstance();
       final uid = 10000 + Random().nextInt(90000);
       final name = 'Guest';
-      final photo =
-          'https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg';
-
+      final photo = 'https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg';
       if (uid == 0) {
         print('[ERROR] UID is not available in SharedPreferences.');
         return;

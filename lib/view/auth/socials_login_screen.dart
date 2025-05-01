@@ -94,7 +94,8 @@ class SocialsLoginScreen extends StatelessWidget {
                   ),
                       CustomText(
                     text: 'YourPurchaseisProtected'.tr,
-                    fontSize: 28,
+                    textAlign: TextAlign.center,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'SFProRounded',
                   ),
@@ -140,55 +141,46 @@ class SocialsLoginScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                       const SizedBox(height: 5),
-                  // GradientText(
-                  //   'terms_conditions2'.tr,
-                  //   textAlign: TextAlign.center,
-                  //   colors: [
-                  //     Color(0xff8385E6),
-                  //     Color(0xffE569DB),
-                  //   ],
-                  // ),
                   RichText(
-  textAlign: TextAlign.center,
-  text: TextSpan(
-    style: TextStyle(fontSize: 16.0), // Base style
-    children: [
-      TextSpan(
-        recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                Get.to(() => TermsAndCondition());
-              },
-        text: 'Terms of Service ',
-        style: TextStyle(
-          fontSize: 14,
-          foreground: Paint()
-            ..shader = LinearGradient(
-              colors: [Color(0xff8385E6), Color(0xffE569DB)],
-            ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-        ),
-      ),
-      TextSpan(
-        text: 'and',
-        style: TextStyle(color: Colors.black,fontSize: 14),
-      ),
-      TextSpan(
-       recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                Get.to(() => PrivacyPolicy());
-              },
-        text: ' Privacy Policy.',
-        style: TextStyle(
-               fontSize: 14,
-          foreground: Paint()
-            ..shader = LinearGradient(
-              colors: [Color(0xff8385E6), Color(0xffE569DB)],
-            ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-        ),
-      ),
-    ],
-  ),
-)
-,
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: TextStyle(fontSize: 16.0), // Base style
+                      children: [
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Get.to(() => TermsAndCondition());
+                            },
+                          text: 'Terms of Service ',
+                          style: TextStyle(
+                            fontSize: 14,
+                            foreground: Paint()
+                              ..shader = LinearGradient(
+                                colors: [Color(0xff8385E6), Color(0xffE569DB)],
+                              ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'and',
+                          style: TextStyle(color: Colors.black,fontSize: 14),
+                        ),
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Get.to(() => PrivacyPolicy());
+                            },
+                          text: ' Privacy Policy.',
+                          style: TextStyle(
+                            fontSize: 14,
+                            foreground: Paint()
+                              ..shader = LinearGradient(
+                                colors: [Color(0xff8385E6), Color(0xffE569DB)],
+                              ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   SizedBox(height: 20),
                 ],
               ),

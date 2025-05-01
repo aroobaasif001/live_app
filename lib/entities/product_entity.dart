@@ -21,6 +21,7 @@ class ProductEntity {
   final List<String>? images;
   final bool? isActive;
   final bool? isSold;
+  final int saveCount;
   final Map<String, dynamic>? bidders; // Store bidders as a Map<String, dynamic>
 
   ProductEntity({
@@ -41,6 +42,7 @@ class ProductEntity {
     this.isActive,
     this.isSold,
     this.bidders,
+    this.saveCount = 0,
   });
 
   // Factory constructor to create ProductEntity from Firestore data

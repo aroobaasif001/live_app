@@ -5,14 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/entities/product_entity.dart';
 import 'package:live_app/utils/colors.dart';
-import 'package:live_app/view/market/tabs/product_detail/product_detail_screen.dart';
 import 'package:live_app/view/profile_views/create_a_product_screen.dart';
-
 import '../../custom_widgets/custom_container.dart';
-import '../../custom_widgets/custom_gradient_button.dart';
 import '../../custom_widgets/custom_text.dart';
-import '../../utils/images_path.dart';
-import '../../translate/translations_app.dart';
 
 class MyProductsScreen extends StatefulWidget {
   const MyProductsScreen({super.key});
@@ -163,47 +158,6 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     );
   }
 
-  // Widget buildProductList(String filter) {
-  //   return StreamBuilder<QuerySnapshot>(
-  //     stream: FirebaseFirestore.instance.collection('products').snapshots(),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         return const Center(child: CircularProgressIndicator());
-  //       }
-
-  //       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-  //         return Center(child: Text("no_products".tr));
-  //       }
-
-  //       // Convert each doc into a ProductEntity
-  //       List<ProductEntity> products = snapshot.data!.docs
-  //           .map((doc) =>
-  //               ProductEntity.fromJson(doc.data() as Map<String, dynamic>))
-  //           .toList();
-
-  //       // Filter logic
-  //       if (filter == "Fix") {
-  //         products = products.where((p) => p.saleType == "Buy Now").toList();
-  //       } else if (filter == "Auction") {
-  //         products = products.where((p) => p.saleType == "Auction").toList();
-  //       } else if (filter == "Active") {
-  //         products = products
-  //             .where((p) => (p.isActive ?? false) && !(p.isSold ?? false))
-  //             .toList();
-  //       } else if (filter == "Sold") {
-  //         products = products.where((p) => p.isSold ?? false).toList();
-  //       }
-
-  //       return ListView.builder(
-  //         itemCount: products.length,
-  //         itemBuilder: (context, index) {
-  //           return buildProductItem(products[index]);
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
-
   Widget buildProductList(String filter) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('products').snapshots(),
@@ -257,9 +211,14 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         return ListView.builder(
           itemCount: products.length,
           itemBuilder: (context, index) {
+            final p     = products[index];
+            final docId = snapshot.data!.docs[index].id;  // ← the REAL Firestore ID
             return GestureDetector(
                 onTap: () {
-                  Get.to(() => ProductDetailScreen(product: products[index]));
+                  Get.to(() => CreateProductScreen(
+                    productDocId: docId,
+                    updateProduct: p,
+                  ));
                 },
                 child: buildProductItem(products[index]));
           },
@@ -302,13 +261,15 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 6),
                       borderRadius: BorderRadius.circular(6),
                       gradient: primaryGradientColor,
-                      child: CustomText(
-                        text: product.saleType == "Auction"
-                            ? "auction".tr
-                            : "buy_now".tr,
-                        fontSize: 10,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                      child: Center(
+                        child: CustomText(
+                          text: product.saleType == "Auction"
+                              ? "auction".tr
+                              : "buy_now".tr,
+                          fontSize: 10,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],

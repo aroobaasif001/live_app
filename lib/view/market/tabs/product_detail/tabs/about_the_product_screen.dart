@@ -9,10 +9,10 @@ import 'package:live_app/utils/icons_path.dart';
 import 'bid_screen.dart';
 
 class AboutTheProductScreen extends StatelessWidget {
-
   final String? productDescription;
 
-  const AboutTheProductScreen({super.key,this.productDescription});
+  const AboutTheProductScreen({Key? key, this.productDescription})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +22,10 @@ class AboutTheProductScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomText(
-            text:productDescription ?? '',
+            text: productDescription ?? '',
             fontSize: 13,
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           CustomTable(
             leftText: 'category'.tr,
             rightText: 'modern_games'.tr,
@@ -39,25 +39,25 @@ class AboutTheProductScreen extends StatelessWidget {
             leftText: 'notes'.tr,
             rightText: 'new_from_factory'.tr,
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           CustomText(
             text: 'buyer_protection'.tr,
             fontSize: 18,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           GestureDetector(
             onTap: () {
               showModalBottomSheet(
-                backgroundColor: Colors.transparent,
                 context: context,
-                scrollControlDisabledMaxHeightRatio: MediaQuery.of(context).size.height * 2,
-                builder: (context) => Container(
-                  height: MediaQuery.of(context).size.height * 0.8, // adjust as needed
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                builder: (ctx) => Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: Colors.white
+                    color: Colors.white,
                   ),
-                  child: BidScreen(), // this will show the BidScreen as a popup
+                  child: BidScreen(),
                 ),
               );
             },
@@ -70,8 +70,9 @@ class AboutTheProductScreen extends StatelessWidget {
                   shape: BoxShape.circle,
                   image: DecorationImage(image: AssetImage(miniIcon)),
                 ),
-                SizedBox(width: 5),
-                CustomContainer(
+                const SizedBox(width: 10),
+                // Prevent overflow by expanding text area
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -87,25 +88,24 @@ class AboutTheProductScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Spacer(),
-                Icon(Icons.arrow_forward_ios_rounded)
+                const SizedBox(width: 10),
+                const Icon(Icons.arrow_forward_ios_rounded),
               ],
             ),
           ),
-          SizedBox(height: 10),
-          Divider(color: conLineColor),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
+          const Divider(color: conLineColor),
+          const SizedBox(height: 10),
           Row(
             children: [
               CustomText(text: 'created_date'.tr),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               InkWell(
                 onTap: () {
                   showDialog(
                     context: context,
                     builder: (context) {
                       TextEditingController reportController = TextEditingController();
-
                       return AlertDialog(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -127,19 +127,24 @@ class AboutTheProductScreen extends StatelessWidget {
                                 border: OutlineInputBorder(),
                               ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xffC0241E), // red color
+                                backgroundColor: Color(0xffC0241E),
                               ),
                               onPressed: () {
-                                String reportText = reportController.text;
+                                final reportText = reportController.text;
                                 if (reportText.isNotEmpty) {
-                                  // Do something like submit to Firebase or backend
-                                  Navigator.pop(context); // Close dialog
-                                  Get.snackbar('Report', 'Your report has been submitted.');
+                                  Navigator.pop(context);
+                                  Get.snackbar(
+                                    'Report',
+                                    'Your report has been submitted.',
+                                  );
                                 } else {
-                                  Get.snackbar('Error', 'Please write something before submitting.');
+                                  Get.snackbar(
+                                    'Error',
+                                    'Please write something before submitting.',
+                                  );
                                 }
                               },
                               child: CustomText(
@@ -162,7 +167,7 @@ class AboutTheProductScreen extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

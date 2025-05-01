@@ -395,7 +395,7 @@ Set<String> favoriteChannels = {};
 
 Widget _buildLiveVideos(BuildContext context) {
   return StreamBuilder<QuerySnapshot>(
-    stream: FirebaseFirestore.instance.collection('livestreams').snapshots(),
+    stream: FirebaseFirestore.instance.collection('livestreams').where('isBlocked',isEqualTo: false).snapshots(),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const Center(child: CircularProgressIndicator());
@@ -464,7 +464,7 @@ Widget _buildLiveVideos(BuildContext context) {
     return SizedBox(
       height: 300,
       child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('products').snapshots(),
+        stream: FirebaseFirestore.instance.collection('products').where('isBlocked',isEqualTo: false).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -504,7 +504,7 @@ Widget _buildLiveVideos(BuildContext context) {
 
   Widget _buildSearchResults() {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('products').snapshots(),
+      stream: FirebaseFirestore.instance.collection('products').where('isBlocked',isEqualTo: true).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

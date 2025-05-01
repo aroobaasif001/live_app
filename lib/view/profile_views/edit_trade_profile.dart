@@ -80,7 +80,7 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("profile_updated".tr)),
       );
-      Get.off(() => TradeProfileScreen(userId: widget.userId));
+      Get.back();
     } catch (e) {
       print("error_updating".tr.replaceAll("{0}", e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(

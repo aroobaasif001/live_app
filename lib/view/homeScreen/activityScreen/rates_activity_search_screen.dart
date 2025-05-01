@@ -7,6 +7,7 @@ import '../../../custom_widgets/custom_gradiant_tab_button.dart';
 import '../../../entities/product_entity.dart';
 
 class RatesActivitySearchScreen extends StatefulWidget {
+
   @override
   _RatesActivitySearchScreenState createState() =>
       _RatesActivitySearchScreenState();
@@ -30,7 +31,7 @@ class _RatesActivitySearchScreenState extends State<RatesActivitySearchScreen> {
 
   Future<void> _fetchProducts() async {
     QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('products').get();
+        await FirebaseFirestore.instance.collection('products').where('isBlocked',isEqualTo: false).get();
     setState(() {
       products = querySnapshot.docs;
     });

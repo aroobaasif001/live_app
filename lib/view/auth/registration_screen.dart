@@ -53,6 +53,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   double _passwordStrength = 0.0;
   String _passwordStrengthText = "";
+
   void _updatePasswordStrength(String password) {
     if (password.isEmpty) {
       _passwordStrength = 0.0;
@@ -66,13 +67,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     } else if (RegExp(r'^(?=.*[A-Za-z])(?=.*\d)').hasMatch(password)) {
       _passwordStrength = 0.6;
       _passwordStrengthText = "Good";
-    } else if (RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])')
-        .hasMatch(password)) {
+    } else if (RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])').hasMatch(password)) {
       _passwordStrength = 0.8;
       _passwordStrengthText = "Very Good";
     } else if (password.length >= 10 &&
-        RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])')
-            .hasMatch(password)) {
+        RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])').hasMatch(password)) {
       _passwordStrength = 1.0;
       _passwordStrengthText = "Strong";
     }
@@ -84,9 +83,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         "Error",
         "Please fix the errors in the form.",
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.white, // 👈 Softer background
-        colorText: Colors.red, // 👈 Red text for warning
-        icon: const Icon(Icons.error_outline, color: Colors.red), // 👈 Red icon
+        backgroundColor: Colors.white,
+        // 👈 Softer background
+        colorText: Colors.red,
+        // 👈 Red text for warning
+        icon: const Icon(Icons.error_outline, color: Colors.red),
+        // 👈 Red icon
         margin: const EdgeInsets.all(10),
         borderRadius: 8,
         duration: const Duration(seconds: 3),
@@ -134,8 +136,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) return 'Please enter your email.';
-    if (!RegExp(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
-        .hasMatch(value)) {
+    if (!RegExp(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$").hasMatch(value)) {
       return 'Please enter a valid email.';
     }
     return null;
@@ -198,21 +199,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 children: [
                   SizedBox(height: 20),
                   CustomTextField(
-                    isRequired: true,
                     hintText: 'First Name',
                     controller: _firstNameController,
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'Enter first name'
-                        : null,
+                    validator: (value) => value == null || value.isEmpty ? 'Enter first name' : null,
                   ),
                   SizedBox(height: 15),
                   CustomTextField(
-                    isRequired: true,
                     hintText: 'Last Name',
                     controller: _lastNameController,
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'Enter last name'
-                        : null,
+                    validator: (value) => value == null || value.isEmpty ? 'Enter last name' : null,
                   ),
                   SizedBox(height: 15),
                   // CustomTextField(
@@ -222,7 +217,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   //   validator: _validateEmail,
                   // ),
                   CustomTextField(
-                    isRequired: true,
                     hintText: 'Email',
                     controller: _emailController,
                     validator: _validateEmail,
@@ -237,17 +231,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomTextField(
-                            isRequired: true,
-                            suffixIcon: IconButton(
+                                    suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
                                   _obscurePassword = !_obscurePassword;
                                 });
                               },
                               icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
+                                _obscurePassword ? Icons.visibility_off : Icons.visibility,
                                 color: Colors.grey,
                               ),
                             ),
@@ -329,7 +320,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 0),
                   // DropdownButtonFormField<String>(
                   //   value: gender,
                   //   decoration: InputDecoration(
@@ -409,123 +400,104 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   //       ),
                   //     ),
                   //   ],
-                 // ),
+                  // ),
 
-                 // GENDER
+                  // GENDER
 // GENDER DROPDOWN with asterisk
-CustomText(
-  text: 'Gender *',
-  fontWeight: FontWeight.w400,
-  fontSize: 14,
-  fontFamily: 'Gilroy-Medium',
-),
-SizedBox(height: 6),
-DropdownButtonFormField<String>(
-  value: gender,
-  decoration: InputDecoration(
-    hintText: 'Select Gender',
-    hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-    filled: true,
-    fillColor: Colors.white,
-    contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none,
-    ),
-  ),
-  items: ['Male', 'Female', 'Other']
-      .map((value) => DropdownMenuItem(
-            value: value,
-            child: Text(value, style: TextStyle(fontSize: 14)),
-          ))
-      .toList(),
-  onChanged: (val) => setState(() => gender = val),
-),
-SizedBox(height: 16),
-
-// COUNTRY DROPDOWN with asterisk
-CustomText(
-  text: 'Country *',
-  fontWeight: FontWeight.w400,
-  fontSize: 14,
-  fontFamily: 'Gilroy-Medium',
-),
-SizedBox(height: 6),
-DropdownButtonFormField<String>(
-  value: country,
-  decoration: InputDecoration(
-    hintText: 'Select Country',
-    hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-    filled: true,
-    fillColor: Colors.white,
-    contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none,
-    ),
-  ),
-  items: ['Russia', 'USA', 'India']
-      .map((value) => DropdownMenuItem(
-            value: value,
-            child: Text(value, style: TextStyle(fontSize: 14)),
-          ))
-      .toList(),
-  onChanged: (val) => setState(() => country = val),
-),
-SizedBox(height: 20),
-
-// TERMS + PRIVACY POLICY CHECKBOX with links
-Row(
-  children: [
-    buildGradientCheckbox(isAgreedToTerms, () {
-      setState(() => isAgreedToTerms = !isAgreedToTerms);
-    }),
-    Expanded(
-      child: RichText(
-        text: TextSpan(
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 14,
-            fontFamily: 'Gilroy-Medium',
-            color: Colors.black87,
-          ),
-          children: [
-            const TextSpan(text: 'I agree to the '),
-            TextSpan(
-              text: 'Terms of Service',
-              style: TextStyle(
-                color: Colors.deepPurple,
-                fontWeight: FontWeight.w500,
-                decoration: TextDecoration.underline,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                    Get.to(()=>TermsAndCondition());
-                },
-            ),
-            const TextSpan(text: ' and confirm I have read the '),
-            TextSpan(
-              text: 'Privacy Policy',
-              style: TextStyle(
-                color: Colors.deepPurple,
-                fontWeight: FontWeight.w500,
-                decoration: TextDecoration.underline,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                   Get.to(()=>PrivacyPolicy());
-                },
-            ),
-          ],
-        ),
-      ),
-    ),
-  ],
-),
-SizedBox(height: 18),
-
-
-                  SizedBox(height: 20),
+                  DropdownButtonFormField<String>(
+                    value: gender,
+                    decoration: InputDecoration(
+                      hintText: 'Select Gender',
+                      hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    items: ['Male', 'Female', 'Other']
+                        .map((value) => DropdownMenuItem(
+                              value: value,
+                              child: Text(value, style: TextStyle(fontSize: 14)),
+                            ))
+                        .toList(),
+                    onChanged: (val) => setState(() => gender = val),
+                  ),
+                  SizedBox(height: 10),
+                  // COUNTRY DROPDOWN with asterisk
+                  DropdownButtonFormField<String>(
+                    value: country,
+                    decoration: InputDecoration(
+                      hintText: 'Select Country',
+                      hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    items: ['Russia', 'USA', 'India']
+                        .map((value) => DropdownMenuItem(
+                              value: value,
+                              child: Text(value, style: TextStyle(fontSize: 14)),
+                            ))
+                        .toList(),
+                    onChanged: (val) => setState(() => country = val),
+                  ),
+                  SizedBox(height: 100),
+                  // TERMS + PRIVACY POLICY CHECKBOX with links
+                  Row(
+                    children: [
+                      buildGradientCheckbox(isAgreedToTerms, () {
+                        setState(() => isAgreedToTerms = !isAgreedToTerms);
+                      }),
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              fontFamily: 'Gilroy-Medium',
+                              color: Colors.black87,
+                            ),
+                            children: [
+                              const TextSpan(text: 'I agree to the '),
+                              TextSpan(
+                                text: 'Terms of Service',
+                                style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Get.to(() => TermsAndCondition());
+                                  },
+                              ),
+                              const TextSpan(text: ' and confirm I have read the '),
+                              TextSpan(
+                                text: 'Privacy Policy',
+                                style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Get.to(() => PrivacyPolicy());
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 18),
                   Row(
                     children: [
                       buildGradientCheckbox(isAbove18, () {

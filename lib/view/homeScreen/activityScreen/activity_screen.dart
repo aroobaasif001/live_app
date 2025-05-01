@@ -76,7 +76,8 @@ class _ActivityScreenState extends State<ActivityScreen> with SingleTickerProvid
       body: TabBarView(
         controller: _tabController,
         children: [
-          PurchaseActivityScreen(currentUserId: FirebaseAuth.instance.currentUser!.uid,),
+          PurchaseActivityScreen(currentUserId: FirebaseAuth.instance.currentUser!.uid,
+          ),
           RatesActivitySearchScreen(),
           MessagesList(),
           FeatureActivityScreen()

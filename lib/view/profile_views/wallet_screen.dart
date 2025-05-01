@@ -9,6 +9,8 @@ class WalletScreen extends StatefulWidget {
 
 class _WalletScreenState extends State<WalletScreen>
     with SingleTickerProviderStateMixin {
+
+  TextEditingController amountController = TextEditingController();
   late TabController _tabController;
   int _selectedIndex = 0;
 
@@ -347,6 +349,7 @@ class _WalletScreenState extends State<WalletScreen>
 
                 TextField(
                   keyboardType: TextInputType.number,
+                  controller: amountController,
                   decoration: InputDecoration(
                     hintText: "Enter an amount up to 100,000 ₽",
                     filled: true,
@@ -555,8 +558,8 @@ class _WalletScreenState extends State<WalletScreen>
               const SizedBox(height: 16),
 
               // ✅ Amount
-              const Text(
-                "10,000 ₽",
+              Text(
+                amountController.text,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

@@ -22,6 +22,7 @@ import 'package:live_app/view/homeScreen/paymentMethodScreen/reward_screen.dart'
 import 'package:live_app/view/market/tabs/payment_screen.dart';
 import 'package:live_app/view/profile_views/create_a_product_screen.dart';
 import 'package:live_app/view/profile_views/create_streem_screen.dart';
+import 'package:live_app/view/profile_views/delivery_address_update_screen.dart';
 import 'package:live_app/view/profile_views/invite_friend_screen.dart';
 import 'package:live_app/view/profile_views/my_rewards_screen.dart';
 import 'package:live_app/view/profile_views/settings_screen.dart';
@@ -76,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       {
         "icon": 'assets/icons/Map Point.png',
         "title": "addresses".tr,
-        "onTap": () => Get.to(() => DeliveryAddressScreen()),
+        "onTap": () => Get.to(() => DeliveryAddressUpdateScreen()),
       },
       {
         "icon": 'assets/icons/Bell.png',

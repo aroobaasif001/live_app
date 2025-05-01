@@ -262,10 +262,7 @@ Future<void> _sendImageMessage() async {
 //     );
 //   }
 // }
-
-  
-
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,

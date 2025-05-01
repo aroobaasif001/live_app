@@ -6,6 +6,7 @@ import 'package:live_app/utils/colors.dart';
 import 'package:live_app/utils/images_path.dart';
 import 'package:live_app/view/auth/delivery_address_screen.dart';
 import 'package:live_app/view/profile_views/create_streem_screen.dart';
+import 'package:live_app/view/profile_views/delivery_address_update_screen.dart';
 import 'package:live_app/view/profile_views/edit_trade_profile.dart';
 import 'package:live_app/view/profile_views/item_for_auction.dart';
 import 'package:live_app/view/profile_views/statistic_screen.dart';
@@ -196,7 +197,7 @@ class _TradeProfileScreenState extends State<TradeProfileScreen> {
                                             CustomText(
                                               text: "Subcribers",
                                               fontSize: 12,
-                                              color: Colors.grey.shade400,
+                                              color: Colors.black,
                                               fontFamily: "Gilroy-Bold",
                                             ),
                                           ],
@@ -219,7 +220,7 @@ class _TradeProfileScreenState extends State<TradeProfileScreen> {
                                             CustomText(
                                               text: "Subscriptions",
                                               fontSize: 12,
-                                              color: Colors.grey.shade400,
+                                              color: Colors.black,
                                               fontFamily: "Gilroy-Bold",
                                             ),
                                           ],
@@ -377,7 +378,7 @@ class _TradeProfileScreenState extends State<TradeProfileScreen> {
                         }),
                         optionTile("assets/images/delivery icon.png", "delivery".tr,
                             onTap: () {
-                          Get.to(() => DeliveryAddressScreen());
+                          Get.to(() => DeliveryAddressUpdateScreen());
                         }),
                         optionTile("assets/images/analytics icon.png", "analytics".tr, onTap: () {
                           Get.to(() => StatisticsScreen());

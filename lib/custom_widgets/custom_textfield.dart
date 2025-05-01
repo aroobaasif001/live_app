@@ -90,7 +90,6 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final bool isPassword;
   final bool obscureText;
-  final bool isRequired;
   final bool readOnly;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
@@ -110,7 +109,6 @@ class CustomTextField extends StatelessWidget {
     this.prefixIcon,
     this.keyboardType,
     this.onChanged,
-    this.isRequired = false,
     this.readOnly = false,
   });
 
@@ -133,30 +131,12 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
-        hintText: isRequired ? null : hintText,
+        hintText: hintText,
         hintStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.grey,
           fontSize: 16,
         ),
-        label: isRequired
-            ? Text.rich(
-                TextSpan(
-                  text: hintText,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                    fontSize: 16,
-                  ),
-                  children: const [
-                    TextSpan(
-                      text: ' *',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ],
-                ),
-              )
-            : null,
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
         errorStyle: const TextStyle(

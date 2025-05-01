@@ -29,9 +29,11 @@ class RegistrationEntity {
   final bool? isBlocked;  // ✅ NEW: isBlocked field
   final bool? isUserNew;  // ✅ NEW: isUserNew field
   final String? fcmToken; // ✅ New field
+  final DateTime? createdAt;
 
 
   RegistrationEntity({
+    this.createdAt,
     this.delivery,
     this.sold,
     this.reviews,
