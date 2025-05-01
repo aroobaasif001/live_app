@@ -8,6 +8,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:live_app/custom_widgets/custom_container.dart';
 import 'package:live_app/custom_widgets/custom_gradient_button.dart';
 import 'package:live_app/custom_widgets/custom_profile_background_scaffold.dart';
+import 'package:live_app/custom_widgets/custom_report_dialog.dart';
 import 'package:live_app/custom_widgets/custom_text.dart';
 import 'package:live_app/entities/registration_entity.dart';
 import 'package:live_app/services/send_notification_service.dart';
@@ -210,60 +211,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       {
         "icon": 'assets/icons/Danger Triangle.png',
         "title": "report_abuse".tr,
-        "screen": (BuildContext context) {
-          TextEditingController reportController = TextEditingController();
-
-          showDialog(
+        "screen": (BuildContext context) async{
+            await showDialog(
             context: context,
-            builder: (context) {
-              return AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                backgroundColor: Colors.white,
-                title: CustomText(
-                  text: 'Report Abuse',
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      controller: reportController,
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                        hintText: 'Write your report here...',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xffC0241E),
-                      ),
-                      onPressed: () {
-                        String reportText = reportController.text;
-                        if (reportText.isNotEmpty) {
-                          Navigator.pop(context);
-                          Get.snackbar(
-                              'Report', 'Your report has been submitted.');
-                        } else {
-                          Get.snackbar('Error',
-                              'Please write something before submitting.');
-                        }
-                      },
-                      child: CustomText(
-                        text: 'Submit',
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
+            builder: (context) => const CustomReportDialog(),
+            );
         }
       },
       {
