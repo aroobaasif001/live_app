@@ -252,7 +252,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               });
                             },
                           ),
-
                           /// 👇 Password rule hint
                           Padding(
                             padding: const EdgeInsets.only(top: 6.0, left: 4.0),
@@ -409,8 +408,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     decoration: InputDecoration(
                       hintText: 'Select Gender',
                       hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-                      filled: true,
-                      fillColor: Colors.white,
                       contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -432,8 +429,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     decoration: InputDecoration(
                       hintText: 'Select Country',
                       hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-                      filled: true,
-                      fillColor: Colors.white,
                       contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),

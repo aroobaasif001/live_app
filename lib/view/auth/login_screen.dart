@@ -53,12 +53,10 @@ class _LoginScreenState extends State<LoginScreen> {
       NotificationService notificationService = NotificationService();
       String? deviceToken = await notificationService.getDeviceToken();
 
-      if (deviceToken != null) {
-        await _firestore.collection("UserEntity").doc(uid).set({
-          'fcmToken': deviceToken,
-        }, SetOptions(merge: true));
-      }
-      Get.snackbar("Success", "login_successful".tr);
+      await _firestore.collection("UserEntity").doc(uid).set({
+        'fcmToken': deviceToken,
+      }, SetOptions(merge: true));
+          Get.snackbar("Success", "login_successful".tr);
       await StorageService.setLoggedIn(true);
       Get.to(() => BottomNavigationBarWidget());
     } on FirebaseAuthException catch (e) {

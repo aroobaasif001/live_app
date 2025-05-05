@@ -34,17 +34,25 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    await FirebaseAppCheck.instance.activate(
-      androidProvider: AndroidProvider.debug,
-      appleProvider: AppleProvider.deviceCheck,
-      webProvider: ReCaptchaV3Provider('PASTE_YOUR_RECAPTCHA_SITE_KEY_HERE'),
-    );
+    // await FirebaseAppCheck.instance.activate(
+    //   androidProvider: AndroidProvider.debug,
+    //   appleProvider: AppleProvider.deviceCheck,
+    //   webProvider: ReCaptchaV3Provider('6LdA9iorAAAAALVjN-nY1O1nRph1UdlUbbD5i7SOO', // <- your reCAPTCHA site key
+    //   ),
+    // );
 
     debugPrint("Firebase initialized successfully.");
   } catch (e) {
     debugPrint("Firebase Initialization Error: $e");
   }
-
+  if (kDebugMode) {
+    // no App Check on debug
+  } else {
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.playIntegrity,
+      appleProvider: AppleProvider.deviceCheck,
+    );
+  }
   Get.put(TranslationsController());
 
   runApp(DevicePreview(

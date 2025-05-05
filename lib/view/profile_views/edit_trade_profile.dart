@@ -191,13 +191,18 @@ class _EditTradeProfileState extends State<EditTradeProfile> {
         backgroundImage: NetworkImage(_profileImageUrl!),
       );
     } else {
-      return CircleAvatar(
-        radius: 40,
-        backgroundColor: Colors.grey[300],
-        child: Icon(
-          Icons.person,
-          size: 40,
-          color: Colors.grey[700],
+      return Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white)),
+        child: CircleAvatar(
+          radius: 40,
+          backgroundColor: Colors.grey[300],
+          child: Icon(
+            Icons.person,
+            size: 40,
+            color: Colors.grey[700],
+          ),
         ),
       );
     }
